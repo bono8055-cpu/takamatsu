@@ -1,0 +1,714 @@
+<!doctype html>
+<html lang="ko">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>다카마쓰 · 나오시마 2026.10.16–19</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;600&family=IBM+Plex+Sans+KR:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--paper:#E6E4DE;--panel:#F3F1EB;--ink:#17181A;--muted:#6E6F6B;
+ --seto:#2B4750;--pumpkin:#C9931A;--line:#CBC8BF;--hole:#B4B0A6}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{background:var(--paper);color:var(--ink);font-family:'IBM Plex Sans KR',system-ui,sans-serif;
+ font-size:15px;line-height:1.65;padding-bottom:70px}
+.wrap{max-width:560px;margin:0 auto;padding:0 18px}
+button{font-family:inherit}
+
+/* 로그인 게이트 */
+#gate{position:fixed;inset:0;z-index:100;background:var(--paper);display:flex;align-items:center;justify-content:center;padding:24px}
+#gate.hide{display:none}
+#gate .box{max-width:380px;width:100%}
+#gate h2{font-family:'Noto Serif KR',serif;font-size:26px;font-weight:600;margin-bottom:6px}
+#gate p{color:var(--muted);font-size:13.5px;margin-bottom:22px}
+.who{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.who button{padding:14px 10px;background:var(--panel);border:1px solid var(--line);
+ font-size:15px;font-weight:500;cursor:pointer;color:var(--ink)}
+.who button:active{background:var(--ink);color:var(--paper)}
+
+.hero{position:relative;padding:46px 0 30px;overflow:hidden}
+.hero .panels{position:absolute;inset:0;display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(2,1fr);pointer-events:none}
+.hero .panels div{border-right:1px solid rgba(23,24,26,.07);border-bottom:1px solid rgba(23,24,26,.07);position:relative}
+.hero .panels div::after{content:"";position:absolute;right:-3px;bottom:-3px;width:6px;height:6px;border-radius:50%;background:var(--hole);opacity:.55}
+.eyebrow{position:relative;font-size:11px;letter-spacing:.22em;font-weight:600;color:var(--seto);margin-bottom:12px}
+h1{position:relative;font-family:'Noto Serif KR',serif;font-weight:300;font-size:38px;line-height:1.14;letter-spacing:-.02em}
+h1 b{font-weight:600;display:block}
+.hero .sub1{position:relative;margin-top:14px;color:var(--muted);font-size:13.5px}
+.facts{position:relative;display:flex;gap:18px;margin-top:18px;flex-wrap:wrap}
+.facts div span{display:block;font-size:10.5px;letter-spacing:.1em;color:var(--muted);font-weight:500}
+.facts div strong{font-family:'Noto Serif KR',serif;font-weight:600;font-size:17px}
+#me{position:relative;margin-top:18px;font-size:12px;color:var(--muted)}
+#me b{color:var(--ink)}
+#me button{background:none;border:0;border-bottom:1px solid var(--muted);color:var(--muted);font-size:12px;cursor:pointer;padding:0 0 1px;margin-left:8px}
+#status{position:relative;margin-top:8px;font-size:11.5px;color:var(--pumpkin)}
+
+nav{position:sticky;top:0;z-index:20;background:rgba(230,228,222,.94);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+nav .wrap{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;padding:9px 14px}
+nav .wrap::-webkit-scrollbar{display:none}
+nav button{flex:0 0 auto;font:500 13px/1 'IBM Plex Sans KR',sans-serif;color:var(--muted);background:none;border:0;padding:9px 13px;cursor:pointer;white-space:nowrap}
+nav button.on{background:var(--ink);color:var(--paper)}
+
+.pane{display:none;padding-top:24px}
+.pane.on{display:block}
+.dayhead{border-top:2px solid var(--ink);padding-top:12px}
+.dayhead h2{font-family:'Noto Serif KR',serif;font-weight:600;font-size:22px;letter-spacing:-.01em}
+.dayhead em{font-style:normal;color:var(--muted);font-size:12.5px;display:block;margin-top:3px}
+.note{background:var(--panel);border-left:2px solid var(--pumpkin);padding:11px 13px;font-size:13px;margin:15px 0 0;color:#3A3B38}
+
+.rail{position:relative;padding-left:26px;margin-top:20px}
+.rail::before{content:"";position:absolute;left:5px;top:8px;bottom:14px;width:1px;background:var(--line)}
+.stop{position:relative;padding:0 0 24px}
+.stop::before{content:"";position:absolute;left:-24px;top:7px;width:11px;height:11px;border-radius:50%;background:var(--paper);border:1px solid var(--hole)}
+.stop.key::before{background:var(--pumpkin);border-color:var(--pumpkin)}
+.stop.move::before{width:5px;height:5px;left:-21px;top:10px;background:var(--hole);border:0}
+.t{font:600 12px/1 'IBM Plex Sans KR',sans-serif;letter-spacing:.04em;color:var(--seto)}
+.stop h3{font-size:15.5px;font-weight:600;margin:5px 0 3px;letter-spacing:-.01em}
+.stop p{font-size:13.5px;color:#44453F}
+.stop.move .t{color:var(--muted)}
+.stop.move p{font-size:13px;color:var(--muted);margin-top:2px}
+.tags{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px}
+.tag{font-size:11.5px;font-weight:500;padding:3px 7px;background:var(--panel);border:1px solid var(--line);color:#55564F}
+.tag.w{border-color:var(--pumpkin);color:#8A6404}
+.links{display:flex;flex-wrap:wrap;gap:12px;margin-top:10px}
+a.go{font-size:12.5px;font-weight:500;color:var(--seto);text-decoration:none;border-bottom:1px solid var(--seto);padding-bottom:1px}
+a.go.p{color:#7A6320;border-color:#7A6320}
+
+.resv{margin-top:12px;border:1px solid var(--seto);border-left-width:2px;padding:9px 12px}
+.resv h4{font-size:11px;letter-spacing:.14em;font-weight:600;color:var(--seto);margin-bottom:3px}
+.resv p{font-size:13px;color:#44453F}
+.resv .links{margin-top:8px}
+a.go.r{color:var(--seto);border-color:var(--seto)}
+.menu{margin-top:12px;border:1px solid var(--line);background:var(--panel)}
+.menu h4{font-size:11px;letter-spacing:.14em;font-weight:600;color:var(--muted);padding:9px 12px 0}
+.menu ul{list-style:none;padding:6px 12px 11px}
+.menu li{padding:7px 0;border-bottom:1px dashed var(--line)}
+.menu li:last-child{border:0;padding-bottom:0}
+.jp{font-size:14px;font-weight:600}
+.yomi{font-size:13px;color:var(--seto);font-weight:500}
+.mean{font-size:12.5px;color:var(--muted)}
+
+/* 반응 · 댓글 */
+.bar{display:flex;gap:8px;margin-top:11px;align-items:center;flex-wrap:wrap}
+.bar button{font-size:12px;font-weight:500;padding:5px 10px;background:none;border:1px solid var(--line);color:var(--muted);cursor:pointer}
+.bar button.act{border-color:var(--seto);color:var(--seto);background:var(--panel)}
+.bar .cnt{font-size:11.5px;color:var(--muted)}
+.thread{margin-top:10px;border-left:2px solid var(--line);padding-left:11px;display:none}
+.thread.on{display:block}
+.cmt{padding:7px 0;border-bottom:1px dashed var(--line);font-size:13.5px}
+.cmt:last-of-type{border:0}
+.cmt .who2{font-size:11.5px;color:var(--seto);font-weight:600}
+.cmt .when{font-size:11px;color:var(--muted);font-weight:400;margin-left:6px}
+.cmt .del{float:right;background:none;border:0;color:var(--muted);font-size:11px;cursor:pointer;padding:0}
+.wr{display:flex;gap:6px;margin-top:9px}
+.wr input{flex:1;min-width:0;font:400 13.5px 'IBM Plex Sans KR',sans-serif;padding:8px 10px;
+ border:1px solid var(--line);background:var(--paper);color:var(--ink)}
+.wr button{padding:8px 13px;background:var(--ink);color:var(--paper);border:0;font-size:13px;font-weight:500;cursor:pointer}
+
+details{border-top:1px solid var(--line)}
+details summary{list-style:none;cursor:pointer;padding:15px 0;font-weight:600;font-size:14.5px;display:flex;justify-content:space-between;align-items:center}
+details summary::-webkit-details-marker{display:none}
+details summary::after{content:"+";font-weight:400;font-size:18px;color:var(--muted)}
+details[open] summary::after{content:"−"}
+details .body{padding-bottom:20px;font-size:13.5px;color:#44453F}
+table{width:100%;border-collapse:collapse;font-size:12.5px}
+th,td{text-align:left;padding:7px 6px 7px 0;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-weight:600;color:var(--muted);font-size:11px;letter-spacing:.05em}
+td:last-child,th:last-child{padding-right:0}
+.check{display:flex;gap:9px;padding:9px 0;align-items:flex-start;font-size:13.5px;border-bottom:1px dashed var(--line)}
+.check:last-child{border:0}
+.check input{margin-top:4px;accent-color:var(--seto);width:16px;height:16px;flex:0 0 auto}
+.byline{font-size:11.5px;color:var(--seto);font-weight:500;margin-top:2px}
+.big{font-family:'Noto Serif KR',serif;font-size:26px;font-weight:600}
+code{font-size:12px;background:var(--panel);padding:1px 5px;border:1px solid var(--line)}
+pre{background:var(--panel);border:1px solid var(--line);padding:10px;font-size:11.5px;overflow-x:auto;margin:8px 0;line-height:1.5}
+footer{margin-top:44px;padding:20px 0 8px;border-top:2px solid var(--ink);font-size:11.5px;color:var(--muted)}
+.empty{color:var(--muted);font-size:13px;padding:12px 0}
+@media(prefers-reduced-motion:no-preference){.pane.on{animation:f .3s ease}}
+@keyframes f{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+</style>
+
+<div id="gate"><div class="box">
+  <h2>누구세요?</h2>
+  <p>이름을 고르면 됩니다. 비밀번호는 없어요.<br>체크와 댓글에 이 이름이 남습니다.</p>
+  <div class="who" id="who"></div>
+</div></div>
+
+<header class="hero">
+  <div class="panels"><div></div><div></div><div></div><div></div><div></div><div></div></div>
+  <div class="wrap">
+    <div class="eyebrow">TAKAMATSU · NAOSHIMA</div>
+    <h1>세토내해의<b>콘크리트와 우동</b></h1>
+    <div class="sub1">2026년 10월 16일 금 → 19일 월 · 3박 4일 · 도착 10:30 / 출발 17:15</div>
+    <div class="facts">
+      <div><span>인원</span><strong>7명</strong></div>
+      <div><span>이동</span><strong>8인승 밴</strong></div>
+      <div><span>미술관</span><strong>4관</strong></div>
+      <div><span>우동</span><strong>4집</strong></div>
+    </div>
+    <div id="me"></div>
+    <div id="status"></div>
+  </div>
+</header>
+
+<nav><div class="wrap" id="nav"></div></nav>
+<main class="wrap" id="panes"></main>
+<div class="wrap"><footer>다카마쓰 · 나오시마 3박 4일 · 7인 · 2026년 10월</footer></div>
+
+<script type="module">
+/* ═══════════════════════════════════════════════════
+   ① 여기에 Firebase 설정을 붙여넣으세요.
+   비워두면 "혼자 보기 모드"로 돌아갑니다 (체크·댓글이 이 기기에만 남음).
+   만드는 법은 앱 안의 [정보] → [함께 쓰기 설정] 참고.
+   ═══════════════════════════════════════════════════ */
+const FIREBASE_CONFIG = {
+  apiKey: "AIzaSyC5FPhNXz-cWO6bYHblo1zgadknCaJjwIw",
+  authDomain: "takamatsu-2fdbb.firebaseapp.com",
+  projectId: "takamatsu-2fdbb",
+  storageBucket: "takamatsu-2fdbb.firebasestorage.app",
+  messagingSenderId: "985581763677",
+  appId: "1:985581763677:web:f8215b97ac61f92c3661b4"
+};
+
+/* ② 가족 이름 — 자유롭게 고치세요 */
+const MEMBERS = ['아버지','현상','아내','형','형수','누나','매형'];
+
+/* ───────── 저장소 계층 ───────── */
+const LS = { get(k){try{return localStorage.getItem(k)}catch(e){return null}},
+             set(k,v){try{localStorage.setItem(k,v)}catch(e){}} };
+let db=null, F=null, online=false;
+const local = { checks:{}, comments:[], reactions:{} };
+const listeners = { checks:[], comments:[], reactions:[] };
+const notify = k => listeners[k].forEach(f=>f());
+
+async function initDB(){
+  if(!FIREBASE_CONFIG.projectId) return false;
+  try{
+    const a = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js');
+    const au = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js');
+    F = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js');
+    const app = a.initializeApp(FIREBASE_CONFIG);
+    // 익명 로그인 — 사용자는 아무것도 하지 않는다. 외부 접근을 막기 위한 열쇠 역할.
+    await au.signInAnonymously(au.getAuth(app));
+    db = F.getFirestore(app);
+    F.onSnapshot(F.collection(db,'checks'), s=>{
+      local.checks={}; s.forEach(d=>local.checks[d.id]=d.data()); notify('checks');
+    });
+    F.onSnapshot(F.query(F.collection(db,'comments'),F.orderBy('at','asc')), s=>{
+      local.comments=[]; s.forEach(d=>local.comments.push({id:d.id,...d.data()})); notify('comments');
+    });
+    F.onSnapshot(F.collection(db,'reactions'), s=>{
+      local.reactions={}; s.forEach(d=>local.reactions[d.id]=d.data()); notify('reactions');
+    });
+    return true;
+  }catch(e){ console.warn('Firebase 연결 실패',e); return false; }
+}
+const now = ()=>Date.now();
+async function setCheck(id,on,by){
+  if(on) local.checks[id]={by,at:now()}; else delete local.checks[id];
+  notify('checks');
+  if(!online) return;
+  try{ on ? await F.setDoc(F.doc(db,'checks',id),{by,at:now()})
+          : await F.deleteDoc(F.doc(db,'checks',id)); }catch(e){console.warn(e)}
+}
+async function addComment(stop,text,by){
+  const o={stop,text,by,at:now()};
+  if(!online){ local.comments.push({id:'l'+Math.random(),...o}); notify('comments'); return; }
+  try{ await F.addDoc(F.collection(db,'comments'),o); }catch(e){console.warn(e)}
+}
+async function delComment(id){
+  if(!online){ local.comments=local.comments.filter(c=>c.id!==id); notify('comments'); return; }
+  try{ await F.deleteDoc(F.doc(db,'comments',id)); }catch(e){console.warn(e)}
+}
+async function toggleReact(stop,by){
+  const id=`${stop}__${by}`;
+  const had=!!local.reactions[id];
+  if(had) delete local.reactions[id]; else local.reactions[id]={stop,by,at:now()};
+  notify('reactions');
+  if(!online) return;
+  try{ had ? await F.deleteDoc(F.doc(db,'reactions',id))
+           : await F.setDoc(F.doc(db,'reactions',id),{stop,by,at:now()}); }catch(e){console.warn(e)}
+}
+
+/* ───────── 지도 링크 (Place ID 기반 = 정확) ───────── */
+const M = o => o.pid
+  ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(o.q)}&query_place_id=${o.pid}`
+  : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(o.q)}`;
+
+const P = {
+  airport:{q:'高松空港',pid:'ChIJCQwJJgPrUzURh_vaUuloNs4'},
+  chikusei:{q:'竹清 本店',pid:'ChIJTxGVIL7rUzURH7e2fgVhDNI'},
+  marunaka:{q:'マルナカ 宮脇店',pid:'ChIJcdMpUMDrUzURBWZk9R2DLwY'},
+  stay:{q:'高松市扇町1-11-8',pid:'ChIJo6QuEezrUzURq7CwtpubNsI'},
+  ikkaku:{q:'骨付鳥 一鶴 高松店',pid:'ChIJe8NJvJrrUzURC3ckN2iEIYU'},
+  matsushita:{q:'松下製麺所',pid:'ChIJJbgoyr3rUzUR-4c_CsSfJKo'},
+  port:{q:'高松港 フェリー乗り場',pid:'ChIJ0RXCHnjsUzURWhV938-wncs'},
+  miyanoura:{q:'四国汽船 宮浦港',pid:'ChIJlcKds9fvUzURHNYAwBALjb8'},
+  tsutsuji:{q:'つつじ荘 直島',pid:'ChIJhzKS9yDuUzURY94mAhhNmhs'},
+  chichu:{q:'地中美術館',pid:'ChIJ4WHu5yvuUzURCXiEZmVSozw'},
+  leeufan:{q:'李禹煥美術館',pid:'ChIJibi8HCnuUzURellSAO4Wd6c'},
+  benesse:{q:'ベネッセハウス ミュージアム',pid:'ChIJu-H0aC_uUzURhcnP5-wFTPA'},
+  ando:{q:'ANDO MUSEUM 直島',pid:'ChIJ267gdcPxUzUR7RGA91SdwQk'},
+  honmura:{q:'本村ラウンジ&アーカイブ',pid:'ChIJJVhc3cPxUzURFxuKoha37ak'},
+  tenkatsu:{q:'天勝 本店',pid:'ChIJf6jFyo_rUzURMShuUgU_N3Y'},
+  bakaichi:{q:'うどんバカ一代',pid:'ChIJMWyhJHbrUzURpONppDqqkeg'},
+  ritsurinP:{q:'栗林公園 東門駐車場',pid:'ChIJ6ez3-krrUzUR77vlGwAO10c'},
+  merikenya:{q:'めりけんや 高松駅前店',pid:'ChIJQxo9tojrUzURFDzJXpSRFzs'},
+  arcade:{q:'高松丸亀町商店街',pid:'ChIJGz08i5rrUzURHWtwRZZF4nA'},
+  greenP:{q:'丸亀町グリーン 駐車場',pid:'ChIJGz6GWQDrUzURE6MuaI_rhuk'},
+  uehara:{q:'さぬきうどん 上原屋本店',pid:'ChIJWUJrkbDrUzURKf-Dpey_-lI'},
+  tamamo:{q:'玉藻公園 高松城跡',pid:'ChIJK3mVCYfrUzURNl7XQRlvOB4'},
+  tamamoP:{q:'玉藻公園専用駐車場',pid:'ChIJ5UbgxIbrUzURsekpdRDiz3M'},
+  sunportP:{q:'サンポート高松地下駐車場',pid:'ChIJFeuBr4nrUzURoX-8acM9icg'},
+  kawaramachiP:{q:'瓦町 コインパーキング'},
+  hyogoP:{q:'兵庫町 コインパーキング 高松'},
+  chikuseiP:{q:'亀岡町 コインパーキング 高松'}
+};
+
+/* ───────── 일정 데이터 ───────── */
+const DAYS=[
+{tab:'16 금',title:'도착 · 우동① · 장보기 · 뼈닭',sub:'차량 이동 4회',
+ stops:[
+  {t:'08:45',h:'인천 출발',p:'다카마쓰공항 10:30 도착 예정.'},
+  {t:'10:30',h:'다카마쓰공항 · 렌터카 인수',p:'8인승 밴. 수속 20분. 국제면허증과 교대 운전자 등록을 확인한다.',map:P.airport},
+  {m:1,t:'10:55',h:'🚗 공항 → 치쿠세이 · 25분',p:'14km'},
+  {k:1,t:'11:35',h:'우동① 치쿠세이 본점',p:'튀김을 즉석에서 튀겨주는 집. 점심 피크 직전이라 대기 10분, 식사 40분.',
+   tags:['대기 10분','짐은 차에'],map:P.chikusei,park:{n:'가게 앞 3대 + 인근 코인주차',...P.chikuseiP},
+   resv:{ok:0,how:'셀프 우동집이라 예약을 받지 않는다. 7명이면 12시 전에 도착해야 붙어 앉는다.'},
+   menu:[{jp:'半熟卵の天ぷら',y:'한주쿠타마고노 텐푸라',k:'반숙 계란 튀김 — 이 집의 간판. 무조건 먼저 시킨다'},
+    {jp:'ちくわ天',y:'치쿠와텐',k:'어묵 튀김. 계란튀김과 한 쌍으로'},
+    {jp:'かけうどん',y:'카케우동',k:'따뜻한 국물 우동. 튀김을 얹어 먹는다'}]},
+  {m:1,t:'12:25',h:'🚗 치쿠세이 → 마루나카 미야와키 · 4분',p:'1.5km'},
+  {t:'12:30',h:'장보기 · 마루나카 미야와키',p:'일봉 대절이라 주방이 있다. 아침거리·물·맥주·과일 위주로 40분. 1층이 주차장이라 비가 와도 젖지 않는다.',
+   tags:['24시간 영업'],map:P.marunaka,park:{n:'건물 1층 대형 주차장',...P.marunaka},
+   ml:'장바구니에 담을 것',
+   menu:[{jp:'讃岐うどん (生麺)',y:'사누키우동 나마멘',k:'생면. 기념품으로도 좋다'},
+    {jp:'オリーブ牛',y:'오리-브규',k:'가가와 특산, 올리브를 먹인 소고기'},
+    {jp:'骨付鳥',y:'호네츠키도리',k:'조리된 뼈닭. 야식이나 대체용으로'}]},
+  {m:1,t:'13:15',h:'🚗 마트 → 숙소 · 10분',p:'3km'},
+  {t:'13:25',h:'숙소 도착 · 짐 정리',p:'체크인은 15:00. 그 전이면 짐만 맡기고 근처에서 쉰다.',
+   map:P.stay,park:{n:'숙소 무료 4대',...P.stay}},
+  {t:'15:00',h:'체크인 · 휴식',p:'첫날 오후는 비워둔다. 비행기 피로를 여기서 턴다.'},
+  {m:1,t:'16:40',h:'🚗 숙소 → 잇카쿠 · 10분',p:'전용주차가 없어 코인주차에 대고 도보 3분'},
+  {k:1,t:'17:00',h:'저녁 · 잇카쿠 (뼈닭)',p:'가가와 명물 호네츠키도리. 오픈 시각으로 예약해 대기를 0으로 만든다. 식사 75분.',
+   tags:['예약 필수','미예약 100분 대기'],map:P.ikkaku,park:{n:'가와라마치 코인주차 · 30분 200엔대',...P.kawaramachiP},
+   resv:{ok:1,how:'<b>전화 예약만 받는다.</b> 고마쓰점은 토·일·공휴일에 종일 좌석 예약을 받지 않으니 금요일인 이날이 유일한 기회다. 7명 · 17:00 · 의자석으로 요청.',
+    links:[{t:'📞 087-823-3711',u:'tel:087-823-3711'},{t:'공식 사이트',u:'https://www.ikkaku.co.jp/takamatsu/info.html'}]},
+   menu:[{jp:'ひな',y:'히나',k:'영계. 부드러워서 어르신은 반드시 이쪽'},
+    {jp:'おやどり',y:'오야도리',k:'성계. 질기지만 씹을수록 맛있다. 젊은 사람 몫'},
+    {jp:'とりめし',y:'토리메시',k:'닭 육수로 지은 밥'},
+    {jp:'かわ酢',y:'카와즈',k:'닭껍질 초무침. 느끼함을 잡아준다'},
+    {jp:'おむすび',y:'오무스비',k:'주먹밥. 접시에 남은 기름에 찍어 먹는 게 현지식'}]},
+  {m:1,t:'18:15',h:'🚗 잇카쿠 → 숙소 · 10분',p:'운전자는 금주하거나 운전대행(代行 · 다이코-)을 부른다.'}
+ ]},
+{tab:'17 토',title:'나오시마 · 안도 다다오',sub:'섬 안 차량 이동 3회',
+ note:'베네세 구역은 츠츠지소에 <b>한 번 주차</b>하고 무료 셔틀로 미술관 3곳을 본다. 안도뮤지엄은 13~14시가 휴관이라 오후 늦게 배치했다.',
+ stops:[
+  {m:1,t:'06:50',h:'🚗① 숙소 → 마츠시타제면소 · 10분',p:'전원 밴 1대'},
+  {k:1,t:'07:00',h:'우동② 마츠시타제면소',p:'오픈 직후라 대기 없음. 좌석이 8석뿐이라 4명·3명 두 조로 나눠 들어간다. 15분 컷.',
+   tags:['8석 · 2조 분할'],map:P.matsushita,park:{n:'가게 앞 5대',...P.matsushita},
+   resv:{ok:0,how:'제면소라 예약 개념이 없다. 07:00 오픈과 동시에 두 조로 나눠 들어간다.'},
+   menu:[{jp:'かけうどん',y:'카케우동',k:'맑은 이리코(멸치) 국물. 이 집의 정석'},
+    {jp:'ちくわ天',y:'치쿠와텐',k:'셀프 진열대에서 직접 집어 온다'},
+    {jp:'生卵',y:'나마타마고',k:'생계란. 깨 넣으면 부드러워진다'}]},
+  {m:1,t:'07:20',h:'🚗② 마츠시타 → 다카마쓰항 · 10분',p:'3km'},
+  {t:'07:30',h:'차량 승선 대기열 · 매표',p:'차량도 예약이 안 되는 선착순이다. 출항 40분 전에 줄을 선다. 대기는 차 안에서 한다. 승선권은 현금만 받는다.',
+   tags:['차 5,400엔 (운전자 포함)','동승 6명 × 520엔','현금 필수'],map:P.port},
+  {k:1,t:'08:12',h:'⛴ 페리 · 50분',p:'미야노우라 09:02 도착. 엘리베이터와 좌석이 있는 일반 페리.',map:P.miyanoura},
+  {m:1,t:'09:05',h:'🚗③ 미야노우라 → 츠츠지소 · 15분',p:'여기 한 번 주차하고 오후까지 차를 두고 다닌다',
+   park:{n:'츠츠지소 주차장 · 종일 거점',...P.tsutsuji}},
+  {t:'09:25',h:'🚌 무료 셔틀 · 8분',p:'츠츠지소 ⇄ 베네세하우스 ⇄ 이우환 ⇄ 지추를 잇는다. 배차 10~20분, 시간표는 정류장에 게시된다.'},
+  {k:1,t:'09:35',h:'베네세하우스 뮤지엄',p:'미술관과 호텔이 한 몸인 안도의 대표작. 08:00부터 열려 한산하다. 관람 70분.',
+   tags:['경사로 위주'],map:P.benesse},
+  {k:1,t:'11:00',h:'지추미술관',p:'모네의 수련, 터렐, 데 마리아. 예약한 11:00 회차로 입장, 관람 90분.',
+   tags:['⚠ 일시지정 예약','데 마리아 방은 계단','터렐 오픈스카이 좌석 있음'],map:P.chichu},
+  {t:'12:30',h:'점심 · 지추카페',p:'바다가 보이는 미술관 내 카페. 7명이면 두 테이블로 나뉠 수 있다. 60분.',
+   resv:{ok:0,how:'미술관 안 카페라 예약이 없다. 관람이 끝나는 순서대로 먼저 나온 사람이 자리를 잡는다.'},
+   menu:[{jp:'瀬戸内サンドイッチ',y:'세토우치 산도잇치',k:'세토내해 재료로 만든 샌드위치'},
+    {jp:'アイスコーヒー',y:'아이스 코-히-',k:'테라스에서 바다를 보며'}]},
+  {t:'13:45',h:'🚌 셔틀 → 이우환미술관',p:'안도의 콘크리트와 이우환의 돌·철판. 관람 35분.',tags:['셔틀 5분'],map:P.leeufan},
+  {m:1,t:'14:30',h:'🚌 셔틀 → 츠츠지소 · 차량 회수',p:''},
+  {m:1,t:'14:45',h:'🚗④ 츠츠지소 → 혼무라 · 10분',p:'섬 동쪽 옛 마을',park:{n:'혼무라 마을영업소 주차장',...P.honmura}},
+  {k:1,t:'15:00',h:'안도뮤지엄 · 옛 마을길',p:'100년 된 민가 안에 콘크리트 공간을 심어 넣은 작은 미술관. 관람 20분 + 평지 마을길 산책.',
+   tags:['13~14시 휴관','16:30 마감','평지'],map:P.ando},
+  {m:1,t:'15:40',h:'🚗⑤ 혼무라 → 미야노우라 · 10분',p:'빨간 호박 사진 → 승선 대기열',park:{n:'미야노우라항 주차장',...P.miyanoura}},
+  {t:'16:20',h:'차량 승선 대기열',p:'돌아오는 편도 선착순이다. 40분 전 진입.'},
+  {k:1,t:'17:00',h:'⛴ 페리 · 60분',p:'다카마쓰항 18:00 도착.'},
+  {m:1,t:'18:05',h:'🚗⑥ 항구 → 텐카쓰 · 5분',p:'1.5km'},
+  {k:1,t:'18:15',h:'저녁 · 텐카쓰 본점',p:'160년 된 활어회 노포. 개별실을 예약해 어르신이 편하게. 식사 90분.',
+   tags:['개별실 예약','토요일 21:00 마감'],map:P.tenkatsu,park:{n:'효고마치 인근 코인주차',...P.hyogoP},
+   resv:{ok:1,how:'<b>온라인 예약이 된다.</b> 핫페퍼가 가장 빠르고, 영어로 하려면 타베로그 영문 페이지를 쓴다. 7명 · 18:15 · <b>개별실(個室)</b>로 지정하되, 어르신 때문에 좌식이 아닌 <b>의자석</b>을 요청한다.',
+    links:[{t:'핫페퍼 예약',u:'https://www.hotpepper.jp/strJ000112136/'},{t:'타베로그 (영문)',u:'https://tabelog.com/en/kagawa/A3701/A370101/37000448/'},{t:'📞 087-821-5380',u:'tel:087-821-5380'}]},
+   menu:[{jp:'刺身の盛り合わせ',y:'사시미노 모리아와세',k:'모둠회. 세토내해 흰살생선 중심'},
+    {jp:'天ぷらの盛り合わせ',y:'텐푸라노 모리아와세',k:'모둠 튀김'},
+    {jp:'おまかせコース',y:'오마카세 코-스',k:'주방장 구성. 7명이면 이게 가장 편하다'},
+    {jp:'鯛めし',y:'타이메시',k:'도미밥. 마무리로'}]},
+  {m:1,t:'19:45',h:'🚗⑦ 텐카쓰 → 숙소 · 5분',p:''}
+ ]},
+{tab:'18 일',title:'리쓰린 권역 몰아보기',sub:'차량 이동 4회 · 회복일',
+ note:'오전에 숙소로 돌아오지 않는다. 리쓰린 주차장에 한 번 대고 아침·정원·점심을 한 권역에서 끝낸다.',
+ stops:[
+  {m:1,t:'07:15',h:'🚗① 숙소 → 바카이치다이 · 10분',p:'4km'},
+  {k:1,t:'07:30',h:'우동③ 바카이치다이',p:'가마버터우동으로 유명한 집. 일요일이라 이 시간에 도착해야 대기가 15~30분에 그친다.',
+   tags:['줄은 한 명만','어르신 차량 대기'],map:P.bakaichi,park:{n:'전용주차장 20여 대',...P.bakaichi},
+   resv:{ok:0,how:'예약을 받지 않는다. 일요일이라 07:30 도착이 유일한 방법이다. 한 명이 줄을 서고 나머지는 차에서 기다린다.'},
+   menu:[{jp:'釜バターうどん',y:'카마바타- 우동',k:'이 집의 대표. 버터와 계란, 후추. 한국인이 가장 좋아한다'},
+    {jp:'かけうどん',y:'카케우동',k:'담백하게 가고 싶으면'},
+    {jp:'温泉玉子',y:'온센타마고',k:'반숙 계란 토핑'}]},
+  {m:1,t:'08:35',h:'🚗② 바카이치다이 → 리쓰린 동문 · 7분',p:'주차장에 한 번 대고 오전 내내 유지'},
+  {k:1,t:'08:45',h:'리쓰린공원',p:'에도시대 다이묘 정원. 동문에서 휠체어를 빌려 남정 코스만 1시간, 키쿠게쓰테이에서 말차 30분, 그리고 쉬어간다.',
+   tags:['휠체어 무료 대여','남정 코스만','07:00 개장이라 한산'],map:P.ritsurinP,
+   park:{n:'동문 주차장 · 25분 100엔',...P.ritsurinP},
+   ml:'찻집에서',
+   menu:[{jp:'抹茶と和菓子',y:'맛챠토 와가시',k:'掬月亭(키쿠게쓰테이)에서. 정원을 보며 마신다'}]},
+  {t:'11:00',h:'점심 · 리쓰린 인근',p:'정문 앞 식당가 또는 공원 안 하나조노테이. 차를 옮기지 않는다.',tags:['같은 주차장 유지']},
+  {m:1,t:'12:40',h:'🚗③ 리쓰린 → 숙소 · 8분',p:'오후는 통째로 휴식 (13:00~17:45)'},
+  {m:1,t:'17:45',h:'🚗④ 숙소 → 마루가메마치 · 10분',p:'상점가 주차장',park:{n:'마루가메마치 그린 주차장',...P.greenP}},
+  {t:'18:00',h:'저녁 · 마루가메마치 상점가',p:'초밥·야키니쿠·이자카야가 아케이드 안에 모여 있다. 90분.',
+   tags:['아케이드 = 평지','마시면 차 두고 대행'],map:P.arcade,
+   resv:{ok:1,how:'그날 정해도 되지만 7명이면 자리가 없을 수 있다. 오후 휴식 중에 <b>당일 온라인 예약</b>을 잡아두면 안전하다.',
+    links:[{t:'타베로그 다카마쓰',u:'https://tabelog.com/en/kagawa/A3701/A370101/'},{t:'핫페퍼 다카마쓰',u:'https://www.hotpepper.jp/SA53/'}]}},
+  {m:1,t:'19:45',h:'🚗 귀가 · 10분',p:''}
+ ]},
+{tab:'19 월',title:'우동④ · 숙소 근처 · 출발',sub:'차량 이동 3회 · 17:15 출발',
+ note:'공항 <b>15:15 도착</b>이 고정점이다. 오전은 숙소 반경 2km 안에서만 움직여 마지막 날 이동을 최소화한다.',
+ stops:[
+  {m:1,t:'09:15',h:'🚗 숙소 → 우에하라야 · 8분',p:'짐 전부 싣고 체크아웃'},
+  {k:1,t:'09:30',h:'우동④ 우에하라야 본점',p:'오픈 직후라 대기 없음. 테이블석이 많아 7명이 붙어 앉기 좋다. 마지막 우동. 40분.',
+   tags:['09:30~14:30','대기 0~10분'],map:P.uehara,park:{n:'전용주차장',...P.uehara},
+   resv:{ok:0,how:'셀프 우동집이라 예약이 없다. 09:30 오픈 직후면 테이블석이 비어 있어 7명이 함께 앉는다.'},
+   menu:[{jp:'かけうどん',y:'카케우동',k:'기본. 국물이 맑고 깔끔하다'},
+    {jp:'ぶっかけうどん',y:'붓카케우동',k:'국물을 조금만 부은 것. 면 맛이 진하게 온다'},
+    {jp:'おでん',y:'오뎅',k:'진열대에서 직접 집는다. 된장을 발라 먹는 게 현지식'},
+    {jp:'かしわ天',y:'카시와텐',k:'닭튀김. 우동 위에 올린다'}]},
+  {m:1,t:'10:20',h:'🚗 우에하라야 → 다마모공원 · 10분',p:'항구 옆'},
+  {k:1,t:'10:35',h:'다마모공원 (다카마쓰성터)',p:'바닷물을 그대로 해자로 쓰는 드문 성. 숙소·항구에서 가깝고 완전 평지라 마지막 날에 안전하다. 1시간.',
+   tags:['입장 200엔','주차 무료','완전 평지'],map:P.tamamo,park:{n:'전용 주차장 · 무료 57대',...P.tamamoP}},
+  {t:'11:45',h:'선포트 다카마쓰 · 마지막 점심',p:'항구 앞 산책로와 상업동. 바다를 보며 점심을 먹고 기념품을 산다. 차를 한 번 대고 도보로 다 된다.',
+   tags:['도보권','기념품'],map:P.sunportP,park:{n:'선포트 지하 주차장',...P.sunportP}},
+  {m:1,t:'14:15',h:'🚗 선포트 → 주유소 → 공항 · 45분',p:'급유 10분 포함. 공항 근처엔 주유소가 드무니 시내에서 넣는다.'},
+  {k:1,t:'15:15',h:'공항 도착 · 렌터카 반납',p:'반납 수속 20분 → 15:35 체크인 → 16:15 보안·출국 → 16:45 게이트.',map:P.airport},
+  {t:'17:15',h:'다카마쓰 출발',p:'인천 18:55 도착 예정.'}
+ ]}
+];
+
+const PH=[
+ {h:'먼저, 이것만 외우면 된다',d:'상대가 길게 답할 수 없는 말들이다. 안심하고 던져도 좋다.',
+  items:[{jp:'すみません',y:'스미마셍',k:'저기요 / 실례합니다',hint:'부를 때도, 미안할 때도, 지나갈 때도 다 된다. 만능이다.'},
+   {jp:'これ、ください',y:'코레, 쿠다사이',k:'이거 주세요',hint:'메뉴나 진열대를 손가락으로 가리키면서. 듣기가 필요 없는 가장 안전한 주문법이다.'},
+   {jp:'おいしいです！',y:'오이시이데스!',k:'맛있어요!',hint:'돌아오는 답은 웃음이거나 「ありがとうございます」뿐이다.'},
+   {jp:'ごちそうさまでした',y:'고치소-사마데시타',k:'잘 먹었습니다',hint:'나갈 때 이 한마디면 인상이 완전히 달라진다.'},
+   {jp:'ありがとうございます',y:'아리가토- 고자이마스',k:'감사합니다'},
+   {jp:'おねがいします',y:'오네가이시마스',k:'부탁드립니다',hint:'뭘 말해야 할지 모를 때 뒤에 붙이면 대개 통한다.'}]},
+ {h:'못 알아들었을 때 — 되받아치기 카드',d:'이 여섯 개가 대화가 꼬이는 상황의 90%를 정리한다.',
+  items:[{jp:'日本語、少しだけです',y:'니홍고, 스코시다케데스',k:'일본어 조금밖에 못해요',hint:'처음에 이걸 먼저 말해두면 상대가 알아서 천천히, 짧게 말해준다. 가장 효과가 크다.'},
+   {jp:'ゆっくり おねがいします',y:'육쿠리 오네가이시마스',k:'천천히 말해 주세요'},
+   {jp:'もう一度 おねがいします',y:'모- 이치도 오네가이시마스',k:'한 번만 더 말해 주세요'},
+   {jp:'書いて ください',y:'카이테 쿠다사이',k:'써 주세요',hint:'숫자나 시간이 안 들릴 때. 일본인은 한자로 쓰니 오히려 우리가 읽기 쉽다.'},
+   {jp:'大丈夫です',y:'다이죠-부데스',k:'괜찮습니다',hint:'거절할 때도, 문제없다고 할 때도 쓴다. 봉투 필요하냐고 물을 때 이 말이면 끝난다.'},
+   {jp:'わかりました',y:'와카리마시타',k:'알겠습니다',hint:'다 못 알아들었어도 상황이 넘어갈 것 같으면 이걸로 넘긴다.'}]},
+ {h:'상대는 이 말들을 한다 — 듣기 대비',d:'가게에서 돌아오는 말은 사실 몇 개 안 된다. 소리만 익혀두면 당황할 일이 없다.',
+  items:[{jp:'何名様ですか？',y:'난메이사마데스카?',k:'몇 분이세요?',hint:'답 → 「七人です」나나닌데스. 손가락 일곱 개를 펴도 된다.'},
+   {jp:'大ですか、小ですか？',y:'다이데스카, 쇼-데스카?',k:'곱빼기요, 보통이요?',hint:'답 → 「小で」쇼-데 (보통으로) / 「大で」다이데 (곱빼기로)'},
+   {jp:'あたたかい？ 冷たい？',y:'아타타카이? 츠메타이?',k:'따뜻하게요, 차갑게요?',hint:'답 → 「あたたかいで」아타타카이데 (따뜻하게)'},
+   {jp:'袋、いりますか？',y:'후쿠로, 이리마스카?',k:'봉투 필요하세요?',hint:'답 → 「おねがいします」또는 「大丈夫です」'},
+   {jp:'お会計は 別々ですか？',y:'오카이케-와 베츠베츠데스카?',k:'계산 따로 하시나요?',hint:'답 → 「一緒で」잇쇼데 (같이요)'},
+   {jp:'少々 お待ちください',y:'쇼-쇼- 오마치쿠다사이',k:'잠시만 기다려 주세요',hint:'그냥 기다리면 된다.'},
+   {jp:'こちらへ どうぞ',y:'코치라에 도-조',k:'이쪽으로 오세요',hint:'따라가면 된다.'}]},
+ {h:'어르신을 위해 — 이건 꼭 말해두자',d:'가게에 들어서자마자 이 한마디를 하면 대부분 알아서 배려해준다.',
+  items:[{jp:'足が悪いので、椅子の席を おねがいします',y:'아시가 와루이노데, 이스노 세키오 오네가이시마스',k:'다리가 불편해서 의자석으로 부탁드립니다',hint:'좌식 가게에서 필수. 답은 대개 「どうぞ」도-조 (그러세요)다.'},
+   {jp:'祖父が 一緒です',y:'소후가 잇쇼데스',k:'할아버지와 함께 왔어요',hint:'이유를 길게 설명할 필요 없이 이 말이면 통한다.'},
+   {jp:'ゆっくりで 大丈夫です',y:'육쿠리데 다이죠-부데스',k:'천천히 해도 괜찮습니다',hint:'서두르는 분위기일 때. 우리 쪽이 여유롭다는 뜻으로 전해진다.'}]},
+ {h:'재미 삼아 한 번 던져보기',d:'가게 아저씨가 웃어줄 확률이 높은 말들. 답이 길어지면 웃으며 「わかりました」로 넘기면 된다.',
+  items:[{jp:'讃岐うどん、最高です！',y:'사누키우동, 사이코-데스!',k:'사누키 우동 최고예요!',hint:'가가와 사람들은 우동에 대한 자부심이 대단하다. 거의 확실하게 웃는다.'},
+   {jp:'今日、四杯目です',y:'쿄-, 욘하이메데스',k:'오늘 네 그릇째예요',hint:'우동 순례 중이라는 뜻. 마지막 날 우에하라야에서 쓰면 딱 맞다.'},
+   {jp:'韓国から 来ました',y:'캉코쿠카라 키마시타',k:'한국에서 왔어요'},
+   {jp:'安藤忠雄が 好きです',y:'안도- 타다오가 스키데스',k:'안도 다다오를 좋아해요',hint:'나오시마에서. 섬 사람들에게는 자기 동네 자랑이라 반응이 좋다.'},
+   {jp:'写真、いいですか？',y:'샤신, 이이데스카?',k:'사진 찍어도 될까요?',hint:'답은 「どうぞ」도-조 아니면 손사래다. 어느 쪽이든 바로 안다.'}]}
+];
+
+const CHECK=[
+ ['c1','렌터카 8인승 밴 · 10/16~19 공항점','국제면허증, 교대 운전자 등록'],
+ ['c2','지추미술관 10/17 11:00 × 7명','18,900엔 · 1회 구매 상한 8명이라 일괄 결제'],
+ ['c3','베네세하우스 · 이우환 · 안도뮤지엄 티켓','같은 포털에서 선구매 · 합계 21,700엔'],
+ ['c4','잇카쿠 10/16 17:00 × 7명','087-823-3711 · 평일만 예약 가능'],
+ ['c5','텐카쓰 10/17 18:15 × 7명 개별실','핫페퍼 온라인 · 의자석으로 지정'],
+ ['c6','숙소에 조기 짐 보관 문의','16일 13:25 도착, 체크인 15:00'],
+ ['c7','페리 승선용 현금 준비','승선권은 현금만 받는다']
+];
+
+/* ───────── 사용자 ───────── */
+let ME = LS.get('trip_user') || null;
+const gate=document.getElementById('gate'), whoBox=document.getElementById('who');
+MEMBERS.forEach(n=>{
+  const b=document.createElement('button'); b.textContent=n;
+  b.onclick=()=>{ ME=n; LS.set('trip_user',n); gate.classList.add('hide'); renderMe(); notify('checks');notify('comments');notify('reactions'); };
+  whoBox.appendChild(b);
+});
+function renderMe(){
+  document.getElementById('me').innerHTML = ME
+   ? `<b>${ME}</b> 님으로 보는 중 <button id="lo">이름 바꾸기</button>` : '';
+  const lo=document.getElementById('lo');
+  if(lo) lo.onclick=()=>{ LS.set('trip_user',''); ME=null; gate.classList.remove('hide'); };
+}
+if(ME) gate.classList.add('hide');
+renderMe();
+
+/* ───────── 렌더링 ───────── */
+const nav=document.getElementById('nav'), panes=document.getElementById('panes');
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const fmt=ts=>{const d=new Date(ts);return `${d.getMonth()+1}/${d.getDate()} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`};
+
+function stopBlock(o,id){
+  const links=[];
+  if(o.map)links.push(`<a class="go" href="${M(o.map)}" target="_blank" rel="noopener">지도</a>`);
+  if(o.park)links.push(`<a class="go p" href="${M(o.park)}" target="_blank" rel="noopener">🅿 ${o.park.n}</a>`);
+  return `<div class="stop${o.k?' key':''}${o.m?' move':''}" data-id="${id}">
+    <div class="t">${o.t}</div><h3>${o.h}</h3>${o.p?`<p>${o.p}</p>`:''}
+    ${o.tags?`<div class="tags">${o.tags.map(t=>`<span class="tag${t.startsWith('⚠')||t.includes('예약 필수')?' w':''}">${t}</span>`).join('')}</div>`:''}
+    ${links.length?`<div class="links">${links.join('')}</div>`:''}
+    ${o.resv?`<div class="resv"><h4>${o.resv.ok?'예약':'예약 없음'}</h4><p>${o.resv.how}</p>
+      ${o.resv.links?`<div class="links">${o.resv.links.map(l=>`<a class="go r" href="${l.u}" target="_blank" rel="noopener">${l.t}</a>`).join('')}</div>`:''}</div>`:''}
+    ${o.menu?`<div class="menu"><h4>${o.ml||'무엇을 시킬까'}</h4><ul>${o.menu.map(m=>
+      `<li><div class="jp">${m.jp}</div><div class="yomi">${m.y}</div><div class="mean">${m.k}</div></li>`).join('')}</ul></div>`:''}
+    ${o.m?'':`<div class="bar" data-bar="${id}"></div><div class="thread" data-th="${id}"></div>`}
+  </div>`;
+}
+
+DAYS.forEach((d,i)=>{
+  nav.insertAdjacentHTML('beforeend',`<button data-i="${i}"${i?'':' class="on"'}>${d.tab}</button>`);
+  const s=document.createElement('section'); s.className='pane'+(i?'':' on');
+  s.innerHTML=`<div class="dayhead"><h2>${d.title}</h2><em>${d.sub}</em></div>`
+   +(d.note?`<div class="note">${d.note}</div>`:'')
+   +`<div class="rail">`+d.stops.map((o,j)=>stopBlock(o,`d${i}s${j}`)).join('')+`</div>`;
+  panes.appendChild(s);
+});
+
+const jpPane=document.createElement('section'); jpPane.className='pane';
+jpPane.innerHTML=`<div class="dayhead"><h2>일본어 한마디</h2><em>못 알아들어도 괜찮게 짜여 있다</em></div>
+<div class="note">원칙은 하나다. <b>상대가 길게 답할 수밖에 없는 말은 하지 않는다.</b>
+「추천이 뭐예요?」 같은 질문은 30초짜리 설명을 부른다. 대신 손가락으로 가리키고 「これ、ください」라고 하면 끝난다.</div>`
++PH.map(g=>`<div style="font-family:'Noto Serif KR',serif;font-size:17px;font-weight:600;margin:26px 0 2px">${g.h}</div>
+ <div style="font-size:13px;color:var(--muted);margin-bottom:4px">${g.d}</div>`
+ +g.items.map(p=>`<div class="ph" style="border-top:1px solid var(--line);padding:13px 0">
+   <div class="jp" style="font-size:15px">${p.jp}</div><div class="yomi">${p.y}</div>
+   <div class="mean" style="color:#44453F">${p.k}</div>
+   ${p.hint?`<div style="font-size:12px;color:var(--muted);margin-top:5px;font-style:italic">${p.hint}</div>`:''}</div>`).join('')).join('');
+panes.appendChild(jpPane);
+
+const boardPane=document.createElement('section'); boardPane.className='pane';
+boardPane.innerHTML=`<div class="dayhead"><h2>요청 · 의견</h2><em>일정에 붙지 않는 이야기는 여기에</em></div>
+ <div class="bar" data-bar="board"></div><div class="thread on" data-th="board"></div>
+ <div style="font-family:'Noto Serif KR',serif;font-size:17px;font-weight:600;margin:30px 0 8px">일정에 달린 의견 모아보기</div>
+ <div id="allc"></div>`;
+panes.appendChild(boardPane);
+
+const infoPane=document.createElement('section'); infoPane.className='pane';
+infoPane.innerHTML=`<div class="dayhead"><h2>참고 정보</h2><em>예약 · 예산 · 운영시간</em></div>
+<details open><summary>예약 체크리스트</summary><div class="body" id="chk"></div></details>
+
+<details><summary>어디를 예약할 수 있나</summary><div class="body">
+<p style="margin-bottom:12px">7명이 함께 앉으려면 예약 되는 곳은 반드시 잡아야 한다. <b>우동집 네 곳은 전부 예약을 받지 않는다</b> — 셀프 서비스라 오픈 시각에 맞춰 가는 것이 유일한 방법이다.</p>
+<table><thead><tr><th>가게</th><th>요일</th><th>예약</th></tr></thead><tbody>
+<tr><td><b>잇카쿠</b></td><td>금</td><td><b>전화만</b> · 087-823-3711<br>토·일·공휴일 종일 예약 불가라 금요일이 유일한 기회</td></tr>
+<tr><td><b>텐카쓰</b></td><td>토</td><td><b>온라인 가능</b> · 핫페퍼 / 타베로그<br>개별실 + 의자석 지정</td></tr>
+<tr><td>마루가메마치 저녁</td><td>일</td><td>당일 온라인 예약 권장</td></tr>
+<tr><td>우동 4곳</td><td>금토일월</td><td>전부 예약 불가 · 오픈 직후 방문</td></tr>
+<tr><td>지추카페</td><td>토</td><td>예약 불가 · 선착순</td></tr>
+</tbody></table></div></details>
+
+<details><summary>나오시마 티켓 · 요금</summary><div class="body">
+<p style="margin-bottom:12px">전 시설 온라인 티켓제. 구매처는 한 곳 —
+<a class="go" href="https://benesse-artsite.eventos.tokyo" target="_blank" rel="noopener">benesse-artsite 예약 포털</a>.
+결제하면 QR코드가 메일로 오고, 당일 입구에서 보여주면 된다.</p>
+<table><thead><tr><th>시설</th><th>1인</th><th>7인</th><th>예약</th></tr></thead><tbody>
+<tr><td>지추미술관</td><td>2,700</td><td>18,900</td><td><b>일시지정 필수</b><br>당일권 없음</td></tr>
+<tr><td>베네세하우스</td><td>1,300</td><td>9,100</td><td>선구매 권장</td></tr>
+<tr><td>이우환미술관</td><td>1,200</td><td>8,400</td><td>선구매 권장</td></tr>
+<tr><td>안도뮤지엄</td><td>600</td><td>4,200</td><td>선구매 권장</td></tr>
+<tr><td>페리 편도</td><td>520</td><td>차 5,400 별도</td><td><b>예약 불가</b> · 현금만</td></tr>
+</tbody></table>
+<p style="margin-top:12px">미술관 4관 온라인 합계 <b>40,600엔</b> — 창구보다 4,900엔 싸고 매표 줄도 없다.</p></div></details>
+
+<details><summary>예산 · 1인 5만엔 기준</summary><div class="body">
+<p class="big" style="margin-bottom:2px">27,240엔</p>
+<p style="margin-bottom:14px;color:var(--muted)">필수 지출 · 예산의 54% · 여유분 22,760엔</p>
+<table><tbody>
+<tr><td>미술관 4관</td><td style="text-align:right">5,800</td></tr>
+<tr><td>우동 4끼</td><td style="text-align:right">3,000</td></tr>
+<tr><td>잇카쿠 (금)</td><td style="text-align:right">3,000</td></tr>
+<tr><td>지추카페 점심 (토)</td><td style="text-align:right">1,800</td></tr>
+<tr><td>텐카쓰 (토)</td><td style="text-align:right">6,000</td></tr>
+<tr><td>리쓰린 입장 + 말차</td><td style="text-align:right">1,140</td></tr>
+<tr><td>일요일 점심 · 저녁</td><td style="text-align:right">5,000</td></tr>
+<tr><td>주차 · 잡비</td><td style="text-align:right">1,500</td></tr>
+</tbody></table>
+<p style="margin-top:12px">4관을 다 봐도 예산의 절반이다. 관람을 줄일 이유는 돈이 아니라 체력뿐이다.</p></div></details>
+
+<details><summary>영업시간 · 대기</summary><div class="body">
+<table><thead><tr><th>장소</th><th>영업</th><th>휴무</th><th>대기</th></tr></thead><tbody>
+<tr><td>치쿠세이</td><td>10:45–14:30</td><td>월</td><td>10–20분</td></tr>
+<tr><td>마츠시타제면소</td><td>07:00–15:00</td><td><b>일</b></td><td>8석뿐</td></tr>
+<tr><td>바카이치다이</td><td>06:00–18:00</td><td>무휴</td><td>주말 1시간+</td></tr>
+<tr><td>우에하라야</td><td>09:30–14:30</td><td><b>일</b></td><td>오픈 직후 0</td></tr>
+<tr><td>잇카쿠</td><td>평일 17:00–</td><td>화</td><td>미예약 100분</td></tr>
+<tr><td>텐카쓰</td><td>토일 –21:00</td><td>무휴</td><td>예약 시 0</td></tr>
+<tr><td>지추미술관</td><td>10:00–17:00</td><td><b>월</b></td><td>예약제</td></tr>
+<tr><td>안도뮤지엄</td><td>10:00–13:00<br>14:00–16:30</td><td><b>월</b></td><td>점심 휴관 주의</td></tr>
+<tr><td>리쓰린공원</td><td>07:00–17:00</td><td>무휴</td><td>휠체어 대여</td></tr>
+<tr><td>다마모공원</td><td>07:00–17:00</td><td>무휴</td><td>주차 무료</td></tr>
+<tr><td>마루나카 미야와키</td><td>24시간</td><td>무휴</td><td>🅿 1층</td></tr>
+</tbody></table>
+<p style="margin-top:14px"><b>페리 다카마쓰 → 미야노우라</b> 08:12 · 10:14 · 12:40 · 15:35 · 18:05<br>
+<b>돌아오는 편</b> 09:07 · 11:30 · 14:20 · 17:00</p></div></details>
+
+<details><summary>공항 도착은 왜 2시간 전인가</summary><div class="body">
+<p>다카마쓰공항은 게이트가 몇 개 안 되는 작은 공항이라 수속 자체는 90분이면 넉넉하다.
+2시간을 잡는 이유는 순전히 <b>렌터카 반납 20분과 급유 시간</b> 때문이다.</p>
+<p style="margin-top:10px">17:15 출발 → <b>15:15 공항 도착</b> → 15:35 체크인 → 16:15 보안·출국 → 16:45 게이트.<br>
+급유는 공항 근처에 주유소가 드무니 <b>시내에서 미리</b> 넣는다.</p></div></details>
+
+<details><summary>어르신 동행 원칙</summary><div class="body">
+<p>· 고속선이 아닌 <b>일반 페리</b>를 탄다. 엘리베이터와 좌석이 있다.<br>
+· 나오시마 미술관 3곳은 츠츠지소에 <b>한 번 주차</b>하고 무료 셔틀로 잇는다.<br>
+· 우동집은 전부 셀프다. 자리를 먼저 잡아드리고 가족이 받아다 드린다.<br>
+· 리쓰린은 남정 휠체어 코스만 돈다.<br>
+· 지추미술관 데 마리아 전시실은 계단이라 입구까지만, 터렐 오픈스카이는 좌석이 있다.<br>
+· 고토히라궁 785계단과 데시마는 일정에서 뺐다.</p></div></details>
+
+<details><summary>식당 평점에 대해</summary><div class="body">
+<p>일본 구글 평점은 한국보다 박하게 매겨진다. <b>3.8~4.1에 리뷰 수백 개 이상이면 현지에서 검증된 집</b>이다.
+텐카쓰 3.8은 160년 된 활어회 노포에 붙은 가격·접객 불만이 섞인 숫자이지 맛의 문제가 아니다.</p>
+<p style="margin-top:10px">한국 입맛에 맞는 순서는 <b>잇카쿠</b>(짭짤하고 매콤한 뼈닭) → <b>바카이치다이</b>(가마버터) → <b>치쿠세이</b>(튀김).
+마츠시타와 우에하라야는 맑은 국물이라 담백함을 기대하고 가야 실망이 없다.</p></div></details>
+
+<details><summary>⚙ 함께 쓰기 설정 (한 번만)</summary><div class="body">
+<p>지금은 <b id="mode">확인 중</b>입니다.</p>
+<p style="margin-top:10px">가족이 같은 체크·댓글을 보려면 무료 데이터베이스를 한 번 연결합니다. 7명이 쓰는 정도로는 요금이 나올 수 없습니다. 전부 <a class="go" href="https://console.firebase.google.com" target="_blank" rel="noopener">Firebase 콘솔</a>에서 하며, 구글 계정만 있으면 됩니다.</p>
+
+<p style="margin-top:14px"><b>1 · 프로젝트 만들기</b><br>
+콘솔 → 프로젝트 추가 → 이름 아무거나(예: takamatsu-trip) → Google 애널리틱스는 <b>사용 안 함</b>으로 꺼도 됩니다.</p>
+
+<p style="margin-top:12px"><b>2 · 익명 로그인 켜기</b><br>
+왼쪽 메뉴 <b>빌드 → Authentication</b> → 시작하기 → 로그인 방법 목록에서 <b>익명</b> → 사용 설정 → 저장.<br>
+<span style="color:var(--muted)">가족이 뭘 입력할 일은 없습니다. 앱이 알아서 처리하고, 외부인의 접근을 막는 열쇠 역할만 합니다.</span></p>
+
+<p style="margin-top:12px"><b>3 · Firestore 만들기 (프로덕션 모드)</b><br>
+왼쪽 메뉴 <b>빌드 → Firestore Database</b> → 데이터베이스 만들기 → 위치는 <b>asia-northeast3 (서울)</b> → <b>프로덕션 모드로 시작</b>.<br>
+<span style="color:var(--muted)">이 상태는 아무도 못 읽고 못 씁니다. 다음 단계에서 엽니다.</span></p>
+
+<p style="margin-top:12px"><b>4 · 규칙 바꾸기</b><br>
+Firestore 화면 위 <b>규칙</b> 탭 → 내용을 아래로 통째로 교체 → <b>게시</b>.</p>
+<pre>rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /{document=**} {
+      allow read, write: if request.auth != null;
+    }
+  }
+}</pre>
+<p><span style="color:var(--muted)">로그인한 사람만 읽고 쓸 수 있다는 뜻입니다. 만료일이 없어 여행이 끝나도 그대로 씁니다.</span></p>
+
+<p style="margin-top:12px"><b>5 · 설정값 붙여넣기</b><br>
+톱니바퀴 <b>프로젝트 설정</b> → 아래 <b>내 앱</b> → <b>웹(&lt;/&gt;)</b> 아이콘 → 앱 등록 →
+나오는 <code>firebaseConfig</code> 내용을 이 파일 위쪽 <code>FIREBASE_CONFIG</code>에 붙여넣고 다시 올리면 끝입니다.</p>
+<pre>const FIREBASE_CONFIG = {
+  apiKey: "AIza...",
+  authDomain: "이름.firebaseapp.com",
+  projectId: "이름",
+  storageBucket: "이름.appspot.com",
+  messagingSenderId: "000...",
+  appId: "1:000..."
+};</pre>
+
+<p style="margin-top:12px"><b>6 · 주소 등록</b><br>
+Authentication → 설정 → <b>승인된 도메인</b>에 페이지를 올린 주소(예: <code>아이디.github.io</code>)를 추가합니다. 이게 빠지면 로그인이 막힙니다.</p>
+
+<p style="margin-top:14px;color:var(--muted)">apiKey는 공개되어도 괜찮은 값입니다. 실제 접근을 막는 것은 4단계의 규칙과 6단계의 도메인 제한입니다.</p>
+<p style="margin-top:10px">이름 목록은 파일 위쪽 <code>MEMBERS</code> 줄에서 바꿉니다.</p></div></details>`;
+panes.appendChild(infoPane);
+
+nav.insertAdjacentHTML('beforeend','<button data-i="jp">일본어</button>');
+nav.insertAdjacentHTML('beforeend','<button data-i="board">요청</button>');
+nav.insertAdjacentHTML('beforeend','<button data-i="info">정보</button>');
+const extra={jp:jpPane,board:boardPane,info:infoPane};
+nav.addEventListener('click',e=>{
+  const b=e.target.closest('button'); if(!b)return;
+  [...nav.children].forEach(x=>x.classList.remove('on')); b.classList.add('on');
+  [...panes.children].forEach(s=>s.classList.remove('on'));
+  (extra[b.dataset.i]||panes.children[+b.dataset.i]).classList.add('on');
+  window.scrollTo({top:nav.offsetTop-1,behavior:'smooth'});
+});
+
+/* ───────── 체크리스트 ───────── */
+function renderChecks(){
+  const box=document.getElementById('chk'); if(!box)return;
+  box.innerHTML=CHECK.map(([id,t,sub])=>{
+    const c=local.checks[id];
+    return `<label class="check"><input type="checkbox" data-c="${id}"${c?' checked':''}>
+      <span><b>${t}</b><br><span style="color:var(--muted);font-size:12.5px">${sub}</span>
+      ${c?`<div class="byline">✓ ${esc(c.by)} · ${fmt(c.at)}</div>`:''}</span></label>`;
+  }).join('');
+  box.querySelectorAll('input[data-c]').forEach(el=>{
+    el.onchange=()=>{ if(!ME){gate.classList.remove('hide');el.checked=!el.checked;return;}
+      setCheck(el.dataset.c, el.checked, ME); };
+  });
+}
+listeners.checks.push(renderChecks);
+
+/* ───────── 댓글 · 반응 ───────── */
+function renderSocial(){
+  document.querySelectorAll('[data-bar]').forEach(bar=>{
+    const id=bar.dataset.bar;
+    const cs=local.comments.filter(c=>c.stop===id);
+    const rs=Object.values(local.reactions).filter(r=>r.stop===id);
+    const mine=rs.some(r=>r.by===ME);
+    bar.innerHTML=`<button data-r="${id}" class="${mine?'act':''}">👍 ${rs.length||''}</button>
+      <button data-t="${id}">💬 의견 ${cs.length||''}</button>
+      ${rs.length?`<span class="cnt">${rs.map(r=>esc(r.by)).join(', ')}</span>`:''}`;
+    bar.querySelector('[data-r]').onclick=()=>{ if(!ME){gate.classList.remove('hide');return;} toggleReact(id,ME); };
+    bar.querySelector('[data-t]').onclick=()=>{
+      document.querySelector(`[data-th="${id}"]`).classList.toggle('on'); };
+  });
+  document.querySelectorAll('[data-th]').forEach(th=>{
+    const id=th.dataset.th;
+    const cs=local.comments.filter(c=>c.stop===id);
+    th.innerHTML=(cs.length?cs.map(c=>`<div class="cmt">
+        <span class="who2">${esc(c.by)}<span class="when">${fmt(c.at)}</span></span>
+        ${c.by===ME?`<button class="del" data-d="${c.id}">삭제</button>`:''}
+        <div>${esc(c.text)}</div></div>`).join('')
+      :`<div class="empty">${id==='board'?'아직 올라온 요청이 없습니다.':'아직 의견이 없습니다.'}</div>`)
+     +`<div class="wr"><input placeholder="${id==='board'?'요청이나 의견을 남겨주세요':'이 일정에 대한 의견'}" data-i="${id}">
+       <button data-s="${id}">남기기</button></div>`;
+    const inp=th.querySelector(`[data-i]`), btn=th.querySelector(`[data-s]`);
+    const send=()=>{ const v=inp.value.trim(); if(!v)return;
+      if(!ME){gate.classList.remove('hide');return;} addComment(id,v,ME); inp.value=''; };
+    btn.onclick=send; inp.onkeydown=e=>{if(e.key==='Enter')send()};
+    th.querySelectorAll('[data-d]').forEach(b=>b.onclick=()=>delComment(b.dataset.d));
+  });
+  const all=document.getElementById('allc');
+  if(all){
+    const cs=local.comments.filter(c=>c.stop!=='board').slice().reverse();
+    all.innerHTML=cs.length?cs.map(c=>{
+      const [di,si]=c.stop.replace('d','').split('s').map(Number);
+      const d=DAYS[di], s=d&&d.stops[si];
+      return `<div class="cmt"><span class="who2">${esc(c.by)}<span class="when">${fmt(c.at)}</span></span>
+        <div style="font-size:12px;color:var(--muted)">${s?`${d.tab} · ${s.t} ${esc(s.h)}`:''}</div>
+        <div>${esc(c.text)}</div></div>`;
+    }).join(''):`<div class="empty">일정에 달린 의견이 아직 없습니다.</div>`;
+  }
+}
+listeners.comments.push(renderSocial);
+listeners.reactions.push(renderSocial);
+
+/* ───────── 시작 ───────── */
+(async()=>{
+  online = await initDB();
+  const st=document.getElementById('status');
+  const mode=document.getElementById('mode');
+  if(online){ st.textContent=''; if(mode){mode.textContent='함께 보기 모드 — 연결됨';mode.style.color='var(--seto)';} }
+  else{ st.textContent='혼자 보기 모드 — 체크와 댓글이 이 기기에만 남습니다';
+        if(mode) mode.textContent='혼자 보기 모드 (아직 연결 전)'; }
+  renderChecks(); renderSocial();
+})();
+</script>
+</html>
