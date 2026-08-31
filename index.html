@@ -65,6 +65,10 @@ nav button.on{background:var(--ink);color:var(--paper)}
 .stop h3{font-size:15.5px;font-weight:600;margin:5px 0 3px;letter-spacing:-.01em}
 .stop p{font-size:13.5px;color:#44453F}
 .stop.move .t{color:var(--muted)}
+.stop .t[data-tm]{cursor:pointer;border-bottom:1px dotted var(--hole);display:inline-block;padding-bottom:2px}
+.stop .t.adj{color:var(--pumpkin);border-bottom-color:var(--pumpkin)}
+.stop .t s{opacity:.45;font-weight:400;margin-left:5px}
+.tedit{font:600 12px/1 'IBM Plex Sans KR',sans-serif;color:var(--seto);background:var(--paper);border:1px solid var(--hole);padding:2px 4px}
 .stop.move p{font-size:13px;color:var(--muted);margin-top:2px}
 .tags{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px}
 .tag{font-size:11.5px;font-weight:500;padding:3px 7px;background:var(--panel);border:1px solid var(--line);color:#55564F}
@@ -175,8 +179,8 @@ const MEMBERS = ['경석','현주','주홍','호진','미정','진주','현상']
 const LS = { get(k){try{return localStorage.getItem(k)}catch(e){return null}},
              set(k,v){try{localStorage.setItem(k,v)}catch(e){}} };
 let db=null, F=null, online=false;
-const local = { checks:{}, comments:[], reactions:{} };
-const listeners = { checks:[], comments:[], reactions:[] };
+const local = { checks:{}, comments:[], reactions:{}, times:{} };
+const listeners = { checks:[], comments:[], reactions:[], times:[] };
 const notify = k => listeners[k].forEach(f=>f());
 
 async function initDB(){
@@ -197,6 +201,9 @@ async function initDB(){
     });
     F.onSnapshot(F.collection(db,'reactions'), s=>{
       local.reactions={}; s.forEach(d=>local.reactions[d.id]=d.data()); notify('reactions');
+    });
+    F.onSnapshot(F.collection(db,'times'), s=>{
+      local.times={}; s.forEach(d=>local.times[d.id]=d.data()); notify('times');
     });
     return true;
   }catch(e){ console.warn('Firebase 연결 실패',e); return false; }
@@ -226,6 +233,13 @@ async function toggleReact(stop,by){
   if(!online) return;
   try{ had ? await F.deleteDoc(F.doc(db,'reactions',id))
            : await F.setDoc(F.doc(db,'reactions',id),{stop,by,at:now()}); }catch(e){console.warn(e)}
+}
+async function setTime(id,d,by){
+  if(d) local.times[id]={d,by,at:now()}; else delete local.times[id];
+  notify('times');
+  if(!online) return;
+  try{ d ? await F.setDoc(F.doc(db,'times',id),{d,by,at:now()})
+         : await F.deleteDoc(F.doc(db,'times',id)); }catch(e){console.warn(e)}
 }
 
 /* ───────── 지도 링크 (Place ID 기반 = 정확) ───────── */
@@ -462,7 +476,7 @@ function stopBlock(o,id){
   if(o.map)links.push(`<a class="go" href="${M(o.map)}" target="_blank" rel="noopener">지도</a>`);
   if(o.park)links.push(`<a class="go p" href="${M(o.park)}" target="_blank" rel="noopener">🅿 ${o.park.n}</a>`);
   return `<div class="stop${o.k?' key':''}${o.m?' move':''}" data-id="${id}">
-    <div class="t">${o.t}</div><h3>${o.h}</h3>${o.p?`<p>${o.p}</p>`:''}
+    <div class="t" data-tm="${id}" title="누르면 실제 시각으로 고칠 수 있다. 뒤 일정도 같이 밀린다">${o.t}</div><h3>${o.h}</h3>${o.p?`<p>${o.p}</p>`:''}
     ${o.tags?`<div class="tags">${o.tags.map(t=>`<span class="tag${t.startsWith('⚠')||t.includes('예약 필수')?' w':''}">${t}</span>`).join('')}</div>`:''}
     ${links.length?`<div class="links">${links.join('')}</div>`:''}
     ${o.resv?`<div class="resv"><h4>${o.resv.ok?'예약':'예약 없음'}</h4><p>${o.resv.how}</p>
@@ -595,6 +609,50 @@ nav.addEventListener('click',e=>{
 });
 
 /* ───────── 체크리스트 ───────── */
+/* ───────── 실제 시각 조정 ───────── */
+const toMin = t => { const [h,m]=String(t).split(':').map(Number); return h*60+m; };
+const toHM  = m => { m=((m%1440)+1440)%1440; return `${String(m/60|0).padStart(2,'0')}:${String(m%60).padStart(2,'0')}`; };
+/* 자기까지의 누적 지연(분). 앞 스톱을 밀면 뒤가 따라 밀리는 근거가 이 누적합이다. */
+const shiftAt = (i,j) => { let s=0; for(let x=0;x<=j;x++) s+=(local.times[`d${i}s${x}`]||{}).d||0; return s; };
+const tmAt = el => { const m=/^d(\d+)s(\d+)$/.exec(el.dataset.tm||''); return m?[+m[1],+m[2]]:null; };
+
+function renderTimes(){
+  document.querySelectorAll('[data-tm]').forEach(el=>{
+    if(el.querySelector('input')) return;
+    const at=tmAt(el); if(!at) return;
+    const o=DAYS[at[0]].stops[at[1]]; if(!o) return;
+    const sh=shiftAt(at[0],at[1]);
+    el.innerHTML = sh ? `${toHM(toMin(o.t)+sh)}<s>${o.t}</s>` : o.t;
+    el.classList.toggle('adj', !!sh);
+  });
+}
+listeners.times.push(renderTimes);
+
+panes.addEventListener('click', e=>{
+  const el=e.target.closest('[data-tm]');
+  if(!el || el.querySelector('input')) return;
+  const at=tmAt(el); if(!at) return;
+  const [i,j]=at, id=`d${i}s${j}`, o=DAYS[i].stops[j];
+  const cur=toMin(o.t)+shiftAt(i,j);
+  const inp=document.createElement('input');
+  inp.type='time'; inp.className='tedit'; inp.value=toHM(cur);
+  el.innerHTML=''; el.appendChild(inp);
+  inp.focus(); if(inp.showPicker) try{ inp.showPicker(); }catch(_){}
+  let done=false;
+  const close=commit=>{
+    if(done) return; done=true;
+    const v=inp.value;
+    el.innerHTML=''; renderTimes();          // notify 재렌더가 막히지 않도록 입력창부터 걷어낸다
+    if(!commit || !v) return;
+    let diff=toMin(v)-cur;
+    diff=((diff+720)%1440+1440)%1440-720;    // 자정 넘김 입력을 ±12시간 안으로 해석
+    if(diff) setTime(id, ((local.times[id]||{}).d||0)+diff, ME||'');
+  };
+  inp.addEventListener('change',()=>close(true));
+  inp.addEventListener('blur',()=>close(true));
+  inp.addEventListener('keydown',ev=>{ if(ev.key==='Escape') close(false); if(ev.key==='Enter') close(true); });
+});
+
 function renderChecks(){
   const box=document.getElementById('chk'); if(!box)return;
   box.innerHTML=CHECK.map(([id,t,sub])=>{
@@ -663,7 +721,7 @@ listeners.reactions.push(renderSocial);
   if(online){ st.textContent=''; if(mode){mode.textContent='함께 보기 모드 — 연결됨';mode.style.color='var(--seto)';} }
   else{ st.textContent='혼자 보기 모드 — 체크와 댓글이 이 기기에만 남습니다';
         if(mode) mode.textContent='혼자 보기 모드 (아직 연결 전)'; }
-  renderChecks(); renderSocial();
+  renderChecks(); renderSocial(); renderTimes();
 })();
 </script>
 </html>
