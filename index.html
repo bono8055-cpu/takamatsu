@@ -158,7 +158,6 @@ footer{margin-top:44px;padding:20px 0 8px;border-top:2px solid var(--ink);font-s
 /* ═══════════════════════════════════════════════════
    ① 여기에 Firebase 설정을 붙여넣으세요.
    비워두면 "혼자 보기 모드"로 돌아갑니다 (체크·댓글이 이 기기에만 남음).
-   만드는 법은 앱 안의 [정보] → [함께 쓰기 설정] 참고.
    ═══════════════════════════════════════════════════ */
 const FIREBASE_CONFIG = {
   apiKey: "AIzaSyC5FPhNXz-cWO6bYHblo1zgadknCaJjwIw",
@@ -580,51 +579,7 @@ infoPane.innerHTML=`<div class="dayhead"><h2>참고 정보</h2><em>예약 · 예
 텐카쓰 3.8은 160년 된 활어회 노포에 붙은 가격·접객 불만이 섞인 숫자이지 맛의 문제가 아니다.</p>
 <p style="margin-top:10px">한국 입맛에 맞는 순서는 <b>잇카쿠</b>(짭짤하고 매콤한 뼈닭) → <b>바카이치다이</b>(가마버터) → <b>치쿠세이</b>(튀김).
 마츠시타와 우에하라야는 맑은 국물이라 담백함을 기대하고 가야 실망이 없다.</p></div></details>
-
-<details><summary>⚙ 함께 쓰기 설정 (한 번만)</summary><div class="body">
-<p>지금은 <b id="mode">확인 중</b>입니다.</p>
-<p style="margin-top:10px">가족이 같은 체크·댓글을 보려면 무료 데이터베이스를 한 번 연결합니다. 7명이 쓰는 정도로는 요금이 나올 수 없습니다. 전부 <a class="go" href="https://console.firebase.google.com" target="_blank" rel="noopener">Firebase 콘솔</a>에서 하며, 구글 계정만 있으면 됩니다.</p>
-
-<p style="margin-top:14px"><b>1 · 프로젝트 만들기</b><br>
-콘솔 → 프로젝트 추가 → 이름 아무거나(예: takamatsu-trip) → Google 애널리틱스는 <b>사용 안 함</b>으로 꺼도 됩니다.</p>
-
-<p style="margin-top:12px"><b>2 · 익명 로그인 켜기</b><br>
-왼쪽 메뉴 <b>빌드 → Authentication</b> → 시작하기 → 로그인 방법 목록에서 <b>익명</b> → 사용 설정 → 저장.<br>
-<span style="color:var(--muted)">가족이 뭘 입력할 일은 없습니다. 앱이 알아서 처리하고, 외부인의 접근을 막는 열쇠 역할만 합니다.</span></p>
-
-<p style="margin-top:12px"><b>3 · Firestore 만들기 (프로덕션 모드)</b><br>
-왼쪽 메뉴 <b>빌드 → Firestore Database</b> → 데이터베이스 만들기 → 위치는 <b>asia-northeast3 (서울)</b> → <b>프로덕션 모드로 시작</b>.<br>
-<span style="color:var(--muted)">이 상태는 아무도 못 읽고 못 씁니다. 다음 단계에서 엽니다.</span></p>
-
-<p style="margin-top:12px"><b>4 · 규칙 바꾸기</b><br>
-Firestore 화면 위 <b>규칙</b> 탭 → 내용을 아래로 통째로 교체 → <b>게시</b>.</p>
-<pre>rules_version = '2';
-service cloud.firestore {
-  match /databases/{database}/documents {
-    match /{document=**} {
-      allow read, write: if request.auth != null;
-    }
-  }
-}</pre>
-<p><span style="color:var(--muted)">로그인한 사람만 읽고 쓸 수 있다는 뜻입니다. 만료일이 없어 여행이 끝나도 그대로 씁니다.</span></p>
-
-<p style="margin-top:12px"><b>5 · 설정값 붙여넣기</b><br>
-톱니바퀴 <b>프로젝트 설정</b> → 아래 <b>내 앱</b> → <b>웹(&lt;/&gt;)</b> 아이콘 → 앱 등록 →
-나오는 <code>firebaseConfig</code> 내용을 이 파일 위쪽 <code>FIREBASE_CONFIG</code>에 붙여넣고 다시 올리면 끝입니다.</p>
-<pre>const FIREBASE_CONFIG = {
-  apiKey: "AIza...",
-  authDomain: "이름.firebaseapp.com",
-  projectId: "이름",
-  storageBucket: "이름.appspot.com",
-  messagingSenderId: "000...",
-  appId: "1:000..."
-};</pre>
-
-<p style="margin-top:12px"><b>6 · 주소 등록</b><br>
-Authentication → 설정 → <b>승인된 도메인</b>에 페이지를 올린 주소(예: <code>아이디.github.io</code>)를 추가합니다. 이게 빠지면 로그인이 막힙니다.</p>
-
-<p style="margin-top:14px;color:var(--muted)">apiKey는 공개되어도 괜찮은 값입니다. 실제 접근을 막는 것은 4단계의 규칙과 6단계의 도메인 제한입니다.</p>
-<p style="margin-top:10px">이름 목록은 파일 위쪽 <code>MEMBERS</code> 줄에서 바꿉니다.</p></div></details>`;
+`;
 panes.appendChild(infoPane);
 
 nav.insertAdjacentHTML('beforeend','<button data-i="jp">일본어</button>');
