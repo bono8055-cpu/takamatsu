@@ -6,6 +6,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;600&family=IBM+Plex+Sans+KR:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css">
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
 <style>
 :root{--paper:#E6E4DE;--panel:#F3F1EB;--ink:#17181A;--muted:#6E6F6B;
  --seto:#2B4750;--pumpkin:#C9931A;--line:#CBC8BF;--hole:#B4B0A6}
@@ -114,7 +116,11 @@ details summary::-webkit-details-marker{display:none}
 details summary::after{content:"+";font-weight:400;font-size:18px;color:var(--muted)}
 details[open] summary::after{content:"−"}
 details .body{padding-bottom:20px;font-size:13.5px;color:#44453F}
-.dmap iframe{display:block;width:100%;height:340px;border:1px solid var(--line)}
+.lmap{height:340px;border:1px solid var(--line);background:var(--panel)}
+.pin{display:flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:50%;
+ background:var(--seto);color:#fff;font:700 13px/1 'IBM Plex Sans KR',sans-serif;
+ border:2px solid var(--paper);box-shadow:0 1px 3px rgba(0,0,0,.3)}
+.mapfoot{font-size:12px;color:var(--muted);margin-top:8px}
 table{width:100%;border-collapse:collapse;font-size:12.5px}
 th,td{text-align:left;padding:7px 6px 7px 0;border-bottom:1px solid var(--line);vertical-align:top}
 th{font-weight:600;color:var(--muted);font-size:11px;letter-spacing:.05em}
@@ -248,18 +254,34 @@ const M = o => o.pid
   ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(o.q)}&query_place_id=${o.pid}`
   : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(o.q)}`;
 
-/* 지도 임베드는 Firebase와 같은 구글 클라우드 프로젝트라 키를 공유한다 */
-const MAPS_KEY = FIREBASE_CONFIG.apiKey;
-const embedRef = o => o.pid ? 'place_id:'+o.pid : encodeURIComponent(o.q);
-const dayMap = r => `<details class="dmap"><summary>지도로 동선 보기</summary><div class="body">
-  <iframe loading="lazy" allowfullscreen src="https://www.google.com/maps/embed/v1/directions?key=${MAPS_KEY}&origin=${embedRef(r[0])}&destination=${embedRef(r[r.length-1])}${r.length>2?'&waypoints='+r.slice(1,-1).map(embedRef).join('|'):''}&mode=driving&language=ko"></iframe>
-  <p style="margin-top:8px;color:var(--muted);font-size:12px">구글이 계산한 자동차 경로다. 핀은 출발지부터 A·B·C 순서로 붙는다.</p></div></details>`;
+const dayMap = i => `<details class="dmap" data-map="${i}"><summary>지도로 동선 보기</summary><div class="body">
+  <div class="lmap" id="lmap${i}"></div>
+  <p class="mapfoot">번호가 이동 순서다. 선은 순서를 잇는 직선이라 실제 주행 경로와는 다르다.</p></div></details>`;
+
+/* 같은 지점을 여러 번 들르는 날이 있어 겹치는 핀을 조금씩 벌린다 */
+const spread = route => { const seen={};
+  return route.map(x=>{ const k=x.p.ll.join(), n=(seen[k]=(seen[k]||0)+1)-1;
+    if(!n) return x.p.ll;
+    return [x.p.ll[0]+0.0004*Math.cos(n*2.4), x.p.ll[1]+0.0004*Math.sin(n*2.4)]; });
+};
+function drawMap(i){
+  const box=document.getElementById('lmap'+i);
+  if(typeof L==='undefined'){ box.textContent='지도를 불러오지 못했다. 네트워크를 확인해라.'; return; }
+  const r=DAYS[i].route, pts=spread(r);
+  const map=L.map(box,{scrollWheelZoom:false});
+  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+    {maxZoom:19,attribution:'&copy; OpenStreetMap'}).addTo(map);
+  L.polyline(pts,{color:'#C9931A',weight:2.5,opacity:.85,dashArray:'6,6'}).addTo(map);
+  r.forEach((x,j)=>L.marker(pts[j],{icon:L.divIcon({className:'',html:`<div class="pin">${j+1}</div>`,
+      iconSize:[26,26],iconAnchor:[13,13]})}).addTo(map).bindPopup(`<b>${x.t}</b> · ${x.n}`));
+  map.fitBounds(L.latLngBounds(pts),{padding:[28,28]});
+}
 
 const P = {
   airport:{q:'高松空港',pid:'ChIJCQwJJgPrUzURh_vaUuloNs4'},
   chikusei:{q:'竹清 本店',pid:'ChIJTxGVIL7rUzURH7e2fgVhDNI'},
   marunaka:{q:'マルナカ 宮脇店',pid:'ChIJcdMpUMDrUzURBWZk9R2DLwY'},
-  stay:{q:'高松市扇町1-11-8',pid:'ChIJo6QuEezrUzURq7CwtpubNsI'},
+  stay:{q:'高松市扇町1-11-8',pid:'ChIJo6QuEezrUzURq7CwtpubNsI',ll:[34.34672,134.03503]},
   ikkaku:{q:'骨付鳥 一鶴 高松店',pid:'ChIJe8NJvJrrUzURC3ckN2iEIYU'},
   matsushita:{q:'松下製麺所',pid:'ChIJJbgoyr3rUzUR-4c_CsSfJKo'},
   port:{q:'高松港 フェリー乗り場',pid:'ChIJ0RXCHnjsUzURWhV938-wncs'},
@@ -271,10 +293,10 @@ const P = {
   ando:{q:'ANDO MUSEUM 直島',pid:'ChIJ267gdcPxUzUR7RGA91SdwQk'},
   honmura:{q:'本村ラウンジ&アーカイブ',pid:'ChIJJVhc3cPxUzURFxuKoha37ak'},
   tenkatsu:{q:'天勝 本店',pid:'ChIJf6jFyo_rUzURMShuUgU_N3Y'},
-  bakaichi:{q:'うどんバカ一代',pid:'ChIJMWyhJHbrUzURpONppDqqkeg'},
-  ritsurinP:{q:'栗林公園 東門駐車場',pid:'ChIJ6ez3-krrUzUR77vlGwAO10c'},
+  bakaichi:{q:'うどんバカ一代',pid:'ChIJMWyhJHbrUzURpONppDqqkeg',ll:[34.33676,134.05861]},
+  ritsurinP:{q:'栗林公園 東門駐車場',pid:'ChIJ6ez3-krrUzUR77vlGwAO10c',ll:[34.32863,134.04517]},
   merikenya:{q:'めりけんや 高松駅前店',pid:'ChIJQxo9tojrUzURFDzJXpSRFzs'},
-  arcade:{q:'高松丸亀町商店街',pid:'ChIJGz08i5rrUzURHWtwRZZF4nA'},
+  arcade:{q:'高松丸亀町商店街',pid:'ChIJGz08i5rrUzURHWtwRZZF4nA',ll:[34.34395,134.05007]},
   greenP:{q:'丸亀町グリーン 駐車場',pid:'ChIJGz6GWQDrUzURE6MuaI_rhuk'},
   uehara:{q:'さぬきうどん 上原屋本店',pid:'ChIJWUJrkbDrUzURKf-Dpey_-lI'},
   tamamo:{q:'玉藻公園 高松城跡',pid:'ChIJK3mVCYfrUzURNl7XQRlvOB4'},
@@ -282,7 +304,7 @@ const P = {
   sunportP:{q:'サンポート高松地下駐車場',pid:'ChIJFeuBr4nrUzURoX-8acM9icg'},
   mugizo:{q:'手打うどん 麦蔵 高松市福岡町'},
   mugizoP:{q:'高松市立杣場川駐車場'},
-  youme:{q:'ゆめタウン高松 三条町'},
+  youme:{q:'ゆめタウン高松 三条町',ll:[34.31676,134.04193]},
   kawaramachiP:{q:'瓦町 コインパーキング'},
   hyogoP:{q:'兵庫町 コインパーキング 高松'},
   chikuseiP:{q:'亀岡町 コインパーキング 高松'}
@@ -369,7 +391,10 @@ const DAYS=[
   {m:1,t:'19:45',h:'🚗⑦ 텐카쓰 → 숙소 · 5분',p:''}
  ]},
 {tab:'18 일',title:'리쓰린 · 유메타운',sub:'차량 이동 5회 · 오후 숙소 휴식',
- route:[P.stay,P.bakaichi,P.ritsurinP,P.youme,P.arcade,P.stay],
+ route:[{p:P.stay,t:'07:15',n:'숙소 출발'},{p:P.bakaichi,t:'07:30',n:'우동③ 바카이치다이'},
+        {p:P.ritsurinP,t:'08:45',n:'리쓰린공원 · 점심'},{p:P.youme,t:'12:30',n:'유메타운 다카마쓰'},
+        {p:P.stay,t:'15:15',n:'숙소 휴식'},{p:P.arcade,t:'18:00',n:'저녁 · 마루가메마치'},
+        {p:P.stay,t:'19:55',n:'귀가'}],
  note:'오전은 리쓰린 주차장에 한 번 대고 아침·정원·점심을 한 권역에서 끝낸다. 유메타운은 리쓰린에서 남쪽으로 7분이라 같은 권역이나 마찬가지지만 09:30(전문점 10:00) 개점이라 오전에는 못 들른다. 그래서 비어 있던 오후 앞쪽에 넣고, 숙소 휴식은 2시간 30분 남겼다.',
  stops:[
   {m:1,t:'07:15',h:'🚗① 숙소 → 바카이치다이 · 10분',p:'4km'},
@@ -526,9 +551,15 @@ DAYS.forEach((d,i)=>{
   const s=document.createElement('section'); s.className='pane'+(i?'':' on');
   s.innerHTML=`<div class="dayhead"><h2>${d.title}</h2><em>${d.sub}</em></div>`
    +(d.note?`<div class="note">${d.note}</div>`:'')
-   +(d.route?dayMap(d.route):'')
+   +(d.route?dayMap(i):'')
    +`<div class="rail">`+d.stops.map((o,j)=>stopBlock(o,`d${i}s${j}`)).join('')+`</div>`;
   panes.appendChild(s);
+});
+
+document.querySelectorAll('details[data-map]').forEach(el=>{
+  el.addEventListener('toggle',()=>{           // 숨어 있을 때 초기화하면 타일 크기가 틀어진다
+    if(el.open && !el.dataset.drawn){ el.dataset.drawn='1'; drawMap(+el.dataset.map); }
+  });
 });
 
 const jpPane=document.createElement('section'); jpPane.className='pane';
