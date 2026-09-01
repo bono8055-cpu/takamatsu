@@ -117,9 +117,12 @@ details summary::after{content:"+";font-weight:400;font-size:18px;color:var(--mu
 details[open] summary::after{content:"−"}
 details .body{padding-bottom:20px;font-size:13.5px;color:#44453F}
 .lmap{height:340px;border:1px solid var(--line);background:var(--panel)}
-.pin{display:flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:50%;
- background:var(--seto);color:#fff;font:700 13px/1 'IBM Plex Sans KR',sans-serif;
- border:2px solid var(--paper);box-shadow:0 1px 3px rgba(0,0,0,.3)}
+.pin{display:flex;align-items:center;justify-content:center;height:26px;min-width:26px;padding:0 7px;
+ border-radius:13px;background:var(--seto);color:#fff;font:700 12.5px/1 'IBM Plex Sans KR',sans-serif;
+ border:2px solid var(--paper);box-shadow:0 1px 3px rgba(0,0,0,.3);white-space:nowrap;transform:translateX(-50%)}
+.leaflet-tooltip.plabel{background:rgba(243,241,235,.93);border:1px solid var(--line);border-radius:0;
+ color:var(--ink);font:600 11.5px/1.3 'IBM Plex Sans KR',sans-serif;padding:2px 6px;box-shadow:none}
+.leaflet-tooltip.plabel::before{display:none}
 .mapfoot{font-size:12px;color:var(--muted);margin-top:8px}
 table{width:100%;border-collapse:collapse;font-size:12.5px}
 th,td{text-align:left;padding:7px 6px 7px 0;border-bottom:1px solid var(--line);vertical-align:top}
@@ -256,25 +259,28 @@ const M = o => o.pid
 
 const dayMap = i => `<details class="dmap" data-map="${i}"><summary>지도로 동선 보기</summary><div class="body">
   <div class="lmap" id="lmap${i}"></div>
-  <p class="mapfoot">번호가 이동 순서다. 선은 순서를 잇는 직선이라 실제 주행 경로와는 다르다.</p></div></details>`;
+  <p class="mapfoot">번호가 이동 순서다. 같은 곳을 여러 번 들르면 번호를 모아 붙였다. 핀을 누르면 시각이 나온다.</p></div></details>`;
 
-/* 같은 지점을 여러 번 들르는 날이 있어 겹치는 핀을 조금씩 벌린다 */
-const spread = route => { const seen={};
-  return route.map(x=>{ const k=x.p.ll.join(), n=(seen[k]=(seen[k]||0)+1)-1;
-    if(!n) return x.p.ll;
-    return [x.p.ll[0]+0.0004*Math.cos(n*2.4), x.p.ll[1]+0.0004*Math.sin(n*2.4)]; });
-};
 function drawMap(i){
   const box=document.getElementById('lmap'+i);
   if(typeof L==='undefined'){ box.textContent='지도를 불러오지 못했다. 네트워크를 확인해라.'; return; }
-  const r=DAYS[i].route, pts=spread(r);
-  const map=L.map(box,{scrollWheelZoom:false});
-  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-    {maxZoom:19,attribution:'&copy; OpenStreetMap'}).addTo(map);
-  L.polyline(pts,{color:'#C9931A',weight:2.5,opacity:.85,dashArray:'6,6'}).addTo(map);
-  r.forEach((x,j)=>L.marker(pts[j],{icon:L.divIcon({className:'',html:`<div class="pin">${j+1}</div>`,
-      iconSize:[26,26],iconAnchor:[13,13]})}).addTo(map).bindPopup(`<b>${x.t}</b> · ${x.n}`));
-  map.fitBounds(L.latLngBounds(pts),{padding:[28,28]});
+  const d=DAYS[i], map=L.map(box,{scrollWheelZoom:false});
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png',
+    {maxZoom:19,attribution:'&copy; OpenStreetMap &copy; CARTO'}).addTo(map);
+  d.path.forEach(seg=>L.polyline(seg,{color:'#C9931A',weight:3.5,opacity:.9}).addTo(map));
+
+  /* 같은 장소를 여러 번 들르면 핀 하나에 번호를 모아 붙인다 */
+  const at=new Map();
+  d.route.forEach((x,j)=>{ const k=x.p.ll.join();
+    if(!at.has(k)) at.set(k,{ll:x.p.ll,n:x.n,nums:[],rows:[]});
+    at.get(k).nums.push(j+1); at.get(k).rows.push(`${j+1}. ${x.t} ${x.r}`); });
+  for(const g of at.values()){
+    L.marker(g.ll,{icon:L.divIcon({className:'',html:`<div class="pin">${g.nums.join('·')}</div>`,iconAnchor:[0,13]})})
+     .addTo(map)
+     .bindTooltip(g.n,{permanent:true,direction:'bottom',offset:[0,15],className:'plabel'})
+     .bindPopup(`<b>${g.n}</b><br>${g.rows.join('<br>')}`);
+  }
+  map.fitBounds(L.latLngBounds(d.route.map(x=>x.p.ll)),{padding:[34,34]});
 }
 
 const P = {
@@ -391,10 +397,16 @@ const DAYS=[
   {m:1,t:'19:45',h:'🚗⑦ 텐카쓰 → 숙소 · 5분',p:''}
  ]},
 {tab:'18 일',title:'리쓰린 · 유메타운',sub:'차량 이동 5회 · 오후 숙소 휴식',
- route:[{p:P.stay,t:'07:15',n:'숙소 출발'},{p:P.bakaichi,t:'07:30',n:'우동③ 바카이치다이'},
-        {p:P.ritsurinP,t:'08:45',n:'리쓰린공원 · 점심'},{p:P.youme,t:'12:30',n:'유메타운 다카마쓰'},
-        {p:P.stay,t:'15:15',n:'숙소 휴식'},{p:P.arcade,t:'18:00',n:'저녁 · 마루가메마치'},
-        {p:P.stay,t:'19:55',n:'귀가'}],
+ route:[{p:P.stay,t:'07:15',n:'숙소',r:'출발'},{p:P.bakaichi,t:'07:30',n:'바카이치다이',r:'우동③ 아침'},
+        {p:P.ritsurinP,t:'08:45',n:'리쓰린공원',r:'정원 · 점심'},{p:P.youme,t:'12:30',n:'유메타운',r:'쇼핑 · 휴식'},
+        {p:P.stay,t:'15:15',n:'숙소',r:'오후 휴식'},{p:P.arcade,t:'18:00',n:'마루가메마치',r:'저녁'},
+        {p:P.stay,t:'19:55',n:'숙소',r:'귀가'}],
+ path:[[[34.34672,134.03503],[34.34414,134.03548],[34.34276,134.04457],[34.34252,134.04541],[34.34097,134.05453],[34.34055,134.05825],[34.33804,134.05828],[34.33676,134.05861]],
+  [[34.33676,134.05861],[34.33515,134.05926],[34.33608,134.05358],[34.33595,134.05355],[34.33496,134.05097],[34.33495,134.04994],[34.3355,134.04686],[34.33212,134.04632],[34.32998,134.04631],[34.32744,134.0451],[34.32331,134.04283],[34.3233,134.04266],[34.32813,134.0453],[34.32824,134.04499],[34.32863,134.04517]],
+  [[34.32863,134.04517],[34.32912,134.04537],[34.32905,134.04575],[34.32993,134.04616],[34.3299,134.04627],[34.32744,134.0451],[34.32008,134.04101],[34.31982,134.04328],[34.31676,134.04193]],
+  [[34.31676,134.04193],[34.31975,134.04327],[34.32006,134.04047],[34.31996,134.03829],[34.32226,134.03155],[34.32404,134.03217],[34.32684,134.03183],[34.32888,134.03227],[34.33075,134.03394],[34.33047,134.03602],[34.33077,134.03686],[34.33265,134.03703],[34.33576,134.03887],[34.33882,134.03965],[34.34022,134.03327],[34.34056,134.03299],[34.34434,134.03392],[34.34414,134.03548],[34.34672,134.03503]],
+  [[34.34672,134.03503],[34.34507,134.03539],[34.34528,134.03791],[34.34551,134.0392],[34.34458,134.048],[34.34395,134.05007]],
+  [[34.34395,134.05007],[34.34456,134.04816],[34.34551,134.0392],[34.34528,134.03791],[34.34507,134.03539],[34.34672,134.03503]]],
  note:'오전은 리쓰린 주차장에 한 번 대고 아침·정원·점심을 한 권역에서 끝낸다. 유메타운은 리쓰린에서 남쪽으로 7분이라 같은 권역이나 마찬가지지만 09:30(전문점 10:00) 개점이라 오전에는 못 들른다. 그래서 비어 있던 오후 앞쪽에 넣고, 숙소 휴식은 2시간 30분 남겼다.',
  stops:[
   {m:1,t:'07:15',h:'🚗① 숙소 → 바카이치다이 · 10분',p:'4km'},
