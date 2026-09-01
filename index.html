@@ -114,6 +114,7 @@ details summary::-webkit-details-marker{display:none}
 details summary::after{content:"+";font-weight:400;font-size:18px;color:var(--muted)}
 details[open] summary::after{content:"−"}
 details .body{padding-bottom:20px;font-size:13.5px;color:#44453F}
+.dmap iframe{display:block;width:100%;height:340px;border:1px solid var(--line)}
 table{width:100%;border-collapse:collapse;font-size:12.5px}
 th,td{text-align:left;padding:7px 6px 7px 0;border-bottom:1px solid var(--line);vertical-align:top}
 th{font-weight:600;color:var(--muted);font-size:11px;letter-spacing:.05em}
@@ -247,6 +248,13 @@ const M = o => o.pid
   ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(o.q)}&query_place_id=${o.pid}`
   : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(o.q)}`;
 
+/* 지도 임베드는 Firebase와 같은 구글 클라우드 프로젝트라 키를 공유한다 */
+const MAPS_KEY = FIREBASE_CONFIG.apiKey;
+const embedRef = o => o.pid ? 'place_id:'+o.pid : encodeURIComponent(o.q);
+const dayMap = r => `<details class="dmap"><summary>지도로 동선 보기</summary><div class="body">
+  <iframe loading="lazy" allowfullscreen src="https://www.google.com/maps/embed/v1/directions?key=${MAPS_KEY}&origin=${embedRef(r[0])}&destination=${embedRef(r[r.length-1])}${r.length>2?'&waypoints='+r.slice(1,-1).map(embedRef).join('|'):''}&mode=driving&language=ko"></iframe>
+  <p style="margin-top:8px;color:var(--muted);font-size:12px">구글이 계산한 자동차 경로다. 핀은 출발지부터 A·B·C 순서로 붙는다.</p></div></details>`;
+
 const P = {
   airport:{q:'高松空港',pid:'ChIJCQwJJgPrUzURh_vaUuloNs4'},
   chikusei:{q:'竹清 本店',pid:'ChIJTxGVIL7rUzURH7e2fgVhDNI'},
@@ -361,6 +369,7 @@ const DAYS=[
   {m:1,t:'19:45',h:'🚗⑦ 텐카쓰 → 숙소 · 5분',p:''}
  ]},
 {tab:'18 일',title:'리쓰린 · 유메타운',sub:'차량 이동 5회 · 오후 숙소 휴식',
+ route:[P.stay,P.bakaichi,P.ritsurinP,P.youme,P.arcade,P.stay],
  note:'오전은 리쓰린 주차장에 한 번 대고 아침·정원·점심을 한 권역에서 끝낸다. 유메타운은 리쓰린에서 남쪽으로 7분이라 같은 권역이나 마찬가지지만 09:30(전문점 10:00) 개점이라 오전에는 못 들른다. 그래서 비어 있던 오후 앞쪽에 넣고, 숙소 휴식은 2시간 30분 남겼다.',
  stops:[
   {m:1,t:'07:15',h:'🚗① 숙소 → 바카이치다이 · 10분',p:'4km'},
@@ -517,6 +526,7 @@ DAYS.forEach((d,i)=>{
   const s=document.createElement('section'); s.className='pane'+(i?'':' on');
   s.innerHTML=`<div class="dayhead"><h2>${d.title}</h2><em>${d.sub}</em></div>`
    +(d.note?`<div class="note">${d.note}</div>`:'')
+   +(d.route?dayMap(d.route):'')
    +`<div class="rail">`+d.stops.map((o,j)=>stopBlock(o,`d${i}s${j}`)).join('')+`</div>`;
   panes.appendChild(s);
 });
