@@ -6,6 +6,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;600&family=IBM+Plex+Sans+KR:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css">
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
 <style>
 :root{--paper:#E6E4DE;--panel:#F3F1EB;--ink:#17181A;--muted:#6E6F6B;
  --seto:#2B4750;--pumpkin:#C9931A;--line:#CBC8BF;--hole:#B4B0A6}
@@ -114,7 +116,14 @@ details summary::-webkit-details-marker{display:none}
 details summary::after{content:"+";font-weight:400;font-size:18px;color:var(--muted)}
 details[open] summary::after{content:"−"}
 details .body{padding-bottom:20px;font-size:13.5px;color:#44453F}
-.dfig svg{display:block;width:100%;height:auto;border:1px solid var(--line)}
+.lmap{height:330px;border:1px solid var(--line);background:var(--panel)}
+.lmap .leaflet-container{cursor:default}
+.pin{display:flex;align-items:center;justify-content:center;height:26px;min-width:26px;padding:0 7px;
+ border-radius:13px;background:#17181A;color:#fff;font:700 12.5px/1 'IBM Plex Sans KR',sans-serif;
+ border:2px solid #fff;box-shadow:0 1px 3px rgba(0,0,0,.35);white-space:nowrap;transform:translateX(-50%)}
+.leaflet-tooltip.plabel{background:rgba(255,255,255,.9);border:1px solid var(--line);border-radius:0;
+ color:var(--ink);font:600 11.5px/1.3 'IBM Plex Sans KR',sans-serif;padding:1px 5px;box-shadow:none}
+.leaflet-tooltip.plabel::before{display:none}
 .figleg{list-style:none;margin-top:10px;font-size:12px;color:#44453F}
 .figleg li{display:flex;align-items:center;gap:7px;padding:3px 0}
 .figleg i{width:14px;height:3px;flex:none;border-radius:2px}
@@ -253,41 +262,40 @@ const M = o => o.pid
   : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(o.q)}`;
 
 /* 구간마다 다른 색 — 순서를 색으로도 읽게 한다 */
-const LEGC=['#2B4750','#C9931A','#A63D2F','#4F7A3A','#7A4A86','#1F6F8B'];
+const LEGC=['#1B4B57','#C9931A','#A63D2F','#3F7A3A','#7A4A86','#1F6F8B'];
+const MAPS={};
 
 function dayFig(i){
-  const d=DAYS[i], W=380, H=300, PAD=30, pts=d.path.flat();
-  const laMin=Math.min(...pts.map(c=>c[0])), laMax=Math.max(...pts.map(c=>c[0]));
-  const loMin=Math.min(...pts.map(c=>c[1])), loMax=Math.max(...pts.map(c=>c[1]));
-  const kx=Math.cos((laMin+laMax)/2*Math.PI/180);        // 위도가 올라갈수록 경도 1도의 실거리가 줄어든다
-  const w=(loMax-loMin)*kx||1e-9, h=(laMax-laMin)||1e-9;
-  const sc=Math.min((W-PAD*2)/w,(H-PAD*2)/h);
-  const ox=(W-w*sc)/2, oy=(H-h*sc)/2;
-  const X=lo=>ox+(lo-loMin)*kx*sc, Y=la=>H-oy-(la-laMin)*sc;
-  const pt=c=>X(c[1]).toFixed(1)+','+Y(c[0]).toFixed(1);
+  const d=DAYS[i];
+  const legend=d.path.map((_,j)=>`<li><i style="background:${LEGC[j%LEGC.length]}"></i>${j+1} → ${j+2} · ${esc(d.route[j].n)} → ${esc(d.route[j+1].n)}</li>`).join('');
+  return `<details class="dfig" data-map="${i}" open><summary>동선 한눈에 보기</summary><div class="body">
+  <div class="lmap" id="lmap${i}"></div>
+  <ul class="figleg">${legend}</ul>
+  <p class="mapfoot">선은 실제 도로를 따라 그렸다. 숫자가 이동 순서이고, 같은 곳을 여러 번 들르면 번호를 모아 붙였다.</p></div></details>`;
+}
 
-  const lines=d.path.map((seg,j)=>`<polyline points="${seg.map(pt).join(' ')}" fill="none" stroke="${LEGC[j%LEGC.length]}" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>`).join('');
-
+function drawMap(i){
+  const box=document.getElementById('lmap'+i); if(!box) return;
+  if(MAPS[i]){ MAPS[i].invalidateSize(); return; }        // 숨었다 나타나면 크기만 다시 잡는다
+  if(typeof L==='undefined'){ box.textContent='지도를 불러오지 못했다. 네트워크를 확인해라.'; return; }
+  const d=DAYS[i];
+  const map=L.map(box,{dragging:false,touchZoom:false,scrollWheelZoom:false,doubleClickZoom:false,
+    boxZoom:false,keyboard:false,zoomControl:false});
+  MAPS[i]=map;
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager_nolabels/{z}/{x}/{y}{r}.png',
+    {maxZoom:19,detectRetina:true,attribution:'&copy; OpenStreetMap &copy; CARTO'}).addTo(map);
+  d.path.forEach((seg,j)=>L.polyline(seg,{color:LEGC[j%LEGC.length],weight:4.5,opacity:.95}).addTo(map));
   const at=new Map();
   d.route.forEach((x,j)=>{ const k=x.p.ll.join();
-    if(!at.has(k)) at.set(k,{ll:x.p.ll,n:x.n,nums:[]});
-    at.get(k).nums.push(j+1); });
-  const nodes=[...at.values()].map(g=>{
-    const x=X(g.ll[1]), y=Y(g.ll[0]), t=g.nums.join('·'), rw=Math.max(11,5.5+t.length*3.6);
-    const ly=y<H-44 ? y+26 : y-16;                       // 아래가 좁으면 이름을 위로 올린다
-    return `<rect x="${(x-rw).toFixed(1)}" y="${(y-11).toFixed(1)}" width="${(rw*2).toFixed(1)}" height="22" rx="11" fill="#17181A"/>`
-      +`<text x="${x.toFixed(1)}" y="${(y+4).toFixed(1)}" text-anchor="middle" fill="#fff" font-size="11.5" font-weight="700">${t}</text>`
-      +`<text x="${x.toFixed(1)}" y="${ly.toFixed(1)}" text-anchor="middle" fill="#17181A" font-size="11.5" font-weight="600">${esc(g.n)}</text>`;
-  }).join('');
-
-  const legend=d.path.map((_,j)=>`<li><i style="background:${LEGC[j%LEGC.length]}"></i>${j+1} → ${j+2} · ${esc(d.route[j].n)} → ${esc(d.route[j+1].n)}</li>`).join('');
-
-  return `<details class="dfig" open><summary>동선 한눈에 보기</summary><div class="body">
-  <svg viewBox="0 0 ${W} ${H}" role="img" aria-label="하루 동선도">
-    <rect width="${W}" height="${H}" fill="#F3F1EB"/>${lines}${nodes}
-    <text x="${W-12}" y="20" text-anchor="end" fill="#6E6F6B" font-size="10.5">북 ↑</text></svg>
-  <ul class="figleg">${legend}</ul>
-  <p class="mapfoot">선은 실제 도로를 따라 그렸다. 숫자는 이동 순서이고, 같은 곳을 여러 번 들르면 번호를 모아 붙였다.</p></div></details>`;
+    if(!at.has(k)) at.set(k,{ll:x.p.ll,n:x.n,nums:[],rows:[]});
+    at.get(k).nums.push(j+1); at.get(k).rows.push(`${j+1}. ${x.t} ${x.r}`); });
+  for(const g of at.values()){
+    L.marker(g.ll,{icon:L.divIcon({className:'',html:`<div class="pin">${g.nums.join('·')}</div>`,iconAnchor:[0,13]})})
+     .addTo(map)
+     .bindTooltip(g.n,{permanent:true,direction:'bottom',offset:[0,15],className:'plabel'})
+     .bindPopup(`<b>${esc(g.n)}</b><br>${g.rows.join('<br>')}`);
+  }
+  map.fitBounds(L.latLngBounds(d.route.map(x=>x.p.ll)),{padding:[36,36]});
 }
 
 const P = {
@@ -684,7 +692,9 @@ nav.addEventListener('click',e=>{
   const b=e.target.closest('button'); if(!b)return;
   [...nav.children].forEach(x=>x.classList.remove('on')); b.classList.add('on');
   [...panes.children].forEach(s=>s.classList.remove('on'));
-  (extra[b.dataset.i]||panes.children[+b.dataset.i]).classList.add('on');
+  const shown=(extra[b.dataset.i]||panes.children[+b.dataset.i]);
+  shown.classList.add('on');
+  shown.querySelectorAll('details[data-map]').forEach(el=>{ if(el.open) drawMap(+el.dataset.map); });
   window.scrollTo({top:nav.offsetTop-1,behavior:'smooth'});
 });
 
@@ -802,6 +812,9 @@ listeners.reactions.push(renderSocial);
   else{ st.textContent='혼자 보기 모드 — 체크와 댓글이 이 기기에만 남습니다';
         if(mode) mode.textContent='혼자 보기 모드 (아직 연결 전)'; }
   renderChecks(); renderSocial(); renderTimes();
+  document.querySelectorAll('details[data-map]').forEach(el=>{
+    el.addEventListener('toggle',()=>{ if(el.open) drawMap(+el.dataset.map); });
+  });
 })();
 </script>
 </html>
