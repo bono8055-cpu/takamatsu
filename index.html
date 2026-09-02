@@ -116,14 +116,15 @@ details summary::-webkit-details-marker{display:none}
 details summary::after{content:"+";font-weight:400;font-size:18px;color:var(--muted)}
 details[open] summary::after{content:"−"}
 details .body{padding-bottom:20px;font-size:13.5px;color:#44453F}
-.lmap{height:330px;border:1px solid var(--line);background:var(--panel)}
-.lmap .leaflet-container{cursor:default}
-.pin{display:flex;align-items:center;justify-content:center;height:26px;min-width:26px;padding:0 7px;
- border-radius:13px;background:#17181A;color:#fff;font:700 12.5px/1 'IBM Plex Sans KR',sans-serif;
- border:2px solid #fff;box-shadow:0 1px 3px rgba(0,0,0,.35);white-space:nowrap;transform:translateX(-50%)}
-.leaflet-tooltip.plabel{background:rgba(255,255,255,.9);border:1px solid var(--line);border-radius:0;
- color:var(--ink);font:600 11.5px/1.3 'IBM Plex Sans KR',sans-serif;padding:1px 5px;box-shadow:none}
+.lmap{height:360px;border:1px solid var(--line);background:#F7F6F2;cursor:default}
+.pin{display:flex;align-items:center;justify-content:center;height:24px;min-width:24px;padding:0 6px;
+ border-radius:12px;background:#17181A;color:#fff;font:700 12px/1 'IBM Plex Sans KR',sans-serif;
+ border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.28);white-space:nowrap;transform:translateX(-50%)}
+.leaflet-tooltip.plabel{background:none;border:0;border-radius:0;box-shadow:none;padding:0;
+ color:var(--ink);font:600 11.5px/1.2 'IBM Plex Sans KR',sans-serif;
+ text-shadow:0 0 3px #fff,0 0 3px #fff,0 0 3px #fff,0 0 2px #fff}
 .leaflet-tooltip.plabel::before{display:none}
+.mapcredit{font-size:10.5px;color:var(--hole);margin-top:6px;text-align:right}
 .figleg{list-style:none;margin-top:10px;font-size:12px;color:#44453F}
 .figleg li{display:flex;align-items:center;gap:7px;padding:3px 0}
 .figleg i{width:14px;height:3px;flex:none;border-radius:2px}
@@ -262,7 +263,7 @@ const M = o => o.pid
   : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(o.q)}`;
 
 /* 구간마다 다른 색 — 순서를 색으로도 읽게 한다 */
-const LEGC=['#1B4B57','#C9931A','#A63D2F','#3F7A3A','#7A4A86','#1F6F8B'];
+const LEGC=['#2F6E7E','#8F6F22','#A34A3C','#4F7A46','#6D5091','#35608F'];
 const MAPS={};
 
 function dayFig(i){
@@ -271,6 +272,7 @@ function dayFig(i){
   return `<details class="dfig" data-map="${i}" open><summary>동선 한눈에 보기</summary><div class="body">
   <div class="lmap" id="lmap${i}"></div>
   <ul class="figleg">${legend}</ul>
+  <p class="mapcredit">지도 &copy; OpenStreetMap 기여자 &middot; &copy; CARTO</p>
   <p class="mapfoot">선은 실제 도로를 따라 그렸다. 숫자가 이동 순서이고, 같은 곳을 여러 번 들르면 번호를 모아 붙였다.</p></div></details>`;
 }
 
@@ -280,11 +282,13 @@ function drawMap(i){
   if(typeof L==='undefined'){ box.textContent='지도를 불러오지 못했다. 네트워크를 확인해라.'; return; }
   const d=DAYS[i];
   const map=L.map(box,{dragging:false,touchZoom:false,scrollWheelZoom:false,doubleClickZoom:false,
-    boxZoom:false,keyboard:false,zoomControl:false});
+    boxZoom:false,keyboard:false,zoomControl:false,attributionControl:false});   // 출처는 그림 아래에 따로 적는다
   MAPS[i]=map;
-  L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager_nolabels/{z}/{x}/{y}{r}.png',
-    {maxZoom:19,detectRetina:true,attribution:'&copy; OpenStreetMap &copy; CARTO'}).addTo(map);
-  d.path.forEach((seg,j)=>L.polyline(seg,{color:LEGC[j%LEGC.length],weight:4.5,opacity:.95}).addTo(map));
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png',
+    {maxZoom:19,detectRetina:true}).addTo(map);
+  /* 흰 테두리를 한 겹 깔아 선이 배경에 묻히지 않게 한다 */
+  d.path.forEach(seg=>L.polyline(seg,{color:'#fff',weight:8,opacity:.95,lineCap:'round',lineJoin:'round'}).addTo(map));
+  d.path.forEach((seg,j)=>L.polyline(seg,{color:LEGC[j%LEGC.length],weight:4,opacity:1,lineCap:'round',lineJoin:'round'}).addTo(map));
   const at=new Map();
   d.route.forEach((x,j)=>{ const k=x.p.ll.join();
     if(!at.has(k)) at.set(k,{ll:x.p.ll,n:x.n,nums:[],rows:[]});
