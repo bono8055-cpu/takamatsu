@@ -272,7 +272,7 @@ function dayFig(i){
   return `<details class="dfig" data-map="${i}" open><summary>동선 한눈에 보기</summary><div class="body">
   <div class="lmap" id="lmap${i}"></div>
   <ul class="figleg">${legend}</ul>
-  <p class="mapcredit">지도 &copy; OpenStreetMap 기여자 &middot; &copy; CARTO</p>
+  <p class="mapcredit">지도 &copy; Esri &middot; Garmin &middot; OpenStreetMap 기여자</p>
   <p class="mapfoot">선은 실제 도로를 따라 그렸다. 숫자가 이동 순서이고, 같은 곳을 여러 번 들르면 번호를 모아 붙였다.</p></div></details>`;
 }
 
@@ -284,8 +284,9 @@ function drawMap(i){
   const map=L.map(box,{dragging:false,touchZoom:false,scrollWheelZoom:false,doubleClickZoom:false,
     boxZoom:false,keyboard:false,zoomControl:false,attributionControl:false});   // 출처는 그림 아래에 따로 적는다
   MAPS[i]=map;
-  L.tileLayer('https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png',
-    {maxZoom:19,detectRetina:true}).addTo(map);
+  /* CARTO는 키 없이 받으면 타일에 "API KEY REQUIRED" 워터마크가 박힌다 */
+  L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}',
+    {maxZoom:19}).addTo(map);
   /* 흰 테두리를 한 겹 깔아 선이 배경에 묻히지 않게 한다 */
   d.path.forEach(seg=>L.polyline(seg,{color:'#fff',weight:8,opacity:.95,lineCap:'round',lineJoin:'round'}).addTo(map));
   d.path.forEach((seg,j)=>L.polyline(seg,{color:LEGC[j%LEGC.length],weight:4,opacity:1,lineCap:'round',lineJoin:'round'}).addTo(map));
