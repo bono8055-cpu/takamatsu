@@ -768,9 +768,7 @@ DAYS.forEach((d,i)=>{
 
 
 const cafePane=document.createElement('section'); cafePane.className='pane';
-cafePane.innerHTML=`<div class="dayhead"><h2>카페</h2><em>일정 사이사이, 그 근처에서</em></div>
-<div class="note">가게 사진은 저작권이 있어 이 앱에 담지 못한다. 각 카페의 <b>지도</b>를 누르면 구글 지도에서 외부·내부·메뉴 사진을 바로 볼 수 있다.
-<b>7명</b>이 한 번에 앉을 수 있는지와 <b>테이크아웃</b> 여부를 함께 적었다 — 확인이 필요한 항목은 그렇게 표시했다.</div>`
+cafePane.innerHTML=`<div class="dayhead"><h2>카페</h2><em>일정 사이사이, 그 근처에서</em></div>`
 +CAFE.map(g=>`<div class="cday"><h3>${g.d}</h3><em>${esc(g.gap)}</em></div>`
  +g.list.map(c=>`<div class="cafe${c.cur?' cur':''}">
    <h4>${esc(c.n)}${c.cur?'<span class="cin">일정에 있음</span>':''}</h4>
