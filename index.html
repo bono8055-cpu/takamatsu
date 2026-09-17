@@ -1010,6 +1010,53 @@ const infoPane=document.createElement('section'); infoPane.className='pane';
 infoPane.innerHTML=`<div class="dayhead"><h2>참고 정보</h2><em>예약 · 예산 · 운영시간</em></div>
 <details open><summary>예약 체크리스트</summary><div class="body" id="chk"></div></details>
 
+<details open><summary>결정사안 · 렌터카를 빌릴까, 택시·버스로 다닐까</summary><div class="body">
+<p style="margin-bottom:12px">아직 정하지 않은 사안이에요. 숫자는 7명 전체 · 엔 기준이고, 렌터카는 토요타 W2(노아·복시 8인승) 정가표로 계산했어요.</p>
+
+<p class="big" style="margin-bottom:2px">렌터카 약 87,000 · 택시·버스 54,130</p>
+<p style="margin-bottom:14px;color:var(--muted)">차이 약 33,000엔 · 1인 4,700엔 · 렌터카 웹할인 20%면 차이 약 20,000엔</p>
+
+<table><tbody>
+<tr><td></td><td style="text-align:right"><b>렌터카</b></td><td style="text-align:right"><b>택시·버스</b></td></tr>
+<tr><td>차량 대여 4일 (10/16 10:30~10/19 15:15)</td><td style="text-align:right">62,700</td><td style="text-align:right">—</td></tr>
+<tr><td>면책보상 4일</td><td style="text-align:right">4,400</td><td style="text-align:right">—</td></tr>
+<tr><td>공항 왕복</td><td style="text-align:right">차로</td><td style="text-align:right">16,100</td></tr>
+<tr><td>나오시마 페리 · 섬 이동</td><td style="text-align:right">17,040</td><td style="text-align:right">9,030</td></tr>
+<tr><td>시내 택시 (2대 · 10구간)</td><td style="text-align:right">—</td><td style="text-align:right">29,000</td></tr>
+<tr><td>연료 77km · 유료주차</td><td style="text-align:right">3,000</td><td style="text-align:right">—</td></tr>
+<tr><td><b>합계</b></td><td style="text-align:right"><b>87,140</b></td><td style="text-align:right"><b>54,130</b></td></tr>
+</tbody></table>
+<p style="margin:8px 0 14px;color:var(--muted);font-size:12.5px">18일에 고토덴(시내 200엔 균일)을 섞으면 택시·버스 안이 47,130엔까지 내려가요. 렌터카는 예약 사이트에서 날짜를 넣어야 실제 견적이 나와요 — 정가보다 10~30% 싸게 잡히는 게 보통이에요.</p>
+
+<p style="margin-bottom:6px"><b>시간은 얼마나 더 드나</b></p>
+<table><tbody>
+<tr><td>택시 호출 → 도착</td><td>시내 5~10분 · 교외 우동집 10~15분. GO 앱 전국 평균 배차가 5분대인데 고마쓰 지역 수치는 공개돼 있지 않아요</td></tr>
+<tr><td>2대 분승</td><td>두 번째 차까지 3~5분 더. 7명이 한 차에 못 타요</td></tr>
+<tr><td>4일 합계</td><td>호출 20회 × 약 8분 = <b>약 2시간 40분</b> 기다리는 시간</td></tr>
+<tr><td>렌터카 쪽 시간</td><td>주차 찾기·정산 13회 × 5분 + 나오시마 승선 대기 40분 = <b>약 1시간 45분</b></td></tr>
+<tr><td>순차이</td><td>택시·버스 쪽이 <b>4일에 약 1시간</b> 더 써요</td></tr>
+</tbody></table>
+
+<p style="margin:14px 0 6px"><b>택시·버스로 가면 잃는 것</b></p>
+<ul style="margin:0 0 10px 18px;line-height:1.7">
+<li>첫날 나카니시우동 — 버스 노선 밖이라 빠져요</li>
+<li>쇼도시마를 고르면 간장마을이 빠지고 오후에 한 시간 비어요</li>
+<li>매번 두 대로 갈라져 타요. 아버지와 같은 차에 누가 타는지가 매번 문제가 돼요</li>
+<li>비가 오면 정류장·택시 대기가 그대로 비를 맞는 시간이에요</li>
+</ul>
+<p style="margin-bottom:6px"><b>택시·버스로 가면 얻는 것</b></p>
+<ul style="margin:0 0 14px 18px;line-height:1.7">
+<li>20,000~33,000엔 절약</li>
+<li>운전할 사람이 없어요 — 넷이 다 마셔도 돼요</li>
+<li>나오시마 차량 승선 대기 40분과 섬 주차 걱정이 사라져요</li>
+<li>공항버스가 유메타운·리쓰린공원 앞에 서서 첫날·마지막날 동선이 오히려 단순해요</li>
+</ul>
+
+<p style="margin-bottom:6px"><b>추천</b></p>
+<p><b>렌터카를 빌리되, 토요일 섬에는 차를 두고 가는 쪽</b>을 권해요. 7명이 한 차로 움직이는 편의가 이 여행에서 가장 큰 값이고, 차이 나는 돈은 1인 3,000~4,700엔이에요. 반면 섬 안에서는 차가 오히려 짐이라 마을버스·셔틀이 더 편하고 6,000엔 넘게 싸요. 이렇게 하면 렌터카 쪽 합계가 약 81,000엔으로 내려가요.</p>
+<p style="margin-top:8px;color:var(--muted);font-size:12.5px">돈을 우선하면 택시·버스 안도 충분히 돌아가요 — 이미 4일치 시각표를 다 맞춰 뒀고, 토요일 탭에서 「차 두고」 안을 눌러 보면 그 하루가 어떻게 되는지 볼 수 있어요.</p>
+</div></details>
+
 <details><summary>어디를 예약할 수 있나</summary><div class="body">
 <p style="margin-bottom:12px">7명이 함께 앉으려면 예약 되는 곳은 반드시 잡아야 해요. <b>우동집 네 곳은 전부 예약을 받지 않아요</b> — 셀프 서비스라 오픈 시각에 맞춰 가는 것이 유일한 방법이에요.</p>
 <table><thead><tr><th>가게</th><th>요일</th><th>예약</th></tr></thead><tbody>
