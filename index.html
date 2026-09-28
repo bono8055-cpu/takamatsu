@@ -1090,8 +1090,16 @@ boardPane.innerHTML=`<div class="dayhead"><h2>요청 · 의견</h2><em>일정에
  <div id="allc"></div>`;
 panes.appendChild(boardPane);
 
+const routeTable=d=>`<table><tbody>`+d.route.map(r=>`<tr><td style="width:46px">${r.t}</td><td>${esc(r.n)}</td><td style="color:var(--muted)">${esc(r.r)}</td></tr>`).join('')+`</tbody></table>`;
+const overview=DAYS.map(d=>d.alt?'':d.sw
+ ?`<div class="cday"><h3>${d.tab.split(' ')[0]}</h3><em>안 ${SATS.length}개 중 하나</em></div>`
+  +SATS.map(([,idx,lbl])=>`<p style="margin:12px 0 3px"><b>${esc(lbl)}</b> <span style="color:var(--muted)">· ${esc(DAYS[idx].title)}</span></p><p style="font-size:12.5px;line-height:1.7">`+DAYS[idx].route.map(r=>`${r.t} ${esc(r.n)}`).join(' → ')+`</p>`).join('')
+ :`<div class="cday"><h3>${d.tab}</h3><em>${esc(d.title)}</em></div>`+routeTable(d)).join('');
+
 const infoPane=document.createElement('section'); infoPane.className='pane';
 infoPane.innerHTML=`<div class="dayhead"><h2>참고 정보</h2><em>예약 · 예산 · 운영시간</em></div>
+<details open><summary>한눈에 보는 일정</summary><div class="body" style="margin-top:-18px">${overview}</div></details>
+
 <details open><summary>예약 체크리스트</summary><div class="body" id="chk"></div></details>
 
 <details open><summary>결정사안 · 렌터카를 빌릴까, 택시·버스로 다닐까</summary><div class="body">
