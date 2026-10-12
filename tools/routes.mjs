@@ -3,6 +3,7 @@
 //       node tools/routes.mjs --dry    → 쓰지 않고 거리 · 점 개수만 보여준다
 //       node tools/routes.mjs --all    → 숨긴 안(alt:1)까지 포함한다
 //       node tools/routes.mjs --osrm   → 구글 대신 공개 경로 서버(OSM)로 받는다
+//       node tools/routes.mjs --only=19(월):1,19(월):5 → 그 구간만 다시 그린다
 // 클라우드 환경에서는 NODE_USE_ENV_PROXY=1 을 붙여 실행한다
 import { readFileSync, writeFileSync, existsSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
@@ -13,7 +14,9 @@ const HTML = join(here, '..', 'index.html');
 const DRY = process.argv.includes('--dry');
 const ALL = process.argv.includes('--all');
 const MOCK = process.env.ROUTES_MOCK === '1';   // 네트워크 없이 치환 로직만 시험할 때
-const FRESH = process.argv.includes('--fresh');   // 저장해 둔 구글 경로를 무시하고 다시 받는다
+const FRESH = process.argv.includes('--fresh');
+/* --only=탭:번호,탭:번호 → 그 구간만 다시 그린다 (예: --only=19(월):1,19(월):5) */
+const ONLY = (process.argv.find(a => a.startsWith('--only=')) || '').slice(7).split(',').filter(Boolean);   // 저장해 둔 구글 경로를 무시하고 다시 받는다
 /* 구글 길찾기는 하루 상한이 있어 한 번 받은 구간은 저장해 두고 다시 묻지 않는다 (git 에는 올리지 않는다) */
 const CACHE = join(here, '.routes-cache.json');
 const cache = existsSync(CACHE) ? JSON.parse(readFileSync(CACHE, 'utf8')) : {};
@@ -31,7 +34,6 @@ const SERVERS = {
 const VIA = {
   // 일정 문구가 '아케이드를 지나'라고 안내하는 도보 구간은 마루가메마치 아케이드를 거치게 한다
   '16(금)|에너지 스탠드|숙소': [[34.34395, 134.05007]],
-  '17(토)|숙소|미라쿠': [[34.34395, 134.05007]],
   '17(토)|미라쿠|숙소': [[34.34395, 134.05007]],
 };
 
@@ -130,6 +132,7 @@ async function main(){
     if(!d.maps) continue;
     for(const m of d.maps){
       for(const [L, , mode] of m.path){
+        if(ONLY.length && !ONLY.includes(`${d.tab}:${L}`)) continue;
         const A = d.route[L], B = d.route[L + 1];
         if(!A?.p?.ll || !B?.p?.ll){ console.log(`- ${d.tab} ${L + 1}→${L + 2}: 좌표 없는 지점이라 건너뜀`); continue; }
         const prof = mode === 'w' ? 'foot' : 'car';
