@@ -124,6 +124,10 @@ details .body{padding-bottom:20px;font-size:13.5px;color:#44453F}
  color:var(--ink);font:600 11.5px/1.2 'IBM Plex Sans KR',sans-serif;
  text-shadow:0 0 3px #fff,0 0 3px #fff,0 0 3px #fff,0 0 2px #fff}
 .leaflet-tooltip.plabel::before{display:none}
+.lmk{transform:translate(-50%,6px);white-space:nowrap;color:#4A4F57;font:600 11px/1 'IBM Plex Sans KR',sans-serif;
+ text-shadow:0 0 3px #fff,0 0 3px #fff,0 0 2px #fff;pointer-events:none}
+.lmk.isl{transform:translate(-50%,-50%);font-size:12.5px;color:#4E6236;letter-spacing:.04em}
+.lmk.sea{transform:translate(-50%,-50%);font-size:13px;font-weight:500;color:#3C6E9E;letter-spacing:.35em}
 .mapcredit{font-size:10.5px;color:var(--hole);margin-top:6px;text-align:right}
 .swap{display:flex;align-items:center;gap:6px;margin-bottom:12px;flex-wrap:wrap}
 .swap b{font-size:12px;color:var(--muted);font-weight:600;margin-right:2px}
@@ -306,7 +310,7 @@ function dayFig(i){
   }).join('');
   return `<details class="dfig" data-map="${i}" open><summary>동선 한눈에 보기</summary><div class="body">${body}
   <p class="mapcredit">지도 &copy; Esri &middot; Garmin &middot; OpenStreetMap 기여자</p>
-  <p class="mapfoot">선은 실제 도로를 따라 그렸어요. 지도의 숫자는 <b>그날 들르는 모든 지점의 순서</b>예요. 같은 곳을 여러 번 들르면 번호를 모아 붙였어요(예: 1·10·12). 일정 본문의 <b>①②③은 차로 움직인 횟수</b>라 지도 번호와 다른 셈이니 헷갈리지 않게 봐주세요. 점선은 무료 셔틀이나 도보고, 배로 건너는 구간은 선을 긋지 않았어요. <b>두 손가락으로 벌리면 확대</b>되고, 확대한 상태에서는 한 손가락으로 지도를 옮길 수 있어요. 오므리면 처음 크기와 위치로 돌아와요.</p></div></details>`;
+  <p class="mapfoot">선은 실제 도로를 따라 그렸어요. 지도의 숫자는 <b>그날 들르는 모든 지점의 순서</b>예요. 같은 곳을 여러 번 들르면 번호를 모아 붙였어요(예: 1·10·12). 일정 본문의 <b>①②③은 차로 움직인 횟수</b>라 지도 번호와 다른 셈이니 헷갈리지 않게 봐주세요. 점선은 무료 셔틀이나 도보고, 배로 건너는 구간은 선을 긋지 않았어요. <b>두 손가락으로 벌리면 확대</b>되고, 확대한 상태에서는 한 손가락으로 지도를 옮길 수 있어요. 오므리면 처음 크기와 위치로 돌아와요. 회색 한글은 지도에 일본어로 적힌 주요 지명이에요.</p></div></details>`;
 }
 
 function drawMaps(i){
@@ -338,7 +342,14 @@ function drawMaps(i){
        .bindPopup(`<b>${esc(g.n)}</b><br>${g.rows.join('<br>')}`);
     }
     map.fitBounds(L.latLngBounds(m.idx.map(j=>d.route[j].p.ll)),{padding:[36,36]});
-    map.setMinZoom(map.getZoom());   // 처음 보이는 크기보다 작게는 줄지 않는다
+    map.setMinZoom(map.getZoom());
+    /* 한글 이름표는 선 위 · 번호 핀 아래 층에 둔다. 그날 핀과 150m 안으로 겹치면 핀 이름이 이미 있으니 빼다 */
+    map.createPane('lmk').style.zIndex=450;
+    const pins=[...at.values()].map(g=>L.latLng(g.ll));
+    const lmks=LMK.filter(o=>!pins.some(q=>q.distanceTo(o.ll)<150)).map(o=>({z:o.z,mk:L.marker(o.ll,{pane:'lmk',interactive:false,keyboard:false,
+      icon:L.divIcon({className:'',html:`<div class="lmk ${o.c||''}">${esc(o.n)}</div>`,iconSize:null,iconAnchor:[0,0]})})}));
+    const syncLmk=()=>{ const z=map.getZoom(); lmks.forEach(o=>z>=o.z?o.mk.addTo(map):o.mk.remove()); };
+    syncLmk(); map.on('zoomend',syncLmk);   // 처음 보이는 크기보다 작게는 줄지 않는다
     /* 확대했을 때만 한 손가락으로 지도를 끈다. 처음 크기로 돌아오면 제자리로 되돌리고 한 손가락은 다시 페이지 스크롤이다 */
     const home=map.getCenter(), z0=map.getZoom();
     map.on('zoomend',()=>{
@@ -377,7 +388,7 @@ const P = {
   gindaco:{q:'銀だこハイボール酒場 高松店',ll:[34.34144,134.0497]},
   bakaichi:{q:'うどんバカ一代',pid:'ChIJMWyhJHbrUzURpONppDqqkeg',ll:[34.33676,134.05861]},
   ritsurinP:{q:'栗林公園 東門駐車場',pid:'ChIJ6ez3-krrUzUR77vlGwAO10c',ll:[34.32863,134.04517]},
-  merikenya:{q:'めりけんや 高松駅前店',pid:'ChIJQxo9tojrUzURFDzJXpSRFzs'},
+  merikenya:{q:'めりけんや 高松駅前店',pid:'ChIJQxo9tojrUzURFDzJXpSRFzs',ll:[34.3496,134.0476]},
   lmStation:{q:'リトルマーメイド 高松駅店'},
   sugidama:{q:'鮨 酒 肴 杉玉 JR高松駅',ll:[34.35005,134.04545]},
   setoshirube:{q:'せとしるべ 高松港玉藻防波堤灯台',ll:[34.3615,134.0517]},
@@ -389,12 +400,24 @@ const P = {
   sunportP:{q:'サンポート高松地下駐車場',pid:'ChIJFeuBr4nrUzURoX-8acM9icg',ll:[34.35444,134.0464]},
   nakanishi:{q:'中西うどん 高松市鹿角町',ll:[34.30239,134.02922]},
   sanbiki:{q:'三びきの子ぶた 高松市常磐町',ll:[34.33889,134.05101]},
-  tenkatsu:{q:'天勝 本店 高松市兵庫町',ll:[34.34649,134.04612]},
   energy:{q:'高松エナジースタンド 一商店 瓦町',ll:[34.34027,134.05011]},
-  merikenya:{q:'めりけんや 高松駅前店',ll:[34.3496,134.0476]},
   youme:{q:'ゆめタウン高松 三条町',ll:[34.31676,134.04193]},
   chikuseiP:{q:'亀岡町 コインパーキング 高松'}
 };
+/* 지도 그림의 일본어 지명 옆에 붙이는 한글 이름표. z 이상으로 확대했을 때만 보인다 (sea · isl 은 넓은 지명) */
+const LMK=[
+ {n:'세토내해',ll:[34.425,134.12],z:0,c:'sea'},
+ {n:'쇼도시마',ll:[34.515,134.235],z:0,c:'isl'},{n:'나오시마',ll:[34.458,133.99],z:0,c:'isl'},
+ {n:'데시마',ll:[34.492,134.088],z:0,c:'isl'},{n:'메기지마',ll:[34.395,134.055],z:10.5,c:'isl'},
+ {n:'오기지마',ll:[34.428,134.058],z:10.5,c:'isl'},{n:'야시마',ll:[34.358,134.1],z:10.5,c:'isl'},
+ {n:'다카마쓰역',ll:[34.3504,134.0466],z:13},{n:'다카마쓰항',ll:P.port.ll,z:13},
+ {n:'다마모공원',ll:P.tamamo.ll,z:13},{n:'리쓰린공원',ll:[34.3295,134.043],z:13},
+ {n:'선포트',ll:P.sunportP.ll,z:14},{n:'빨간 등대',ll:P.setoshirube.ll,z:14},
+ {n:'마루가메마치 상점가',ll:P.arcade.ll,z:14.5},{n:'유메타운',ll:P.youme.ll,z:13},
+ {n:'다카마쓰공항',ll:P.airport.ll,z:12},
+ {n:'도노쇼항',ll:P.tonosho.ll,z:13},{n:'엔젤로드',ll:P.angel.ll,z:13},
+ {n:'올리브공원',ll:P.olive.ll,z:13},{n:'간카케이',ll:P.kankakei.ll,z:13},{n:'간장마을',ll:P.hishio.ll,z:13}
+];
 
 /* ───────── 일정 데이터 ───────── */
 const DAYS=[
