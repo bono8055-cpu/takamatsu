@@ -13,6 +13,10 @@ const HTML = join(here, '..', 'index.html');
 const DRY = process.argv.includes('--dry');
 const ALL = process.argv.includes('--all');
 const MOCK = process.env.ROUTES_MOCK === '1';   // 네트워크 없이 치환 로직만 시험할 때
+const FRESH = process.argv.includes('--fresh');   // 저장해 둔 구글 경로를 무시하고 다시 받는다
+/* 구글 길찾기는 하루 상한이 있어 한 번 받은 구간은 저장해 두고 다시 묻지 않는다 (git 에는 올리지 않는다) */
+const CACHE = join(here, '.routes-cache.json');
+const cache = existsSync(CACHE) ? JSON.parse(readFileSync(CACHE, 'utf8')) : {};
 
 function die(msg){ console.error('오류: ' + msg); process.exit(1); }
 const sleep = ms => new Promise(r => setTimeout(r, ms));
@@ -91,7 +95,10 @@ function simplify(pts, tol = 1){
 
 async function route(prof, pts, key){
   if(key && !process.argv.includes('--osrm')){
-    try{ return await google(key, prof, pts); }catch(e){ console.log(`  ! ${e.message} — 공개 경로 서버로 다시 받는다`); }
+    const ck = `${prof}|${pts.map(p => p.join(',')).join(';')}`;
+    if(cache[ck] && !FRESH) return { ...cache[ck], cached: true };
+    try{ const r = await google(key, prof, pts); cache[ck] = r; writeFileSync(CACHE, JSON.stringify(cache)); return r; }
+    catch(e){ console.log(`  ! ${e.message} — 공개 경로 서버로 다시 받는다`); }
   }
   if(MOCK){
     const [a, b] = [pts[0], pts.at(-1)];
@@ -128,11 +135,12 @@ async function main(){
         const prof = mode === 'w' ? 'foot' : 'car';
         const via = VIA[`${d.tab}|${A.n}|${B.n}`] || [];
         const label = `${d.tab} ${L + 1}→${L + 2} ${A.n} → ${B.n} (${prof === 'foot' ? '도보' : '차'})`;
+        let r;
         try{
-          const r = await route(prof, [A.p.ll, ...via, B.p.ll], MOCK ? null : key);
+          r = await route(prof, [A.p.ll, ...via, B.p.ll], MOCK ? null : key);
           /* 핀 위치에서 선이 시작·끝나도록 정확한 지점 좌표를 양 끝에 붙인다 */
           const pts = simplify([A.p.ll, ...r.coords, B.p.ll]);
-          console.log(`✓ ${label}: ${r.km.toFixed(2)}km · ${Math.round(r.min)}분 · 점 ${pts.length}개`);
+          console.log(`✓ ${label}: ${r.km.toFixed(2)}km · ${Math.round(r.min)}분 · 점 ${pts.length}개${r.cached ? ' (저장분)' : ''}`);
           /* 그날 블록 안에서만 같은 번호의 선을 찾아 바꾼다 */
           const t = tabs.findIndex(x => x.tab === d.tab);
           const from = tabs[t].at, to = t + 1 < tabs.length ? tabs[t + 1].at : s.length;
@@ -144,7 +152,7 @@ async function main(){
           tabs.splice(0, tabs.length, ...[...s.matchAll(/\{tab:'([^']+)'/g)].map(m2 => ({ tab: m2[1], at: m2.index })));
           done++;
         }catch(e){ console.log(`✗ ${label}: ${e.message}`); fail++; }
-        if(!MOCK) await sleep(1100);   // 공개 서버라 1초에 한 번만 묻는다
+        if(!MOCK && !r?.cached) await sleep(1100);   // 공개 서버라 1초에 한 번만 묻는다
       }
     }
   }
