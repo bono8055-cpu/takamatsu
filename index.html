@@ -76,6 +76,7 @@ nav button.on{background:var(--ink);color:var(--paper)}
 .links{display:flex;flex-wrap:wrap;gap:12px;margin-top:10px}
 a.go{font-size:12.5px;font-weight:500;color:var(--seto);text-decoration:none;border-bottom:1px solid var(--seto);padding-bottom:1px}
 a.go.p{color:#7A6320;border-color:#7A6320}
+a.go.d{color:#1F6F4A;border-color:#1F6F4A;font-weight:600}
 
 .resv{margin-top:12px;border:1px solid var(--seto);border-left-width:2px;padding:9px 12px}
 .resv h4{font-size:11px;letter-spacing:.14em;font-weight:600;color:var(--seto);margin-bottom:3px}
@@ -288,6 +289,14 @@ async function setTime(id,d,by){
 const M = o => o.pid
   ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(o.q)}&query_place_id=${o.pid}`
   : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(o.q)}`;
+/* 길찾기 — 출발지를 비워 두면 구글 지도가 지금 내 위치에서 시작한다. 경로만 띄우고 안내 시작은 누르는 사람이 한다 */
+const DIR = (o,mode) => `https://www.google.com/maps/dir/?api=1&${o.pid
+  ? `destination=${encodeURIComponent(o.q)}&destination_place_id=${o.pid}`
+  : o.ll ? `destination=${o.ll.join(',')}` : `destination=${encodeURIComponent(o.q)}`}&travelmode=${mode}`;
+/* 그 장소로 가는 바로 앞 이동 칸이 🚶면 걷기, 🚌면 대중교통, 🚗·🚕면 차로 찾는다 */
+const TRAVEL = (stops,j) => { for(let k=j-1;k>=0;k--){ const x=stops[k]; if(!x.m) continue;
+  return x.h.startsWith('🚶')?'walking':x.h.startsWith('🚌')?'transit':'driving'; } return null; };
+const DIRLABEL={walking:'🚶 걸어서 길찾기',driving:'🚗 차로 길찾기',transit:'🚌 대중교통 길찾기'};
 
 /* 구간마다 다른 색 — 순서를 색으로도 읽게 한다 */
 const LEGC=['#2F6E7E','#8F6F22','#A34A3C','#4F7A46','#6D5091','#35608F','#8C4470','#6B7A2E'];
@@ -649,7 +658,7 @@ const DAYS=[
   {m:1,t:'10:20',h:'🚗 우에하라야 → 선포트 지하주차장 · 15분',p:'3.8km'},
   {m:1,t:'10:35',h:'🚶 선포트 지하주차장 → 다마모공원 서문 · 10분',p:'약 600m · 평지 · 차는 선포트에 둬요'},
   {k:1,t:'10:45',h:'다마모공원 (다카마쓰성터)',p:'바닷물을 그대로 해자로 쓰는 드문 성. 숙소·항구에서 가깝고 완전 평지라 마지막 날에 안전해요. 역 쪽 서문으로 들어갔다 같은 서문으로 나와요. 50분.',
-   tags:['입장 200엔','서문 출입','완전 평지','현금 준비'],map:P.tamamo,
+   tags:['입장 200엔','서문 출입','완전 평지','현금 준비'],map:P.tamamo,dir:P.tamamoW,
    sl:'다마모공원에서 볼 것',
    see:[{n:'해수 해자와 도미',d:'바닷물을 그대로 끌어들인 드문 해자예요. 도미가 헤엄치고 먹이 주기도 돼요'},
     {n:'천수대 (天守台)',d:'천수각은 없지만 석축 위에 오르면 항구와 세토내해가 보여요. 계단이 있어 어르신은 아래에서 기다려요'},
@@ -1058,9 +1067,12 @@ function detail(o){
   return body?`<details class="more"><summary>자세히 보기</summary><div class="mbody">${body}</div></details>`:'';
 }
 
-function stopBlock(o,id){
+function stopBlock(o,id,mode){
   const links=[];
   if(o.map)links.push(`<a class="go" href="${M(o.map)}" target="_blank" rel="noopener">지도</a>`);
+  /* 배로 건너는 칸 · 앞에 이동 칸이 없는 칸은 길찾기를 달지 않는다. dir 이 있으면 그곳으로, 차로 가는 곳에 주차장이 있으면 주차장으로 안내한다 */
+  if(o.map&&mode&&!o.h.startsWith('⛴')){ const to=o.dir||(mode==='driving'&&o.park?o.park:o.map);
+    links.push(`<a class="go d" href="${DIR(to,mode)}" target="_blank" rel="noopener">${DIRLABEL[mode]}</a>`); }
   if(o.park)links.push(`<a class="go p" href="${M(o.park)}" target="_blank" rel="noopener">🅿 ${o.park.n}</a>`);
   return `<div class="stop${o.k?' key':''}${o.m?' move':''}" data-id="${id}">
     <div class="t" data-tm="${id}" title="누르면 실제 시각으로 고칠 수 있어요. 뒤 일정도 같이 밀려요">${o.t}</div><h3>${o.h}</h3>${o.p?`<p>${o.p}</p>`:''}
@@ -1086,7 +1098,7 @@ DAYS.forEach((d,i)=>{
    +`<div class="dayhead"><h2>${d.title}</h2><em>${d.sub}</em></div>`
    +(d.note?`<div class="note">${d.note}</div>`:'')
    +(d.maps?dayFig(i):'')
-   +`<div class="rail">`+d.stops.map((o,j)=>stopBlock(o,`d${i}s${j}`)).join('')+`</div>`;
+   +`<div class="rail">`+d.stops.map((o,j)=>stopBlock(o,`d${i}s${j}`,TRAVEL(d.stops,j))).join('')+`</div>`;
   panes.appendChild(s);
 });
 
