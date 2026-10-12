@@ -300,7 +300,7 @@ function dayFig(i){
     return (d.maps.length>1?`<h4 class="figt">${esc(m.t)}</h4>`:'')
       +`<div class="lmap" id="lmap${i}_${k}"></div><ul class="figleg">${legend}</ul>`;
   }).join('');
-  return `<details class="dfig" data-map="${i}" open><summary>동선 한눈에 보기</summary><div class="body">${body}
+  return `<details class="dfig" data-map="${i}"><summary>동선 한눈에 보기 · 눌러서 지도 열기</summary><div class="body">${body}
   <p class="mapfoot">선은 실제 도로를 따라 그렸어요. 지도의 숫자는 <b>그날 들르는 모든 지점의 순서</b>예요. 같은 곳을 여러 번 들르면 번호를 모아 붙였어요(예: 1·10·12). 일정 본문의 <b>①②③은 차로 움직인 횟수</b>라 지도 번호와 다른 셈이니 헷갈리지 않게 봐주세요. 점선은 무료 셔틀이나 도보고, 배로 건너는 구간은 선을 긋지 않았어요. <b>두 손가락으로 벌리면 확대</b>되고, 확대한 상태에서는 한 손가락으로 지도를 옮길 수 있어요. 오므리면 처음 크기와 위치로 돌아와요.</p></div></details>`;
 }
 
