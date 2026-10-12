@@ -306,7 +306,7 @@ function dayFig(i){
   }).join('');
   return `<details class="dfig" data-map="${i}" open><summary>동선 한눈에 보기</summary><div class="body">${body}
   <p class="mapcredit">지도 &copy; Esri &middot; Garmin &middot; OpenStreetMap 기여자</p>
-  <p class="mapfoot">선은 실제 도로를 따라 그렸어요. 지도의 숫자는 <b>그날 들르는 모든 지점의 순서</b>예요. 같은 곳을 여러 번 들르면 번호를 모아 붙였어요(예: 1·10·12). 일정 본문의 <b>①②③은 차로 움직인 횟수</b>라 지도 번호와 다른 셈이니 헷갈리지 않게 봐주세요. 점선은 무료 셔틀이나 도보고, 배로 건너는 구간은 선을 긋지 않았어요.</p></div></details>`;
+  <p class="mapfoot">선은 실제 도로를 따라 그렸어요. 지도의 숫자는 <b>그날 들르는 모든 지점의 순서</b>예요. 같은 곳을 여러 번 들르면 번호를 모아 붙였어요(예: 1·10·12). 일정 본문의 <b>①②③은 차로 움직인 횟수</b>라 지도 번호와 다른 셈이니 헷갈리지 않게 봐주세요. 점선은 무료 셔틀이나 도보고, 배로 건너는 구간은 선을 긋지 않았어요. <b>두 손가락으로 벌리면 확대</b>되고, 오므리면 처음 크기로 돌아와요.</p></div></details>`;
 }
 
 function drawMaps(i){
@@ -315,12 +315,14 @@ function drawMaps(i){
     const id=i+'_'+k, box=document.getElementById('lmap'+id); if(!box) return;
     if(MAPS[id]){ MAPS[id].invalidateSize(); return; }   // 숨었다 나타나면 크기만 다시 잡아요
     if(typeof L==='undefined'){ box.textContent='지도를 불러오지 못했어요. 네트워크를 확인해 주세요.'; return; }
-    const map=L.map(box,{dragging:false,touchZoom:false,scrollWheelZoom:false,doubleClickZoom:false,
-      boxZoom:false,keyboard:false,zoomControl:false,attributionControl:false});
+    /* 두 손가락으로 벌릴 때만 확대한다. 한 손가락은 페이지 스크롤로 남긴다 */
+    const map=L.map(box,{dragging:false,touchZoom:true,scrollWheelZoom:false,doubleClickZoom:false,
+      boxZoom:false,keyboard:false,zoomControl:false,attributionControl:false,
+      zoomSnap:0.25,bounceAtZoomLimits:false,maxZoom:19});
     MAPS[id]=map;
     /* CARTO는 키 없이 받으면 타일에 "API KEY REQUIRED" 워터마크가 박힌다 */
     L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}',
-      {maxZoom:19}).addTo(map);
+      {maxZoom:19,maxNativeZoom:17}).addTo(map);   // 17단계까지는 확대할수록 더 자세한 타일을 받는다
     /* 흰 테두리를 한 겹 깔아 선이 배경에 묻히지 않게 한다 */
     m.path.forEach(([,co])=>L.polyline(co,{color:'#fff',weight:8,opacity:.95,lineCap:'round',lineJoin:'round'}).addTo(map));
     m.path.forEach(([,co,mode],q)=>L.polyline(co,{color:LEGC[q%LEGC.length],weight:4,opacity:1,
@@ -336,6 +338,10 @@ function drawMaps(i){
        .bindPopup(`<b>${esc(g.n)}</b><br>${g.rows.join('<br>')}`);
     }
     map.fitBounds(L.latLngBounds(m.idx.map(j=>d.route[j].p.ll)),{padding:[36,36]});
+    map.setMinZoom(map.getZoom());   // 처음 보이는 크기보다 작게는 줄지 않는다
+    /* 노트북 트랙패드의 두 손가락 벌리기는 ctrl+휠로 들어온다 */
+    box.addEventListener('wheel',e=>{ if(!e.ctrlKey) return; e.preventDefault();
+      map.setZoomAround(map.mouseEventToContainerPoint(e),map.getZoom()-e.deltaY*0.01,{animate:false}); },{passive:false});
   });
 }
 
