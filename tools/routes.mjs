@@ -2,6 +2,8 @@
 // 사용: node tools/routes.mjs          → 보이는 날(alt 제외)의 모든 선을 다시 그려 index.html 에 쓴다
 //       node tools/routes.mjs --dry    → 쓰지 않고 거리 · 점 개수만 보여준다
 //       node tools/routes.mjs --all    → 숨긴 안(alt:1)까지 포함한다
+//       node tools/routes.mjs --osrm   → 구글 대신 공개 경로 서버(OSM)로 받는다
+// 클라우드 환경에서는 NODE_USE_ENV_PROXY=1 을 붙여 실행한다
 import { readFileSync, writeFileSync, existsSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
@@ -24,10 +26,38 @@ const SERVERS = {
 /* 특정 길을 꼭 지나야 하는 구간만 경유점을 둔다. 키: "탭|출발 이름|도착 이름", 값: [[lat,lng],...] */
 const VIA = {
   // 일정 문구가 '아케이드를 지나'라고 안내하는 도보 구간은 마루가메마치 아케이드를 거치게 한다
-  '16(금)|에너지 스탠드|숙소': [[34.34204, 134.04783]],
-  '17(토)|숙소|미라쿠': [[34.34204, 134.04783]],
-  '17(토)|미라쿠|숙소': [[34.34204, 134.04783]],
+  '16(금)|에너지 스탠드|숙소': [[34.34395, 134.05007]],
+  '17(토)|숙소|미라쿠': [[34.34395, 134.05007]],
+  '17(토)|미라쿠|숙소': [[34.34395, 134.05007]],
 };
+
+/* 구글 경로를 1순위로 받는다. 앱 지도가 구글이라 같은 도로 데이터여야 확대해도 선이 길과 겹친다 */
+const REFERER = 'https://bono8055-cpu.github.io/takamatsu/';   // 키가 이 주소에서만 쓰이도록 제한돼 있다
+function decode(str){
+  const out = []; let i = 0, la = 0, ln = 0;
+  while(i < str.length){
+    for(const k of [0, 1]){
+      let r = 0, sh = 0, b;
+      do { b = str.charCodeAt(i++) - 63; r |= (b & 31) << sh; sh += 5; } while(b >= 32);
+      const v = r & 1 ? ~(r >> 1) : r >> 1;
+      if(k === 0) la += v; else ln += v;
+    }
+    out.push([la / 1e5, ln / 1e5]);
+  }
+  return out;
+}
+async function google(key, prof, pts){
+  const ll = ([la, ln]) => ({ location: { latLng: { latitude: la, longitude: ln } } });
+  const body = { origin: ll(pts[0]), destination: ll(pts.at(-1)), travelMode: prof === 'foot' ? 'WALK' : 'DRIVE', polylineQuality: 'HIGH_QUALITY' };
+  if(pts.length > 2) body.intermediates = pts.slice(1, -1).map(p => ({ ...ll(p), via: true }));
+  const r = await fetch('https://routes.googleapis.com/directions/v2:computeRoutes', { method: 'POST', body: JSON.stringify(body),
+    headers: { 'content-type': 'application/json', 'x-goog-api-key': key, referer: REFERER,
+      'x-goog-fieldmask': 'routes.distanceMeters,routes.duration,routes.polyline.encodedPolyline' } });
+  const j = await r.json();
+  if(!r.ok || !j.routes?.length) throw new Error(`구글 → ${r.status} ${j.error?.message || '경로 없음'}`);
+  const rt = j.routes[0];
+  return { coords: decode(rt.polyline.encodedPolyline), km: rt.distanceMeters / 1000, min: parseInt(rt.duration) / 60 };
+}
 
 function loadHtml(){
   if(!existsSync(HTML)) die(`index.html 을 찾을 수 없다: ${HTML}`);
@@ -36,7 +66,8 @@ function loadHtml(){
   if(a < 0 || b < 0 || b <= a) die('index.html 에서 DAYS 블록 경계를 찾지 못했다. 구조가 바뀌었는지 확인해라.');
   const { DAYS } = new Function(`${s.slice(a, b)}\nreturn { DAYS };`)();
   if(!Array.isArray(DAYS) || !DAYS.length) die('DAYS 파싱 결과가 비어 있다.');
-  return { s, DAYS };
+  const key = (/const GMAPS_KEY='([^']+)'/.exec(s) || [])[1];
+  return { s, DAYS, key };
 }
 
 /* 미터 단위 Douglas-Peucker. 1m 이하로 휘는 점만 버려서 최대로 확대해도 길에서 벗어나지 않는다 */
@@ -58,7 +89,10 @@ function simplify(pts, tol = 1){
   return pts.filter((_, m) => keep[m]);
 }
 
-async function route(prof, pts){
+async function route(prof, pts, key){
+  if(key && !process.argv.includes('--osrm')){
+    try{ return await google(key, prof, pts); }catch(e){ console.log(`  ! ${e.message} — 공개 경로 서버로 다시 받는다`); }
+  }
   if(MOCK){
     const [a, b] = [pts[0], pts.at(-1)];
     return { coords: [a, [(a[0] + b[0]) / 2 + 0.0005, (a[1] + b[1]) / 2], b], km: 0, min: 0 };
@@ -81,7 +115,7 @@ async function route(prof, pts){
 const fmt = pts => pts.map(([la, ln]) => `[${+la.toFixed(5)},${+ln.toFixed(5)}]`).join(',');
 
 async function main(){
-  let { s, DAYS } = loadHtml();
+  let { s, DAYS, key } = loadHtml();
   const tabs = [...s.matchAll(/\{tab:'([^']+)'/g)].map(m => ({ tab: m[1], at: m.index }));
   let done = 0, fail = 0;
   for(const d of DAYS){
@@ -95,7 +129,7 @@ async function main(){
         const via = VIA[`${d.tab}|${A.n}|${B.n}`] || [];
         const label = `${d.tab} ${L + 1}→${L + 2} ${A.n} → ${B.n} (${prof === 'foot' ? '도보' : '차'})`;
         try{
-          const r = await route(prof, [A.p.ll, ...via, B.p.ll]);
+          const r = await route(prof, [A.p.ll, ...via, B.p.ll], MOCK ? null : key);
           /* 핀 위치에서 선이 시작·끝나도록 정확한 지점 좌표를 양 끝에 붙인다 */
           const pts = simplify([A.p.ll, ...r.coords, B.p.ll]);
           console.log(`✓ ${label}: ${r.km.toFixed(2)}km · ${Math.round(r.min)}분 · 점 ${pts.length}개`);
