@@ -306,7 +306,7 @@ function dayFig(i){
   }).join('');
   return `<details class="dfig" data-map="${i}" open><summary>동선 한눈에 보기</summary><div class="body">${body}
   <p class="mapcredit">지도 &copy; Esri &middot; Garmin &middot; OpenStreetMap 기여자</p>
-  <p class="mapfoot">선은 실제 도로를 따라 그렸어요. 지도의 숫자는 <b>그날 들르는 모든 지점의 순서</b>예요. 같은 곳을 여러 번 들르면 번호를 모아 붙였어요(예: 1·10·12). 일정 본문의 <b>①②③은 차로 움직인 횟수</b>라 지도 번호와 다른 셈이니 헷갈리지 않게 봐주세요. 점선은 무료 셔틀이나 도보고, 배로 건너는 구간은 선을 긋지 않았어요. <b>두 손가락으로 벌리면 확대</b>되고, 오므리면 처음 크기로 돌아와요.</p></div></details>`;
+  <p class="mapfoot">선은 실제 도로를 따라 그렸어요. 지도의 숫자는 <b>그날 들르는 모든 지점의 순서</b>예요. 같은 곳을 여러 번 들르면 번호를 모아 붙였어요(예: 1·10·12). 일정 본문의 <b>①②③은 차로 움직인 횟수</b>라 지도 번호와 다른 셈이니 헷갈리지 않게 봐주세요. 점선은 무료 셔틀이나 도보고, 배로 건너는 구간은 선을 긋지 않았어요. <b>두 손가락으로 벌리면 확대</b>되고, 확대한 상태에서는 한 손가락으로 지도를 옮길 수 있어요. 오므리면 처음 크기와 위치로 돌아와요.</p></div></details>`;
 }
 
 function drawMaps(i){
@@ -339,6 +339,12 @@ function drawMaps(i){
     }
     map.fitBounds(L.latLngBounds(m.idx.map(j=>d.route[j].p.ll)),{padding:[36,36]});
     map.setMinZoom(map.getZoom());   // 처음 보이는 크기보다 작게는 줄지 않는다
+    /* 확대했을 때만 한 손가락으로 지도를 끈다. 처음 크기로 돌아오면 제자리로 되돌리고 한 손가락은 다시 페이지 스크롤이다 */
+    const home=map.getCenter(), z0=map.getZoom();
+    map.on('zoomend',()=>{
+      if(map.getZoom()>z0+0.01) map.dragging.enable();
+      else { map.dragging.disable(); map.setView(home,z0,{animate:false}); }
+    });
     /* 노트북 트랙패드의 두 손가락 벌리기는 ctrl+휠로 들어온다 */
     box.addEventListener('wheel',e=>{ if(!e.ctrlKey) return; e.preventDefault();
       map.setZoomAround(map.mouseEventToContainerPoint(e),map.getZoom()-e.deltaY*0.01,{animate:false}); },{passive:false});
