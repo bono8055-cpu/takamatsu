@@ -1193,7 +1193,7 @@ const runPane=document.createElement('section'); runPane.className='pane';
 const runLink=r=>{ const ll=r.route.map(x=>x.p.ll.join(',')), mid=ll.slice(1,-1);
   if(mid.length===1) return `https://www.google.com/maps/dir/?api=1&origin=${ll[0]}&destination=${mid[0]}&travelmode=walking`;
   return `https://www.google.com/maps/dir/?api=1&origin=${ll[0]}&destination=${ll.at(-1)}&waypoints=${mid.join('%7C')}&travelmode=walking`; };
-runPane.innerHTML=`<div class="dayhead"><h2>런닝</h2><em>숙소에서 출발해 바다를 보며 달리고 숙소로 돌아와요</em></div>${artImg('top')}
+runPane.innerHTML=`<div class="dayhead"><h2>런닝코스</h2><em>숙소에서 출발해 바다를 보며 달리고 숙소로 돌아와요</em></div>${artImg('top')}
 <div class="note"><b>아침이든 저녁이든</b><br>
 · 해 뜨는 시각 06:10 · 해 지는 시각 17:28 (16~19일)<br>
 · 아침에는 바다 위로 해가 떠오르고, 저녁에는 해가 진 뒤 빨간 등대에 불이 들어와요.<br>
@@ -1327,7 +1327,7 @@ infoPane.innerHTML=`<div class="dayhead"><h2>참고 정보</h2><em>예약 · 예
 panes.appendChild(infoPane);
 
 nav.insertAdjacentHTML('beforeend','<button data-i="jp">일본어</button>');
-nav.insertAdjacentHTML('beforeend','<button data-i="run">런닝</button>');
+nav.insertAdjacentHTML('beforeend','<button data-i="run">런닝코스</button>');
 nav.insertAdjacentHTML('beforeend','<button data-i="cafe">카페</button>');
 nav.insertAdjacentHTML('beforeend','<button data-i="board">요청</button>');
 nav.insertAdjacentHTML('beforeend','<button data-i="info">정보</button>');
