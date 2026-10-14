@@ -165,6 +165,7 @@ ul.see .mean{font-size:13px;color:#44453F}
 .run h3{font-family:'Noto Serif KR',serif;font-size:17px;font-weight:600;line-height:1.4}
 .rlv{display:inline-block;font:600 11px/1 'IBM Plex Sans KR',sans-serif;padding:4px 7px;margin-right:6px;vertical-align:2px;color:#fff;background:var(--seto)}
 .rlv.mid{background:#B8432F}
+.rlv.easy{background:#4F7A46}
 .rkm{font-size:13px;color:var(--muted);margin:4px 0 8px}
 .rkm b{color:var(--ink);font-size:15px}
 .run .dfig{margin-top:10px}
@@ -957,6 +958,11 @@ const DAYS=[
 
 /* 런닝 코스 — 숙소에서 출발해 숙소로 돌아온다. 선(maps[].path)은 tools/routes.mjs 가 도보 경로로 그린다 */
 const RUNS=[
+ {tab:'런닝입문',n:'왕초보 · 선포트 바닷가 왕복',lv:'왕초보',km:'3.5km',min:'25~35분',art:'tower',
+  d:'숙소에서 선포트 바닷가까지 갔다가 같은 길로 돌아와요. 1분 달리고 1분 걷기를 되풀이해도 돼요. 힘들면 바닷가에서 쉬었다가 걸어서 돌아와도 25분이에요.',
+  facts:[['노면','포장 평지 · 오르막 없음'],['바다','선포트 바닷가에서 바다와 섬이 보여요'],['신호','큰길 신호 4~5번 · 신호에서 숨을 골라요'],['화장실 · 물','다카마쓰역 · 선포트 건물 · 역 앞 편의점']],
+  route:[{p:P.stay,t:'0km',n:'숙소',r:'출발'},{p:P.sunportSea,t:'1.8km',n:'선포트 바닷가',r:'반환점'},{p:P.stay,t:'3.5km',n:'숙소',r:'도착'}],
+  maps:[{t:'',idx:[0,1,2],path:[[0,[[34.34672,134.03503],[34.34671,134.03503],[34.34672,134.03519],[34.34701,134.03515],[34.34704,134.03512],[34.34708,134.03511],[34.34726,134.03509],[34.34754,134.03591],[34.34764,134.03586],[34.34775,134.03583],[34.34777,134.03586],[34.34797,134.03663],[34.34813,134.03659],[34.34817,134.03667],[34.34851,134.03655],[34.34857,134.03678],[34.34857,134.03687],[34.3486,134.03698],[34.34883,134.0369],[34.34907,134.03753],[34.34915,134.03768],[34.3494,134.0383],[34.34946,134.03856],[34.34949,134.03856],[34.34953,134.03861],[34.34967,134.0391],[34.34971,134.03932],[34.34972,134.03953],[34.34963,134.04008],[34.34971,134.04026],[34.34977,134.0405],[34.35008,134.04037],[34.35037,134.04148],[34.35042,134.04148],[34.35044,134.04152],[34.35064,134.04228],[34.35074,134.04272],[34.35122,134.04265],[34.35126,134.04266],[34.35126,134.0427],[34.35131,134.0427],[34.35189,134.04259],[34.35204,134.0431],[34.35208,134.04308],[34.35212,134.0432],[34.35235,134.04401],[34.3524,134.04428],[34.35243,134.04433],[34.35253,134.0447],[34.3526,134.04474],[34.35268,134.04476],[34.35366,134.04431],[34.3538,134.0443],[34.35385,134.04432],[34.35457,134.04577],[34.35492,134.04652]],'w'],[1,[[34.35492,134.04652],[34.35457,134.04577],[34.35391,134.04442],[34.35384,134.04432],[34.3538,134.0443],[34.35366,134.04431],[34.35268,134.04476],[34.3526,134.04474],[34.35253,134.0447],[34.35243,134.04433],[34.3524,134.04428],[34.35235,134.04401],[34.35212,134.0432],[34.35208,134.04308],[34.35204,134.0431],[34.35189,134.04259],[34.35131,134.0427],[34.35126,134.0427],[34.35126,134.04266],[34.35122,134.04265],[34.35074,134.04272],[34.35064,134.04228],[34.35044,134.04152],[34.35042,134.04148],[34.35037,134.04148],[34.35008,134.04037],[34.34977,134.0405],[34.34971,134.04026],[34.34963,134.04008],[34.34972,134.03953],[34.34971,134.03932],[34.34967,134.0391],[34.34953,134.03861],[34.3495,134.03857],[34.34946,134.03856],[34.3494,134.0383],[34.34915,134.03768],[34.34907,134.03753],[34.34883,134.0369],[34.3486,134.03698],[34.34859,134.03695],[34.3483,134.03705],[34.3482,134.03665],[34.34817,134.03667],[34.34813,134.03659],[34.34797,134.03663],[34.34777,134.03586],[34.34775,134.03583],[34.34754,134.03591],[34.34726,134.03509],[34.34708,134.03511],[34.34704,134.03512],[34.34701,134.03515],[34.34672,134.03519],[34.34671,134.03503],[34.34672,134.03503]],'w']]}]},
  {tab:'런닝A',n:'A · 바닷가 산책로와 빨간 등대',lv:'초급',km:'5.3km',min:'35~45분',art:'light',
   d:'숙소에서 선포트 바닷가로 나가 방파제 끝 빨간 등대까지 갔다가 같은 길로 돌아와요. 바다를 보며 달리는 구간이 왕복 2km예요.',
   facts:[['노면','포장 평지 · 오르막 없음'],['바다','선포트 바닷가부터 등대까지 바다가 양옆에 있어요'],['신호','숙소 → 선포트 사이 큰길 신호 4~5번'],['화장실 · 물','다카마쓰역 · 선포트 건물 · 역 앞 편의점']],
@@ -1166,6 +1172,7 @@ const waves=(y0,n,c)=>Array.from({length:n},(_,i)=>{const y=y0+i*9,x=(i*47)%60;r
 const ART={
  top:`<svg class="rart" viewBox="0 0 320 120" role="img" aria-label="해 뜨는 세토내해를 따라 달리는 두 사람"><rect width="320" height="120" fill="#F6ECD8"/><circle cx="236" cy="66" r="22" fill="#E7AE45"/><path d="M0 70 Q30 56 62 66 Q90 52 128 68 L128 72 L0 72Z" fill="#A9B9B6"/><path d="M168 72 Q200 60 226 70 L300 70 Q312 64 320 66 L320 72Z" fill="#B7C3BE"/><rect y="72" width="320" height="30" fill="#3E6470"/>${waves(80,3,'#8FB3B6')}<rect y="100" width="320" height="20" fill="#D9D3C4"/><path d="M0 100 H320" stroke="#B9B2A2" stroke-width="2"/>${runner(118,108,'#17181A')}${runner(150,110,'#B8432F')}</svg>`,
  light:`<svg class="rart" viewBox="0 0 320 130" role="img" aria-label="방파제 끝 빨간 등대와 바닷가 산책로"><rect width="320" height="130" fill="#EEF0EA"/><circle cx="70" cy="40" r="14" fill="#E7AE45"/><path d="M0 76 Q36 62 74 72 Q110 60 150 74 L150 78 L0 78Z" fill="#A9B9B6"/><rect y="78" width="320" height="52" fill="#3E6470"/>${waves(88,4,'#8FB3B6')}<path d="M96 112 L292 92 L296 98 L100 120Z" fill="#CBC8BF"/><path d="M96 112 L292 92" stroke="#E6E4DE" stroke-width="1.5"/><rect x="276" y="52" width="14" height="42" rx="2" fill="#B8432F"/><rect x="276" y="62" width="14" height="4" fill="#F3F1EB" opacity=".8"/><path d="M274 52 H292 L283 42Z" fill="#7A2B1F"/><circle cx="283" cy="49" r="2.4" fill="#F7D67A"/><path d="M262 40 L248 34 M262 46 L246 46 M304 40 L318 34 M304 46 L320 46" stroke="#E7AE45" stroke-width="1.6" stroke-linecap="round"/>${runner(170,105,'#17181A')}<path d="M0 126 H96" stroke="#CBC8BF" stroke-width="8"/></svg>`,
+ tower:`<svg class="rart" viewBox="0 0 320 130" role="img" aria-label="심볼타워 앞 바닷가를 걷고 달리는 두 사람"><rect width="320" height="130" fill="#F4EEE2"/><circle cx="268" cy="34" r="13" fill="#E7AE45"/><rect x="42" y="14" width="26" height="72" fill="#9DB3B8"/><path d="M42 14 h26 v4 h-26Z" fill="#6F8D94"/><g fill="#F3F1EB">${[24,34,44,54,64,74].map(y=>`<rect x="47" y="${y}" width="16" height="3"/>`).join('')}</g><rect x="72" y="52" width="40" height="34" fill="#B7C7C9"/><path d="M118 80 Q160 68 200 78 Q240 66 284 76 L284 86 L118 86Z" fill="#A9B9B6"/><rect y="86" width="320" height="22" fill="#3E6470"/>${waves(93,2,'#8FB3B6')}<rect y="108" width="320" height="22" fill="#D9D3C4"/><path d="M0 108 H320" stroke="#B9B2A2" stroke-width="2"/><g stroke="#7A6A55" stroke-width="2.5" stroke-linecap="round"><path d="M226 114 h30 M230 114 v8 M252 114 v8"/></g>${runner(150,126,'#4F7A46')}<g transform="translate(196 126)" stroke="#17181A" stroke-width="3" stroke-linecap="round" fill="none"><circle cx="0" cy="-26" r="4.2" fill="#17181A" stroke="none"/><path d="M0 -20 L0 -8 M0 -8 L-4 0 M0 -8 L4 0 M0 -17 L-5 -10 M0 -17 L5 -11"/></g></svg>`,
  castle:`<svg class="rart" viewBox="0 0 320 130" role="img" aria-label="다마모성 망루와 해자, 항구 창고 골목"><rect width="320" height="130" fill="#F2EEE4"/><path d="M28 74 L120 74 L112 54 L36 54Z" fill="#A7A196"/><path d="M36 54 h76 M33 64 h82" stroke="#8F897E" stroke-width="1"/><rect x="48" y="34" width="52" height="20" fill="#FBFAF6"/><path d="M40 36 Q74 26 108 36 L100 31 Q74 22 48 31Z" fill="#2E3233"/><rect x="58" y="18" width="32" height="14" fill="#FBFAF6"/><path d="M52 20 Q74 10 96 20 L90 14 Q74 6 58 14Z" fill="#2E3233"/><rect x="56" y="40" width="8" height="6" fill="#2E3233"/><rect x="84" y="40" width="8" height="6" fill="#2E3233"/><rect y="74" width="320" height="34" fill="#3E6470"/>${waves(82,3,'#8FB3B6')}<g fill="#8A6A4A"><rect x="196" y="46" width="34" height="28"/><rect x="236" y="40" width="38" height="34"/><rect x="280" y="48" width="34" height="26"/></g><g fill="#5E4732"><path d="M192 46 L213 36 L234 46Z"/><path d="M232 40 L255 28 L278 40Z"/><path d="M276 48 L297 38 L318 48Z"/></g><g fill="#F7D67A"><rect x="208" y="58" width="8" height="8"/><rect x="250" y="54" width="9" height="9"/><rect x="292" y="58" width="8" height="8"/></g><path d="M150 90 l16 0 l-3 5 h-10Z" fill="#F3F1EB"/><path d="M158 90 v-10 l6 8Z" fill="#F3F1EB"/><rect y="108" width="320" height="22" fill="#D9D3C4"/>${runner(132,124,'#B8432F')}</svg>`
 };
 
@@ -1182,21 +1189,23 @@ jpPane.innerHTML=`<div class="dayhead"><h2>일본어 한마디</h2><em>못 알�
 panes.appendChild(jpPane);
 
 const runPane=document.createElement('section'); runPane.className='pane';
-const runLink=r=>{ const ll=r.route.map(x=>x.p.ll.join(','));
-  return `https://www.google.com/maps/dir/?api=1&origin=${ll[0]}&destination=${ll.at(-1)}&waypoints=${ll.slice(1,-1).join('%7C')}&travelmode=walking`; };
+/* 같은 길로 돌아오는 코스(경유지 1곳)는 반환점까지만 보여준다. 출발지와 도착지가 같으면 구글 지도가 경로를 그리지 않는다 */
+const runLink=r=>{ const ll=r.route.map(x=>x.p.ll.join(',')), mid=ll.slice(1,-1);
+  if(mid.length===1) return `https://www.google.com/maps/dir/?api=1&origin=${ll[0]}&destination=${mid[0]}&travelmode=walking`;
+  return `https://www.google.com/maps/dir/?api=1&origin=${ll[0]}&destination=${ll.at(-1)}&waypoints=${mid.join('%7C')}&travelmode=walking`; };
 runPane.innerHTML=`<div class="dayhead"><h2>런닝</h2><em>숙소에서 출발해 바다를 보며 달리고 숙소로 돌아와요</em></div>${ART.top}
 <div class="note"><b>언제 달리나</b><br>
 · <b>19일(월) 아침</b>이 가장 넉넉해요. 09:15 출발이라 06:30에 나가도 B코스를 돌고 씻을 시간이 남아요.<br>
-· 17일(토) · 18일(일) 아침은 07:15 출발이라 <b>A코스만</b> 돌아요. 06:10에 나가 07:00 전에 돌아와요.<br>
-· 18일(일) 오후 숙소 휴식(15:15~16:30)에도 A코스가 들어가요.<br>
+· 17일(토) · 18일(일) 아침은 07:15 출발이라 <b>왕초보나 A코스</b>만 돌아요. 06:10에 나가 07:00 전에 돌아와요.<br>
+· 18일(일) 오후 숙소 휴식(15:15~16:30)에도 왕초보나 A코스가 들어가요.<br>
 · 해 뜨는 시각 06:10 · 해 지는 시각 17:28 (16~19일)</div>
 <div class="note"><b>나가기 전에</b><br>
 · 두 명 이상 함께 나가고 폰과 숙소 열쇠를 챙겨요.<br>
 · 일본은 차가 왼쪽으로 다녀요. 길을 건널 때 <b>오른쪽을 먼저</b> 봐요.<br>
 · 10월 아침은 15도 안팎이라 얇은 긴팔이 좋아요. 방파제 위는 바람이 세요.<br>
-· 시간은 1km에 7~8분으로 천천히 달린 기준이에요.</div>`
+· 시간은 1km에 7~8분으로 천천히 달린 기준이에요. 왕초보 코스는 걷기를 섞은 시간이에요.</div>`
 +RUNS.map((r,k)=>`<div class="run">${ART[r.art]}<div class="rb">
-  <h3><span class="rlv${r.lv==='중급'?' mid':''}">${r.lv}</span>${esc(r.n)}</h3>
+  <h3><span class="rlv${r.lv==='중급'?' mid':r.lv==='왕초보'?' easy':''}">${r.lv}</span>${esc(r.n)}</h3>
   <div class="rkm"><b>${r.km}</b> · ${r.min} · 숙소 출발 · 숙소 도착</div>
   <p style="font-size:13.5px">${r.d}</p>
   <table class="ctb" style="margin-top:8px"><tbody>${r.facts.map(([a,b])=>`<tr><td>${a}</td><td>${b}</td></tr>`).join('')}</tbody></table>
