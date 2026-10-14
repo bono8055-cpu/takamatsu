@@ -1,5 +1,5 @@
 // 동선 지도의 선을 실제 도로 경로로 다시 그리는 CLI
-// 사용: node tools/routes.mjs          → 보이는 날(alt 제외)의 모든 선을 다시 그려 index.html 에 쓴다
+// 사용: node tools/routes.mjs          → 보이는 날(alt 제외)과 런닝 코스의 모든 선을 다시 그려 index.html 에 쓴다
 //       node tools/routes.mjs --dry    → 쓰지 않고 거리 · 점 개수만 보여준다
 //       node tools/routes.mjs --all    → 숨긴 안(alt:1)까지 포함한다
 //       node tools/routes.mjs --osrm   → 구글 대신 공개 경로 서버(OSM)로 받는다
@@ -70,10 +70,10 @@ function loadHtml(){
   const s = readFileSync(HTML, 'utf8');
   const a = s.indexOf('const P = {'), b = s.indexOf('const PH=[');
   if(a < 0 || b < 0 || b <= a) die('index.html 에서 DAYS 블록 경계를 찾지 못했다. 구조가 바뀌었는지 확인해라.');
-  const { DAYS } = new Function(`${s.slice(a, b)}\nreturn { DAYS };`)();
+  const { DAYS, RUNS } = new Function(`${s.slice(a, b)}\nreturn { DAYS, RUNS: typeof RUNS === 'undefined' ? [] : RUNS };`)();
   if(!Array.isArray(DAYS) || !DAYS.length) die('DAYS 파싱 결과가 비어 있다.');
   const key = (/const GMAPS_KEY='([^']+)'/.exec(s) || [])[1];
-  return { s, DAYS, key };
+  return { s, DAYS: [...DAYS, ...RUNS], key };   // 런닝 코스(RUNS)도 같은 방식으로 다시 그린다
 }
 
 /* 미터 단위 Douglas-Peucker. 1m 이하로 휘는 점만 버려서 최대로 확대해도 길에서 벗어나지 않는다 */
