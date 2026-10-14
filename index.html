@@ -158,7 +158,7 @@ ul.see li{border-top:1px solid var(--line);padding:8px 0}
 ul.see .mean{font-size:13px;color:#44453F}
 .figt{font:600 12.5px/1 'IBM Plex Sans KR',sans-serif;color:var(--seto);margin:18px 0 7px}
 /* 런닝 */
-.rart{display:block;width:100%;height:auto;border:1px solid var(--line);margin-top:14px}
+.rart{display:block;width:100%;aspect-ratio:16/9;object-fit:cover;background:#EFE6D4;border:1px solid var(--line);margin-top:14px}
 .run{border:1px solid var(--line);background:var(--panel);margin-top:18px}
 .run .rart{border:0;border-bottom:1px solid var(--line);margin:0}
 .run .rb{padding:13px}
@@ -1166,15 +1166,15 @@ cafePane.innerHTML=`<div class="dayhead"><h2>카페</h2><em>일정 사이사이,
   </div>`).join('')).join('');
 panes.appendChild(cafePane);
 
-/* 런닝 탭 삽화 — 세토내해 아침 바다 · 빨간 등대 · 다마모성 */
-const runner=(x,y,c)=>`<g transform="translate(${x} ${y})" stroke="${c}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"><circle cx="0" cy="-26" r="4.2" fill="${c}" stroke="none"/><path d="M-1 -20 L-4 -8"/><path d="M-4 -8 L3 -1 L1 7"/><path d="M-4 -8 L-10 -1 L-15 1"/><path d="M-1 -18 L6 -14 L9 -19"/><path d="M-2 -18 L-8 -13 L-12 -16"/></g>`;
-const waves=(y0,n,c)=>Array.from({length:n},(_,i)=>{const y=y0+i*9,x=(i*47)%60;return `<path d="M${x} ${y} q10 -4 20 0 t20 0 M${x+90} ${y+3} q10 -4 20 0 t20 0 M${x+190} ${y} q10 -4 20 0 t20 0" stroke="${c}" stroke-width="1.4" fill="none" stroke-linecap="round"/>`}).join('');
+/* 런닝 탭 삽화 — AI로 그려 Higgsfield 저장소에 올린 그림을 바로 불러온다 */
+const ARTB='https://d8j0ntlcm91z4.cloudfront.net/user_37vErD8AJhL9V7kdpLOZ1TNmIfV/hf_20261014_';
 const ART={
- top:`<svg class="rart" viewBox="0 0 320 120" role="img" aria-label="해 뜨는 세토내해를 따라 달리는 두 사람"><rect width="320" height="120" fill="#F6ECD8"/><circle cx="236" cy="66" r="22" fill="#E7AE45"/><path d="M0 70 Q30 56 62 66 Q90 52 128 68 L128 72 L0 72Z" fill="#A9B9B6"/><path d="M168 72 Q200 60 226 70 L300 70 Q312 64 320 66 L320 72Z" fill="#B7C3BE"/><rect y="72" width="320" height="30" fill="#3E6470"/>${waves(80,3,'#8FB3B6')}<rect y="100" width="320" height="20" fill="#D9D3C4"/><path d="M0 100 H320" stroke="#B9B2A2" stroke-width="2"/>${runner(118,108,'#17181A')}${runner(150,110,'#B8432F')}</svg>`,
- light:`<svg class="rart" viewBox="0 0 320 130" role="img" aria-label="방파제 끝 빨간 등대와 바닷가 산책로"><rect width="320" height="130" fill="#EEF0EA"/><circle cx="70" cy="40" r="14" fill="#E7AE45"/><path d="M0 76 Q36 62 74 72 Q110 60 150 74 L150 78 L0 78Z" fill="#A9B9B6"/><rect y="78" width="320" height="52" fill="#3E6470"/>${waves(88,4,'#8FB3B6')}<path d="M96 112 L292 92 L296 98 L100 120Z" fill="#CBC8BF"/><path d="M96 112 L292 92" stroke="#E6E4DE" stroke-width="1.5"/><rect x="276" y="52" width="14" height="42" rx="2" fill="#B8432F"/><rect x="276" y="62" width="14" height="4" fill="#F3F1EB" opacity=".8"/><path d="M274 52 H292 L283 42Z" fill="#7A2B1F"/><circle cx="283" cy="49" r="2.4" fill="#F7D67A"/><path d="M262 40 L248 34 M262 46 L246 46 M304 40 L318 34 M304 46 L320 46" stroke="#E7AE45" stroke-width="1.6" stroke-linecap="round"/>${runner(170,105,'#17181A')}<path d="M0 126 H96" stroke="#CBC8BF" stroke-width="8"/></svg>`,
- tower:`<svg class="rart" viewBox="0 0 320 130" role="img" aria-label="심볼타워 앞 바닷가를 걷고 달리는 두 사람"><rect width="320" height="130" fill="#F4EEE2"/><circle cx="268" cy="34" r="13" fill="#E7AE45"/><rect x="42" y="14" width="26" height="72" fill="#9DB3B8"/><path d="M42 14 h26 v4 h-26Z" fill="#6F8D94"/><g fill="#F3F1EB">${[24,34,44,54,64,74].map(y=>`<rect x="47" y="${y}" width="16" height="3"/>`).join('')}</g><rect x="72" y="52" width="40" height="34" fill="#B7C7C9"/><path d="M118 80 Q160 68 200 78 Q240 66 284 76 L284 86 L118 86Z" fill="#A9B9B6"/><rect y="86" width="320" height="22" fill="#3E6470"/>${waves(93,2,'#8FB3B6')}<rect y="108" width="320" height="22" fill="#D9D3C4"/><path d="M0 108 H320" stroke="#B9B2A2" stroke-width="2"/><g stroke="#7A6A55" stroke-width="2.5" stroke-linecap="round"><path d="M226 114 h30 M230 114 v8 M252 114 v8"/></g>${runner(150,126,'#4F7A46')}<g transform="translate(196 126)" stroke="#17181A" stroke-width="3" stroke-linecap="round" fill="none"><circle cx="0" cy="-26" r="4.2" fill="#17181A" stroke="none"/><path d="M0 -20 L0 -8 M0 -8 L-4 0 M0 -8 L4 0 M0 -17 L-5 -10 M0 -17 L5 -11"/></g></svg>`,
- castle:`<svg class="rart" viewBox="0 0 320 130" role="img" aria-label="다마모성 망루와 해자, 항구 창고 골목"><rect width="320" height="130" fill="#F2EEE4"/><path d="M28 74 L120 74 L112 54 L36 54Z" fill="#A7A196"/><path d="M36 54 h76 M33 64 h82" stroke="#8F897E" stroke-width="1"/><rect x="48" y="34" width="52" height="20" fill="#FBFAF6"/><path d="M40 36 Q74 26 108 36 L100 31 Q74 22 48 31Z" fill="#2E3233"/><rect x="58" y="18" width="32" height="14" fill="#FBFAF6"/><path d="M52 20 Q74 10 96 20 L90 14 Q74 6 58 14Z" fill="#2E3233"/><rect x="56" y="40" width="8" height="6" fill="#2E3233"/><rect x="84" y="40" width="8" height="6" fill="#2E3233"/><rect y="74" width="320" height="34" fill="#3E6470"/>${waves(82,3,'#8FB3B6')}<g fill="#8A6A4A"><rect x="196" y="46" width="34" height="28"/><rect x="236" y="40" width="38" height="34"/><rect x="280" y="48" width="34" height="26"/></g><g fill="#5E4732"><path d="M192 46 L213 36 L234 46Z"/><path d="M232 40 L255 28 L278 40Z"/><path d="M276 48 L297 38 L318 48Z"/></g><g fill="#F7D67A"><rect x="208" y="58" width="8" height="8"/><rect x="250" y="54" width="9" height="9"/><rect x="292" y="58" width="8" height="8"/></g><path d="M150 90 l16 0 l-3 5 h-10Z" fill="#F3F1EB"/><path d="M158 90 v-10 l6 8Z" fill="#F3F1EB"/><rect y="108" width="320" height="22" fill="#D9D3C4"/>${runner(132,124,'#B8432F')}</svg>`
+ top:['014618_60b425e8-9941-4c19-81ee-54e5a09f9a7b','해 뜨는 세토내해 바닷가 산책로를 달리는 두 사람'],
+ light:['014619_eccf8e10-61ad-41c9-a789-c1c2d6b6943c','방파제 끝 빨간 등대'],
+ tower:['014622_51d1e4be-b9f7-48fb-8c50-aed9aac53fac','심볼타워 앞 바닷가 산책로'],
+ castle:['014619_39a4500d-e272-4409-bbad-5d14611b4de6','다마모성 망루와 해자, 항구 창고 골목']
 };
+const artImg=k=>`<img class="rart" src="${ARTB}${ART[k][0]}_min.webp" alt="${ART[k][1]}" loading="lazy" onerror="this.remove()">`;
 
 const jpPane=document.createElement('section'); jpPane.className='pane';
 jpPane.innerHTML=`<div class="dayhead"><h2>일본어 한마디</h2><em>못 알아들어도 괜찮게 짜여 있어요</em></div>
@@ -1193,18 +1193,18 @@ const runPane=document.createElement('section'); runPane.className='pane';
 const runLink=r=>{ const ll=r.route.map(x=>x.p.ll.join(',')), mid=ll.slice(1,-1);
   if(mid.length===1) return `https://www.google.com/maps/dir/?api=1&origin=${ll[0]}&destination=${mid[0]}&travelmode=walking`;
   return `https://www.google.com/maps/dir/?api=1&origin=${ll[0]}&destination=${ll.at(-1)}&waypoints=${mid.join('%7C')}&travelmode=walking`; };
-runPane.innerHTML=`<div class="dayhead"><h2>런닝</h2><em>숙소에서 출발해 바다를 보며 달리고 숙소로 돌아와요</em></div>${ART.top}
-<div class="note"><b>언제 달리나</b><br>
-· <b>19일(월) 아침</b>이 가장 넉넉해요. 09:15 출발이라 06:30에 나가도 B코스를 돌고 씻을 시간이 남아요.<br>
-· 17일(토) · 18일(일) 아침은 07:15 출발이라 <b>왕초보나 A코스</b>만 돌아요. 06:10에 나가 07:00 전에 돌아와요.<br>
-· 18일(일) 오후 숙소 휴식(15:15~16:30)에도 왕초보나 A코스가 들어가요.<br>
-· 해 뜨는 시각 06:10 · 해 지는 시각 17:28 (16~19일)</div>
+runPane.innerHTML=`<div class="dayhead"><h2>런닝</h2><em>숙소에서 출발해 바다를 보며 달리고 숙소로 돌아와요</em></div>${artImg('top')}
+<div class="note"><b>아침이든 저녁이든</b><br>
+· 해 뜨는 시각 06:10 · 해 지는 시각 17:28 (16~19일)<br>
+· 아침에는 바다 위로 해가 떠오르고, 저녁에는 해가 진 뒤 빨간 등대에 불이 들어와요.<br>
+· 저녁 식사 뒤라면 1~2시간 쉬었다가 나가요.</div>
 <div class="note"><b>나가기 전에</b><br>
 · 두 명 이상 함께 나가고 폰과 숙소 열쇠를 챙겨요.<br>
 · 일본은 차가 왼쪽으로 다녀요. 길을 건널 때 <b>오른쪽을 먼저</b> 봐요.<br>
-· 10월 아침은 15도 안팎이라 얇은 긴팔이 좋아요. 방파제 위는 바람이 세요.<br>
+· 10월 아침저녁은 15~18도라 얇은 긴팔이 좋아요. 방파제 위는 바람이 세요.<br>
+· 해가 진 뒤에는 밝은 색 옷을 입어요.<br>
 · 시간은 1km에 7~8분으로 천천히 달린 기준이에요. 왕초보 코스는 걷기를 섞은 시간이에요.</div>`
-+RUNS.map((r,k)=>`<div class="run">${ART[r.art]}<div class="rb">
++RUNS.map((r,k)=>`<div class="run">${artImg(r.art)}<div class="rb">
   <h3><span class="rlv${r.lv==='중급'?' mid':r.lv==='왕초보'?' easy':''}">${r.lv}</span>${esc(r.n)}</h3>
   <div class="rkm"><b>${r.km}</b> · ${r.min} · 숙소 출발 · 숙소 도착</div>
   <p style="font-size:13.5px">${r.d}</p>
@@ -1212,7 +1212,7 @@ runPane.innerHTML=`<div class="dayhead"><h2>런닝</h2><em>숙소에서 출발�
   <details class="dfig" data-run="${k}"><summary>코스 지도 · 눌러서 열기</summary><div class="body"><div class="lmap" id="rmap${k}"></div>
    <ul class="figleg">${r.maps[0].path.map(([L],q)=>`<li><i style="background:${LEGC[q%LEGC.length]}"></i>${L+1} → ${L+2} · ${esc(r.route[L].n)} → ${esc(r.route[L+1].n)}<em>${r.route[L+1].t}</em></li>`).join('')}</ul></div></details>
   <div class="links"><a class="go d" href="${runLink(r)}" target="_blank" rel="noopener">🏃 구글 지도로 코스 열기</a></div>
- </div></div>`).join('');
+ </div></div>`).join('')+`<p class="mapfoot">삽화는 AI로 그린 그림이에요.</p>`;
 panes.appendChild(runPane);
 runPane.querySelectorAll('details[data-run]').forEach(el=>el.addEventListener('toggle',()=>{
   const k=+el.dataset.run, id='r'+k, box=document.getElementById('rmap'+k);
