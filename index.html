@@ -75,6 +75,21 @@ nav button.on{background:var(--ink);color:var(--paper)}
 #toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%);z-index:70;padding:9px 16px;border-radius:999px;
  background:rgba(23,24,26,.9);color:#F3F1EB;font-size:13px;opacity:0;pointer-events:none;transition:opacity .25s}
 #toast.on{opacity:1}
+/* 운전 탭 — 막내 사위에게만 보인다 */
+nav button.drv{color:#1F6F4A;font-weight:600}
+nav button.drv.on{background:#1F6F4A;color:#fff}
+.dvhead{display:flex;align-items:baseline;justify-content:space-between;gap:8px;border-top:2px solid var(--ink);padding-top:10px}
+.dvhead h2{font-size:20px;font-weight:700}
+.dvhead em{font-style:normal;font-size:12px;color:var(--muted)}
+.dvlist{margin-top:8px}
+.dvlist a{display:flex;align-items:center;gap:10px;min-height:52px;padding:7px 10px;margin-top:6px;border:1px solid var(--line);background:var(--panel);color:var(--ink);text-decoration:none}
+.dvlist a b{flex:none;width:44px;font-size:13px;color:var(--seto)}
+.dvlist a span{flex:1;font-size:15px;font-weight:600;line-height:1.25}
+.dvlist a span i{display:block;font-style:normal;font-size:11.5px;font-weight:400;color:var(--muted);margin-top:2px}
+.dvlist a em{flex:none;font-style:normal;font-size:12px;font-weight:600;color:#fff;background:#1F6F4A;padding:7px 9px}
+.dvlist a.next{border:2px solid #1F6F4A;background:#EEF5EF}
+.dvlist .ferry{font-size:12px;color:var(--muted);padding:5px 10px 0 64px}
+.dvfoot{font-size:11.5px;color:var(--muted);margin-top:10px;line-height:1.5}
 /* 공유 링크로 들어오면 그 일정 하나만 보여준다 */
 body.solo section.pane.on .stop:not(.solo-on),body.solo section.pane.on .dfig,body.solo section.pane.on .note,body.solo section.pane.on .swap,body.solo #srail{display:none!important}
 .solobar{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:14px 0 4px;padding:10px 12px;background:var(--panel);border-left:2px solid var(--pumpkin);font-size:13px;color:#3A3B38}
@@ -1137,7 +1152,7 @@ let ME = LS.get('trip_user') || null;
 const gate=document.getElementById('gate'), whoBox=document.getElementById('who');
 MEMBERS.forEach(n=>{
   const b=document.createElement('button'); b.textContent=n;
-  b.onclick=()=>{ ME=n; LS.set('trip_user',n); gate.classList.add('hide'); renderMe(); notify('checks');notify('comments');notify('reactions'); };
+  b.onclick=()=>{ ME=n; LS.set('trip_user',n); gate.classList.add('hide'); renderMe(); if(typeof applyDriver==='function') applyDriver(true); notify('checks');notify('comments');notify('reactions'); };
   whoBox.appendChild(b);
 });
 function renderMe(){
@@ -1554,6 +1569,55 @@ panes.addEventListener('pointermove',e=>{ if(hold&&Math.hypot(e.clientX-hold.x,e
 window.addEventListener('scroll',()=>{ if(hold&&!hold.fired) holdCancel(); },{passive:true});
 /* 길게 눌렀을 때 뜨는 브라우저 기본 메뉴(복사 · 선택)는 일정 카드에서만 막는다 */
 panes.addEventListener('contextmenu',e=>{ if(e.target.closest('.stop')&&!e.target.closest('a,.menu')) e.preventDefault(); });
+
+/* ───────── 운전 탭 (막내 사위 전용) ─────────
+   토요일 차 이동 구간을 한 화면에 모았다. 누르면 구글 지도가 지금 위치에서 그 목적지까지 바로 내비를 시작한다.
+   목적지는 일정 카드의 길찾기와 같다(주차장이 있으면 주차장) */
+const DRIVER='막내 사위';
+const SAT=DAYS.find(d=>d.tab==='17(토)'&&!d.alt);
+const drivePane=document.createElement('section'); drivePane.className='pane';
+function driveLegs(){
+  const out=[]; const st=SAT.stops;
+  st.forEach((o,j)=>{
+    if(o.m&&o.h.startsWith('⛴')) return;
+    if(!o.h.startsWith('⛴')&&!o.m&&o.h.includes('페리')) return;
+    if(o.m&&o.h.startsWith('🚗')){
+      const [name,dur]=plain(o.h).replace(/^🚗\S*\s*/,'').split(' · ');
+      /* 목적지는 제목의 「→ 이름」을 그날 동선에서 찾는다. 바로 다음 카드가 그곳이면 카드의 주차장 · 출입구를 쓴다 */
+      const toName=(name.split('→').pop()||'').trim(), r=SAT.route.find(x=>x.n===toName);
+      const card=st.slice(j+1).find(x=>!x.m&&x.map);
+      const dest=card&&(!r||card.map===r.p)?(card.dir||card.park||card.map):(r&&r.p); if(!dest) return;
+      out.push({t:o.t,name,dur,km:plain(o.p).split(' · ')[0],url:DIR(dest,'driving')+'&dir_action=navigate'});
+    } else if(o.h.startsWith('⛴')) out.push({ferry:`${o.t} ${plain(o.h)}`});
+  });
+  return out;
+}
+function renderDrive(){
+  const legs=driveLegs();
+  /* 토요일 당일이면 일본 시각으로 다음 구간을 굵게 표시한다 */
+  const jp=new Date(Date.now()+9*3600e3), today=jp.toISOString().slice(5,10)==='10-17', now=jp.toISOString().slice(11,16);
+  const nextI=today?legs.findIndex(l=>l.t&&l.t>=now):-1;
+  drivePane.innerHTML=`<div class="dvhead"><h2>🚗 토요일 운전</h2><em>누르면 지금 위치에서 바로 안내</em></div>
+  <div class="dvlist">${legs.map((l,i)=>l.ferry?`<div class="ferry">${esc(l.ferry)}</div>`
+    :`<a href="${l.url}" target="_blank" rel="noopener"${i===nextI?' class="next"':''}><b>${l.t}</b><span>${esc(l.name)}<i>${esc(l.dur||'')} · ${esc(l.km||'')}</i></span><em>안내</em></a>`).join('')}</div>
+  <p class="dvfoot">구글 지도 앱이 열리고 바로 내비가 시작돼요. 경로 옵션에서 '유료도로 피하기'를 켜 두면 좋아요. 이 탭은 막내 사위에게만 보여요.</p>`;
+}
+renderDrive();
+panes.appendChild(drivePane);
+extra.drive=drivePane;
+/* 막내 사위로 들어오면 운전 탭을 맨 앞에 붙이고 첫 화면으로 연다. 다른 이름이면 숨긴다 */
+function applyDriver(open){
+  let b=nav.querySelector('button[data-i="drive"]');
+  if(ME===DRIVER){
+    if(!b){ b=document.createElement('button'); b.dataset.i='drive'; b.className='drv'; b.textContent='🚗 운전'; nav.prepend(b); }
+    if(open){ curTab='drive'; history.replaceState({t:'drive',s:0},'',location.pathname); renderDrive(); showTab('drive'); }
+  } else if(b){
+    b.remove();
+    if(curTab==='drive'){ curTab='0'; history.replaceState({t:'0',s:0},'',location.pathname); showTab('0'); }
+  }
+}
+applyDriver(!/^#d\d+s\d+$/.test(location.hash));
+const _lo=document.getElementById('me'); _lo&&_lo.addEventListener('click',e=>{ if(e.target.id==='lo') setTimeout(()=>applyDriver(false),0); });
 
 /* 공유 링크(#d0s12)로 들어오면 그 날 탭을 열고 그 일정으로 내려간다 */
 (()=>{ const m=/^#d(\d+)s(\d+)$/.exec(location.hash); if(!m) return;
