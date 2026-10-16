@@ -75,6 +75,10 @@ nav button.on{background:var(--ink);color:var(--paper)}
 #toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%);z-index:70;padding:9px 16px;border-radius:999px;
  background:rgba(23,24,26,.9);color:#F3F1EB;font-size:13px;opacity:0;pointer-events:none;transition:opacity .25s}
 #toast.on{opacity:1}
+/* 공유 링크로 들어오면 그 일정 하나만 보여준다 */
+body.solo section.pane.on .stop:not(.solo-on),body.solo section.pane.on .dfig,body.solo section.pane.on .note,body.solo section.pane.on .swap,body.solo #srail{display:none!important}
+.solobar{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:14px 0 4px;padding:10px 12px;background:var(--panel);border-left:2px solid var(--pumpkin);font-size:13px;color:#3A3B38}
+.solobar button{flex:none;font:600 13px/1 var(--f);padding:9px 12px;border:1px solid var(--ink);background:var(--ink);color:var(--paper);cursor:pointer}
 
 .pane{display:none;padding-top:24px}
 .pane.on{display:block}
@@ -1534,9 +1538,21 @@ panes.addEventListener('contextmenu',e=>{ if(e.target.closest('.stop')&&!e.targe
   if(d.alt){ const k=SATS.findIndex(x=>x[1]===+m[1]); if(k>=0) LS.set(ALTK,String(k)); }
   curTab=key; history.replaceState({t:key,s:0},'',location.pathname+location.hash);
   showTab(key);
-  setTimeout(()=>{ const el=document.querySelector(`.stop[data-id="d${m[1]}s${m[2]}"]`); if(!el) return;
+  const el=document.querySelector(`.stop[data-id="d${m[1]}s${m[2]}"]`); if(!el) return;
+  /* 받은 사람은 그 일정 카드 하나만 본다. '전체 일정 보기'를 누르면 그날 일정 전체에서 그 카드 위치로 간다 */
+  el.classList.add('solo-on'); document.body.classList.add('solo');
+  const bar=document.createElement('div'); bar.className='solobar';
+  bar.innerHTML='<span>공유받은 일정 하나만 보고 있어요</span><button>전체 일정 보기</button>';
+  el.closest('.rail').before(bar);
+  bar.querySelector('button').onclick=()=>{
+    document.body.classList.remove('solo'); el.classList.remove('solo-on'); bar.remove();
+    history.replaceState({t:key,s:0},'',location.pathname);
     lockUntil=Date.now()+1000; window.scrollTo({top:el.getBoundingClientRect().top+window.scrollY-navBar.offsetHeight-12,behavior:'instant'});
-    el.classList.add('hold'); setTimeout(()=>el.classList.remove('hold'),1500); },400);
+    el.classList.add('hold'); setTimeout(()=>el.classList.remove('hold'),1500);
+  };
+  /* 다른 탭을 누르면 하나만 보기를 끝낸다 */
+  nav.addEventListener('click',()=>{ if(document.body.classList.contains('solo')){ document.body.classList.remove('solo'); el.classList.remove('solo-on'); bar.remove(); } },{once:true});
+  window.scrollTo({top:0,behavior:'instant'});
 })();
 
 panes.addEventListener('click',e=>{
