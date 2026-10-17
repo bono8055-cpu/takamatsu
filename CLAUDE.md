@@ -6,6 +6,7 @@
 - 일정은 `index.html`의 `DAYS` 배열, 장소는 `P`, 카페는 `CAFE`. 토요일 안들은 `sw:[순서, 버튼이름]`으로 묶인다.
 - 일정을 고치면 `route` 시각과 `stops` 시각이 함께 맞는지 확인한다.
 - 지도 선(`maps[].path`)은 손으로 찍지 않고 `node tools/routes.mjs`로 도로 경로를 받아 다시 그린다(`--dry`는 저장 없이 확인). 경로 서버가 막혀 있으면 실패로 끝난다.
+- 후쿠오카 계획(2027.3)은 `fukuoka.html`이다. 큰 사위만 보고(다른 이름은 `./`로 돌려보냄) Firebase 없이 기기에만 저장한다. 지도 선은 `node tools/routes.mjs --file=fukuoka.html`, 지하철 · 전철(`'t'`) · 배(`'b'`) 구간은 직선으로 둔다.
 
 ## 앱 문구
 

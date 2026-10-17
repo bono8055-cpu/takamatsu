@@ -4,13 +4,14 @@
 //       node tools/routes.mjs --all    → 숨긴 안(alt:1)까지 포함한다
 //       node tools/routes.mjs --osrm   → 구글 대신 공개 경로 서버(OSM)로 받는다
 //       node tools/routes.mjs --only=19(월):1,19(월):5 → 그 구간만 다시 그린다
+//       node tools/routes.mjs --file=fukuoka.html → 다른 여행 페이지의 선을 다시 그린다
 // 클라우드 환경에서는 NODE_USE_ENV_PROXY=1 을 붙여 실행한다
 import { readFileSync, writeFileSync, existsSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 
 const here = dirname(fileURLToPath(import.meta.url));
-const HTML = join(here, '..', 'index.html');
+const HTML = join(here, '..', (process.argv.find(a => a.startsWith('--file=')) || '--file=index.html').slice(7));
 const DRY = process.argv.includes('--dry');
 const ALL = process.argv.includes('--all');
 const MOCK = process.env.ROUTES_MOCK === '1';   // 네트워크 없이 치환 로직만 시험할 때
@@ -24,7 +25,8 @@ const cache = existsSync(CACHE) ? JSON.parse(readFileSync(CACHE, 'utf8')) : {};
 function die(msg){ console.error('오류: ' + msg); process.exit(1); }
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 
-/* 차는 자동차 경로, 'w'(도보)는 보행자 경로, 's'(무료 셔틀)는 차 경로로 받는다 */
+/* 차는 자동차 경로, 'w'(도보)는 보행자 경로, 's'(무료 셔틀) · 'u'(버스)는 차 경로로 받는다.
+   't'(지하철 · 전철) · 'b'(배)는 길 데이터가 없어 손대지 않고 직선으로 둔다 */
 const SERVERS = {
   car:  ['https://routing.openstreetmap.de/routed-car/route/v1/driving/', 'https://router.project-osrm.org/route/v1/driving/'],
   foot: ['https://routing.openstreetmap.de/routed-foot/route/v1/driving/'],
@@ -65,7 +67,7 @@ async function google(key, prof, pts){
 }
 
 function loadHtml(){
-  if(!existsSync(HTML)) die(`index.html 을 찾을 수 없다: ${HTML}`);
+  if(!existsSync(HTML)) die(`일정 파일을 찾을 수 없다: ${HTML}`);
   const s = readFileSync(HTML, 'utf8');
   const a = s.indexOf('const P = {'), b = s.indexOf('const PH=[');
   if(a < 0 || b < 0 || b <= a) die('index.html 에서 DAYS 블록 경계를 찾지 못했다. 구조가 바뀌었는지 확인해라.');
@@ -134,6 +136,7 @@ async function main(){
         if(ONLY.length && !ONLY.includes(`${d.tab}:${L}`)) continue;
         const A = d.route[L], B = d.route[L + 1];
         if(!A?.p?.ll || !B?.p?.ll){ console.log(`- ${d.tab} ${L + 1}→${L + 2}: 좌표 없는 지점이라 건너뜀`); continue; }
+        if(mode === 't' || mode === 'b') continue;
         const prof = mode === 'w' ? 'foot' : 'car';
         const via = VIA[`${d.tab}|${A.n}|${B.n}`] || [];
         const label = `${d.tab} ${L + 1}→${L + 2} ${A.n} → ${B.n} (${prof === 'foot' ? '도보' : '차'})`;

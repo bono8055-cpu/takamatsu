@@ -1,0 +1,1356 @@
+<!doctype html>
+<html lang="ko">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>후쿠오카 · 2027.3.5–8</title>
+<!-- 글꼴: 프리텐다드(한글 고딕). 일본어는 기기 기본 고딕으로 이어진다 -->
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" rel="stylesheet">
+<style>
+:root{--f:'Pretendard Variable',Pretendard,-apple-system,BlinkMacSystemFont,'Apple SD Gothic Neo','Noto Sans KR','Malgun Gothic','Hiragino Sans','Noto Sans JP',sans-serif;
+ --paper:#E6E4DE;--panel:#F3F1EB;--ink:#17181A;--muted:#6E6F6B;
+ --seto:#2B4750;--pumpkin:#C9931A;--line:#CBC8BF;--hole:#B4B0A6}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{background:var(--paper);color:var(--ink);font-family:var(--f);letter-spacing:-.01em;
+ font-size:15px;line-height:1.65;padding-bottom:70px}
+.wrap{max-width:560px;margin:0 auto;padding:0 18px}
+button{font-family:inherit}
+
+/* 로그인 게이트 */
+#gate{position:fixed;inset:0;z-index:100;background:var(--paper);display:flex;align-items:center;justify-content:center;padding:24px}
+#gate.hide{display:none}
+#gate .box{max-width:380px;width:100%}
+#gate h2{font-family:var(--f);font-size:26px;font-weight:600;margin-bottom:6px}
+#gate p{color:var(--muted);font-size:13.5px;margin-bottom:22px}
+.who{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.who button{padding:14px 10px;background:var(--panel);border:1px solid var(--line);
+ font-size:15px;font-weight:500;cursor:pointer;color:var(--ink)}
+.who button:active{background:var(--ink);color:var(--paper)}
+
+.hero{position:relative;padding:20px 0 14px;overflow:hidden}
+.hero .panels{position:absolute;inset:0;display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(2,1fr);pointer-events:none}
+.hero .panels div{border-right:1px solid rgba(23,24,26,.07);border-bottom:1px solid rgba(23,24,26,.07);position:relative}
+.hero .panels div::after{content:"";position:absolute;right:-3px;bottom:-3px;width:6px;height:6px;border-radius:50%;background:var(--hole);opacity:.55}
+.eyebrow{position:relative;font-size:10px;letter-spacing:.22em;font-weight:600;color:var(--seto);margin-bottom:4px}
+h1{position:relative;font-family:var(--f);font-weight:700;font-size:28px;line-height:1.14;letter-spacing:-.02em;white-space:nowrap}
+h1 b{font-weight:600}
+.hero .sub1{position:relative;margin-top:4px;color:var(--muted);font-size:12.5px}
+.facts{position:relative;display:flex;gap:18px;margin-top:18px;flex-wrap:wrap}
+.facts div span{display:block;font-size:10.5px;letter-spacing:.1em;color:var(--muted);font-weight:500}
+.facts div strong{font-family:var(--f);font-weight:600;font-size:17px}
+#me{position:relative;margin-top:8px;font-size:12px;color:var(--muted)}
+#me b{color:var(--ink)}
+#me button{background:none;border:0;border-bottom:1px solid var(--muted);color:var(--muted);font-size:12px;cursor:pointer;padding:0 0 1px;margin-left:8px}
+#me .trip{color:var(--seto);font-weight:600;margin-left:8px;text-decoration:none;border-bottom:1px solid var(--seto)}
+/* 여행 고르기 — 큰 사위에게만 뜬다 */
+#tripPick{position:fixed;inset:0;z-index:101;background:var(--paper);display:flex;align-items:center;justify-content:center;padding:24px}
+#tripPick.hide{display:none}
+#tripPick .box{max-width:380px;width:100%}
+#tripPick h2{font-family:var(--f);font-size:26px;font-weight:600;margin-bottom:6px}
+#tripPick p{color:var(--muted);font-size:13.5px;margin-bottom:22px}
+#tripPick .who button{line-height:1.4}
+#tripPick .who small{display:block;font-size:11.5px;font-weight:400;color:var(--muted);margin-top:2px}
+#status{position:relative;margin-top:4px;font-size:11.5px;color:var(--pumpkin)}
+
+nav{position:sticky;top:0;z-index:20;background:rgba(230,228,222,.94);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+nav .wrap{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;padding:9px 14px}
+nav .wrap::-webkit-scrollbar{display:none}
+nav button{flex:0 0 auto;font:500 13px/1 var(--f);color:var(--muted);background:none;border:0;padding:9px 13px;cursor:pointer;white-space:nowrap}
+nav button.on{background:var(--ink);color:var(--paper)}
+/* 오른쪽 가장자리 스크롤 막대 — 구간마다 점을 찍고 손가락으로 끌어 옮긴다. 거의 본문 여백(18px) 안에 떠서 글자를 가리지 않는다 */
+#srail{position:fixed;right:0;width:24px;z-index:25;opacity:0;pointer-events:none;transition:opacity .3s;touch-action:none}
+#srail.on{opacity:1;pointer-events:auto}
+#srail .ln{position:absolute;right:10px;top:0;bottom:0;width:4px;border-radius:2px;background:rgba(23,24,26,.18)}
+#srail .dt{position:absolute;z-index:1;right:9px;width:6px;height:6px;margin-top:-3px;border-radius:50%;background:#9A9992}
+#srail .dt.k{right:8px;width:8px;height:8px;margin-top:-4px;background:var(--seto)}
+#srail .dt.cur{right:6px;width:12px;height:12px;margin-top:-6px;z-index:2;background:var(--pumpkin);box-shadow:0 0 0 3px rgba(201,147,26,.28)}
+#srail .th{position:absolute;z-index:0;right:5px;width:14px;min-height:26px;border-radius:7px;background:rgba(23,24,26,.42)}
+#srail .lb{display:none;position:absolute;right:30px;transform:translateY(-50%);max-width:72vw;padding:5px 11px;border-radius:999px;
+ background:rgba(23,24,26,.88);color:#F3F1EB;font-size:12px;line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#srail .lb b{color:#E7C46A;font-weight:600;margin-right:6px}
+#srail.drag .lb{display:block}
+/* 일정 길게 누르기 → 공유 메뉴 */
+.stop{-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}
+.stop .menu,.stop .menu *,.stop input,.stop textarea{-webkit-user-select:text;user-select:text}
+.stop.hold{background:rgba(201,147,26,.10);transition:background .2s}
+#shsheet{position:fixed;inset:0;z-index:60;display:none;background:rgba(23,24,26,.35)}
+#shsheet.on{display:block}
+#shsheet .box{position:absolute;left:0;right:0;bottom:0;max-width:560px;margin:0 auto;background:var(--panel);
+ border-top:2px solid var(--ink);padding:16px 18px calc(16px + env(safe-area-inset-bottom))}
+#shsheet h4{font-size:15px;font-weight:600;line-height:1.4}
+#shsheet .sub{font-size:12.5px;color:var(--muted);margin:2px 0 12px}
+#shsheet button{display:block;width:100%;font:600 15px/1 var(--f);padding:14px;margin-top:8px;border:1px solid var(--line);background:var(--paper);color:var(--ink);cursor:pointer}
+#shsheet button.pri{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+#toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%);z-index:70;padding:9px 16px;border-radius:999px;
+ background:rgba(23,24,26,.9);color:#F3F1EB;font-size:13px;opacity:0;pointer-events:none;transition:opacity .25s}
+#toast.on{opacity:1}
+/* 운전 탭 — 막내 사위에게만 보인다 */
+nav button.drv{color:#1F6F4A;font-weight:600}
+nav button.drv.on{background:#1F6F4A;color:#fff}
+.dvhead{display:flex;align-items:baseline;justify-content:space-between;gap:8px;border-top:2px solid var(--ink);padding-top:10px}
+.dvhead h2{font-size:20px;font-weight:700}
+.dvhead em{font-style:normal;font-size:12px;color:var(--muted)}
+.dvlist{margin-top:4px}
+.dvlist a{display:flex;align-items:center;gap:10px;min-height:40px;padding:4px 10px;margin-top:1px;border:1px solid var(--line);background:var(--panel);color:var(--ink);text-decoration:none}
+.dvlist a b{flex:none;width:44px;font-size:13px;color:var(--seto)}
+.dvlist a span{flex:1;font-size:15px;font-weight:600;line-height:1.25}
+.dvlist a span i{display:block;font-style:normal;font-size:11.5px;font-weight:400;color:var(--muted);margin-top:2px}
+.dvlist a em{flex:none;font-style:normal;font-size:12px;font-weight:600;color:#fff;background:#1F6F4A;padding:7px 9px}
+.dvlist a.next{border:2px solid #1F6F4A;background:#EEF5EF}
+.dvlist .ferry{font-size:12px;color:var(--muted);padding:5px 10px 0 64px}
+.dvfoot{font-size:11.5px;color:var(--muted);margin-top:10px;line-height:1.5}
+/* 공유 링크로 들어오면 그 일정 하나만 보여준다 */
+body.solo section.pane.on .stop:not(.solo-on),body.solo section.pane.on .dfig,body.solo section.pane.on .note,body.solo section.pane.on .swap,body.solo #srail{display:none!important}
+.solobar{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:14px 0 4px;padding:10px 12px;background:var(--panel);border-left:2px solid var(--pumpkin);font-size:13px;color:#3A3B38}
+.solobar button{flex:none;font:600 13px/1 var(--f);padding:9px 12px;border:1px solid var(--ink);background:var(--ink);color:var(--paper);cursor:pointer}
+
+.pane{display:none;padding-top:24px}
+.pane.on{display:block}
+.dayhead{border-top:2px solid var(--ink);padding-top:12px}
+.dayhead h2{font-family:var(--f);font-weight:600;font-size:22px;letter-spacing:-.01em}
+.dayhead em{font-style:normal;color:var(--muted);font-size:12.5px;display:block;margin-top:3px}
+.note{background:var(--panel);border-left:2px solid var(--pumpkin);padding:11px 13px;font-size:13px;margin:15px 0 0;color:#3A3B38}
+
+.rail{position:relative;padding-left:26px;margin-top:20px}
+.rail::before{content:"";position:absolute;left:5px;top:8px;bottom:14px;width:1px;background:var(--line)}
+.stop{position:relative;padding:0 0 24px}
+.stop::before{content:"";position:absolute;left:-24px;top:7px;width:11px;height:11px;border-radius:50%;background:var(--paper);border:1px solid var(--hole)}
+.stop.key::before{background:var(--pumpkin);border-color:var(--pumpkin)}
+.stop.move::before{width:5px;height:5px;left:-21px;top:10px;background:var(--hole);border:0}
+.t{font:600 12px/1 var(--f);letter-spacing:.04em;color:var(--seto)}
+.stop h3{font-size:15.5px;font-weight:600;margin:5px 0 3px;letter-spacing:-.01em}
+.stop p{font-size:13.5px;color:#44453F}
+.stop.move .t{color:var(--muted)}
+.stop .t[data-tm]{cursor:pointer;border-bottom:1px dotted var(--hole);display:inline-block;padding-bottom:2px}
+.stop .t.adj{color:var(--pumpkin);border-bottom-color:var(--pumpkin)}
+.stop .t s{opacity:.45;font-weight:400;margin-left:5px}
+.tedit{font:600 12px/1 var(--f);color:var(--seto);background:var(--paper);border:1px solid var(--hole);padding:2px 4px}
+.stop.move p{font-size:13px;color:var(--muted);margin-top:2px}
+.tags{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px}
+.tag{font-size:11.5px;font-weight:500;padding:3px 7px;background:var(--panel);border:1px solid var(--line);color:#55564F}
+.tag.w{border-color:var(--pumpkin);color:#8A6404}
+.links{display:flex;flex-wrap:wrap;gap:12px;margin-top:10px}
+a.go{font-size:12.5px;font-weight:500;color:var(--seto);text-decoration:none;border-bottom:1px solid var(--seto);padding-bottom:1px}
+a.go.p{color:#7A6320;border-color:#7A6320}
+a.go.d{color:#1F6F4A;border-color:#1F6F4A;font-weight:600}
+
+.resv{margin-top:12px;border:1px solid var(--seto);border-left-width:2px;padding:9px 12px}
+.resv h4{font-size:11px;letter-spacing:.14em;font-weight:600;color:var(--seto);margin-bottom:3px}
+.resv p{font-size:13px;color:#44453F}
+.resv .links{margin-top:8px}
+a.go.r{color:var(--seto);border-color:var(--seto)}
+.menu{margin-top:12px;border:1px solid var(--line);background:var(--panel)}
+.menu h4{font-size:11px;letter-spacing:.14em;font-weight:600;color:var(--muted);padding:9px 12px 0}
+.menu ul{list-style:none;padding:6px 12px 11px}
+.menu li{padding:7px 0;border-bottom:1px dashed var(--line)}
+.menu li:last-child{border:0;padding-bottom:0}
+.jp{font-size:14px;font-weight:600}
+.yomi{font-size:13px;color:var(--seto);font-weight:500}
+.mean{font-size:12.5px;color:var(--muted)}
+
+/* 반응 · 댓글 */
+.bar{display:flex;gap:8px;margin-top:11px;align-items:center;flex-wrap:wrap}
+.bar button{font-size:12px;font-weight:500;padding:5px 10px;background:none;border:1px solid var(--line);color:var(--muted);cursor:pointer}
+.bar button.act{border-color:var(--seto);color:var(--seto);background:var(--panel)}
+.bar .cnt{font-size:11.5px;color:var(--muted)}
+.thread{margin-top:10px;border-left:2px solid var(--line);padding-left:11px;display:none}
+.thread.on{display:block}
+.cmt{padding:7px 0;border-bottom:1px dashed var(--line);font-size:13.5px}
+.cmt:last-of-type{border:0}
+.cmt .who2{font-size:11.5px;color:var(--seto);font-weight:600}
+.cmt .when{font-size:11px;color:var(--muted);font-weight:400;margin-left:6px}
+.cmt .del{float:right;background:none;border:0;color:var(--muted);font-size:11px;cursor:pointer;padding:0}
+.wr{display:flex;gap:6px;margin-top:9px}
+.wr input{flex:1;min-width:0;font:400 13.5px var(--f);padding:8px 10px;
+ border:1px solid var(--line);background:var(--paper);color:var(--ink)}
+.wr button{padding:8px 13px;background:var(--ink);color:var(--paper);border:0;font-size:13px;font-weight:500;cursor:pointer}
+
+details{border-top:1px solid var(--line)}
+details summary{list-style:none;cursor:pointer;padding:15px 0;font-weight:600;font-size:14.5px;display:flex;justify-content:space-between;align-items:center}
+details summary::-webkit-details-marker{display:none}
+details summary::after{content:"+";font-weight:400;font-size:18px;color:var(--muted)}
+details[open] summary::after{content:"−"}
+details .body{padding-bottom:20px;font-size:13.5px;color:#44453F}
+.lmap{height:360px;border:1px solid var(--line);background:#F7F6F2;cursor:default}
+.pin{display:flex;align-items:center;justify-content:center;height:24px;min-width:24px;padding:0 6px;
+ border-radius:12px;background:#17181A;color:#fff;font:700 12px/1 var(--f);
+ border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.28);white-space:nowrap}
+.gpin{position:absolute;display:flex;flex-direction:column;align-items:center;transform:translate(-50%,-12px);cursor:pointer}
+.gpin .plabel{margin-top:2px;white-space:nowrap;color:#1F2023;font:600 11.5px/1.2 var(--f);
+ text-shadow:0 0 3px #fff,0 0 3px #fff,0 0 3px #fff,0 0 2px #fff}
+.swap{display:flex;align-items:center;gap:6px;margin-bottom:12px;flex-wrap:wrap}
+.swap b{font-size:12px;color:var(--muted);font-weight:600;margin-right:2px}
+.swap button{font:inherit;font-size:12.5px;padding:5px 10px;border:1px solid var(--line);background:var(--panel);color:var(--muted);cursor:pointer}
+.swap button.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.cday{margin:26px 0 10px;border-bottom:1px solid var(--line);padding-bottom:6px}
+.cday h3{font-family:var(--f);font-size:17px;font-weight:600;display:inline}
+.cday em{font-size:12.5px;color:var(--muted);font-style:normal;margin-left:8px}
+.cafe{border:1px solid var(--line);background:var(--panel);padding:13px;margin-bottom:11px}
+.cafe.cur{border-left:2px solid var(--pumpkin)}
+.cafe h4{font-size:15px;font-weight:600}
+.cin{font-size:11px;font-weight:500;color:#8A6404;margin-left:7px}
+.cjp{font-size:12px;color:var(--muted);margin-bottom:8px}
+.ctb{width:100%;font-size:12.5px}
+.ctb td{padding:3px 0;vertical-align:top}
+.ctb td:first-child{width:74px;color:var(--muted);white-space:nowrap}
+.cno{font-size:12.5px;color:#3A3B38;margin-top:8px;line-height:1.6}
+.cntb{width:100%;border-collapse:collapse;font-size:12.5px;table-layout:fixed}
+.cntb th,.cntb td{border:1px solid var(--line);padding:5px 4px;text-align:center;vertical-align:middle}
+.cntb thead th{background:var(--panel);font-weight:600;font-size:12px;color:var(--muted)}
+.cntb tbody th{width:26px;color:var(--muted);font-weight:600}
+.cntb td i{display:block;font-style:normal;font-size:11px;color:var(--muted);margin-top:1px}
+.cntb tr.hl td,.cntb tr.hl th{background:#FBF3DF}
+.ctb td.cpay{color:#8A6404;font-weight:600}
+.slack{background:var(--panel);border-left:2px solid var(--pumpkin);padding:8px 10px;
+ font-size:12.5px;color:#3A3B38;line-height:1.55;margin-top:10px}
+.slack b{color:#8A6404}
+.stop .more{border-top:1px dashed var(--line);margin-top:11px}
+.stop .more>summary{padding:9px 0;font-size:12.5px;color:var(--seto)}
+.spot{margin-top:13px}
+.spot figure{margin:0}
+.spot img{display:block;width:100%;border:1px solid var(--line)}
+.spot .cr{font-size:10px;color:var(--hole);margin:3px 0 5px;text-align:right}
+ul.see li{border-top:1px solid var(--line);padding:8px 0}
+ul.see .mean{font-size:13px;color:#44453F}
+.figt{font:600 12.5px/1 var(--f);color:var(--seto);margin:18px 0 7px}
+/* 런닝 */
+.rart{display:block;width:100%;aspect-ratio:16/9;object-fit:cover;background:#EFE6D4;border:1px solid var(--line);margin-top:14px}
+.run{border:1px solid var(--line);background:var(--panel);margin-top:18px}
+.run .rart{border:0;border-bottom:1px solid var(--line);margin:0}
+.run .rb{padding:13px}
+.run h3{font-family:var(--f);font-size:17px;font-weight:600;line-height:1.4}
+.rlv{display:inline-block;font:600 11px/1 var(--f);padding:4px 7px;margin-right:6px;vertical-align:2px;color:#fff;background:var(--seto)}
+.rlv.mid{background:#B8432F}
+.rlv.easy{background:#4F7A46}
+.rkm{font-size:13px;color:var(--muted);margin:4px 0 8px}
+.rkm b{color:var(--ink);font-size:15px}
+.run .dfig{margin-top:10px}
+.dfig .body>.figt:first-child{margin-top:2px}
+.figleg{list-style:none;margin-top:10px;font-size:12px;color:#44453F}
+.figleg li{display:flex;align-items:center;gap:7px;padding:3px 0}
+.figleg i{width:14px;height:3px;flex:none;border-radius:2px}
+.figleg em{font-style:normal;color:var(--muted);font-size:11px;margin-left:5px}
+.mapfoot{font-size:12px;color:var(--muted);margin-top:8px}
+table{width:100%;border-collapse:collapse;font-size:12.5px}
+th,td{text-align:left;padding:7px 6px 7px 0;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-weight:600;color:var(--muted);font-size:11px;letter-spacing:.05em}
+td:last-child,th:last-child{padding-right:0}
+.check{display:flex;gap:9px;padding:9px 0;align-items:flex-start;font-size:13.5px;border-bottom:1px dashed var(--line)}
+.check:last-child{border:0}
+.check input{margin-top:4px;accent-color:var(--seto);width:16px;height:16px;flex:0 0 auto}
+.byline{font-size:11.5px;color:var(--seto);font-weight:500;margin-top:2px}
+.big{font-family:var(--f);font-size:26px;font-weight:600}
+code{font-size:12px;background:var(--panel);padding:1px 5px;border:1px solid var(--line)}
+pre{background:var(--panel);border:1px solid var(--line);padding:10px;font-size:11.5px;overflow-x:auto;margin:8px 0;line-height:1.5}
+footer{margin-top:44px;padding:20px 0 8px;border-top:2px solid var(--ink);font-size:11.5px;color:var(--muted)}
+.empty{color:var(--muted);font-size:13px;padding:12px 0}
+@media(prefers-reduced-motion:no-preference){.pane.on{animation:f .3s ease}}
+@keyframes f{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+</style>
+
+<div id="gate"><div class="box">
+  <h2>누구세요?</h2>
+  <p>이름을 고르면 됩니다. 비밀번호는 없어요.<br>체크와 댓글에 이 이름이 남습니다.</p>
+  <div class="who" id="who"></div>
+</div></div>
+
+<div id="tripPick" class="hide"><div class="box">
+  <h2>어느 여행을 볼까요?</h2>
+  <p>큰 사위에게만 보이는 화면이에요. 위쪽 이름 옆 단추로 언제든 바꿀 수 있어요.</p>
+  <div class="who"><button data-trip="tk">다카마쓰<small>2026.10 · 7명</small></button><button data-trip="fk">후쿠오카<small>2027.3 · 2명</small></button></div>
+</div></div>
+
+<header class="hero">
+  <div class="panels"><div></div><div></div><div></div><div></div><div></div><div></div></div>
+  <div class="wrap">
+    <div class="eyebrow">FUKUOKA · DAZAIFU · YANAGAWA</div>
+    <h1>봄 마중 <b>후쿠오카</b></h1>
+    <div class="sub1">2027 · 3/5(금) → 8(월) · 3박 4일 · 2명</div>
+    <div id="me"></div>
+    <div id="status"></div>
+  </div>
+</header>
+
+<nav><div class="wrap" id="nav"></div></nav>
+<main class="wrap" id="panes"></main>
+<div class="wrap"><footer>후쿠오카 · 다자이후 · 야나가와 3박 4일 · 2인 · 2027년 3월</footer></div>
+
+<script type="module">
+/* ═══════════════════════════════════════════════════
+   ① 여기에 Firebase 설정을 붙여넣으세요.
+   비워두면 "혼자 보기 모드"로 돌아갑니다 (체크·댓글이 이 기기에만 남음).
+   ═══════════════════════════════════════════════════ */
+const FIREBASE_CONFIG = { projectId: "" };   // 후쿠오카는 이 기기에만 저장한다 — 다카마쓰 기록과 섞이지 않게
+
+/* ② 가족 이름 — 자유롭게 고치세요 */
+const MEMBERS = ['아버지','큰 딸','큰 사위','장남','며느리','막내 딸','막내 사위'];
+
+/* ───────── 저장소 계층 ───────── */
+const LS = { get(k){try{return localStorage.getItem(k)}catch(e){return null}},
+             set(k,v){try{localStorage.setItem(k,v)}catch(e){}} };
+/* 후쿠오카 계획은 큰 사위만 본다. 다른 이름이거나 이름을 안 골랐으면 다카마쓰 첫 화면으로 보낸다 */
+const TRIP_OWNER='큰 사위';
+if(LS.get('trip_user')!==TRIP_OWNER) location.replace('./');
+let db=null, F=null, online=false;
+const local = { checks:{}, comments:[], reactions:{}, times:{} };
+const listeners = { checks:[], comments:[], reactions:[], times:[] };
+const notify = k => listeners[k].forEach(f=>f());
+
+async function initDB(){
+  if(!FIREBASE_CONFIG.projectId) return false;
+  try{
+    const a = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js');
+    const au = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js');
+    F = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js');
+    const app = a.initializeApp(FIREBASE_CONFIG);
+    // 익명 로그인 — 사용자는 아무것도 하지 않아요. 외부 접근을 막기 위한 열쇠 역할.
+    await au.signInAnonymously(au.getAuth(app));
+    db = F.getFirestore(app);
+    F.onSnapshot(F.collection(db,'checks'), s=>{
+      local.checks={}; s.forEach(d=>local.checks[d.id]=d.data()); notify('checks');
+    });
+    F.onSnapshot(F.query(F.collection(db,'comments'),F.orderBy('at','asc')), s=>{
+      local.comments=[]; s.forEach(d=>local.comments.push({id:d.id,...d.data()})); notify('comments');
+    });
+    F.onSnapshot(F.collection(db,'reactions'), s=>{
+      local.reactions={}; s.forEach(d=>local.reactions[d.id]=d.data()); notify('reactions');
+    });
+    F.onSnapshot(F.collection(db,'times'), s=>{
+      local.times={}; s.forEach(d=>local.times[d.id]=d.data()); notify('times');
+    });
+    return true;
+  }catch(e){ console.warn('Firebase 연결 실패',e); return false; }
+}
+const now = ()=>Date.now();
+async function setCheck(id,on,by){
+  if(on) local.checks[id]={by,at:now()}; else delete local.checks[id];
+  notify('checks');
+  if(!online) return;
+  try{ on ? await F.setDoc(F.doc(db,'checks',id),{by,at:now()})
+          : await F.deleteDoc(F.doc(db,'checks',id)); }catch(e){console.warn(e)}
+}
+async function addComment(stop,text,by){
+  const o={stop,text,by,at:now()};
+  if(!online){ local.comments.push({id:'l'+Math.random(),...o}); notify('comments'); return; }
+  try{ await F.addDoc(F.collection(db,'comments'),o); }catch(e){console.warn(e)}
+}
+async function delComment(id){
+  if(!online){ local.comments=local.comments.filter(c=>c.id!==id); notify('comments'); return; }
+  try{ await F.deleteDoc(F.doc(db,'comments',id)); }catch(e){console.warn(e)}
+}
+async function toggleReact(stop,by){
+  const id=`${stop}__${by}`;
+  const had=!!local.reactions[id];
+  if(had) delete local.reactions[id]; else local.reactions[id]={stop,by,at:now()};
+  notify('reactions');
+  if(!online) return;
+  try{ had ? await F.deleteDoc(F.doc(db,'reactions',id))
+           : await F.setDoc(F.doc(db,'reactions',id),{stop,by,at:now()}); }catch(e){console.warn(e)}
+}
+async function setTime(id,d,by){
+  if(d) local.times[id]={d,by,at:now()}; else delete local.times[id];
+  notify('times');
+  if(!online) return;
+  try{ d ? await F.setDoc(F.doc(db,'times',id),{d,by,at:now()})
+         : await F.deleteDoc(F.doc(db,'times',id)); }catch(e){console.warn(e)}
+}
+
+/* ───────── 지도 링크 (Place ID 기반 = 정확) ───────── */
+const M = o => o.pid
+  ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(o.q)}&query_place_id=${o.pid}`
+  : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(o.q)}`;
+/* 길찾기 — 출발지를 비워 두면 구글 지도가 지금 내 위치에서 시작한다. 경로만 띄우고 안내 시작은 누르는 사람이 한다 */
+const DIR = (o,mode) => `https://www.google.com/maps/dir/?api=1&${o.pid
+  ? `destination=${encodeURIComponent(o.q)}&destination_place_id=${o.pid}`
+  : o.ll ? `destination=${o.ll.join(',')}` : `destination=${encodeURIComponent(o.q)}`}&travelmode=${mode}`;
+/* 그 장소로 가는 바로 앞 이동 칸이 🚶면 걷기, 🚌면 대중교통, 🚗·🚕면 차로 찾는다 */
+const TRAVEL = (stops,j) => { for(let k=j-1;k>=0;k--){ const x=stops[k]; if(!x.m) continue;
+  return x.h.startsWith('🚶')?'walking':/^(🚌|🚇|🚆)/.test(x.h)?'transit':'driving'; } return null; };
+const DIRLABEL={walking:'🚶 걸어서 길찾기',driving:'🚗 차로 길찾기',transit:'🚌 대중교통 길찾기'};
+
+/* 구간마다 다른 색 — 순서를 색으로도 읽게 한다 */
+const LEGC=['#2F6E7E','#8F6F22','#A34A3C','#4F7A46','#6D5091','#35608F','#8C4470','#6B7A2E'];
+const MAPS={};
+
+function dayFig(i){
+  const d=DAYS[i];
+  const body=d.maps.map((m,k)=>{
+    const legend=m.path.map(([L,,mode],q)=>`<li><i style="background:${LEGC[q%LEGC.length]}"></i>${L+1} → ${L+2} · ${esc(d.route[L].n)} → ${esc(d.route[L+1].n)}${mode==='t'?'<em>지하철 · 전철 (직선)</em>':mode==='u'?'<em>버스</em>':mode==='b'?'<em>뱃놀이 (직선)</em>':mode==='w'?'<em>도보</em>':''}</li>`).join('');
+    return (d.maps.length>1?`<h4 class="figt">${esc(m.t)}</h4>`:'')
+      +`<div class="lmap" id="lmap${i}_${k}"></div><ul class="figleg">${legend}</ul>`;
+  }).join('');
+  return `<details class="dfig" data-map="${i}"><summary>동선 한눈에 보기 · 눌러서 지도 열기</summary><div class="body">${body}
+  <p class="mapfoot">걷기 · 택시 · 버스 선은 실제 길을 따라 그렸고, 지하철 · 전철 · 뱃놀이는 출발과 도착을 직선으로 이었어요. 지도의 숫자는 <b>그날 들르는 모든 지점의 순서</b>예요. 같은 곳을 여러 번 들르면 번호를 모아 붙였어요(예: 1·6·9). 점선은 차가 아닌 이동이에요.</p></div></details>`;
+}
+
+/* 구글 지도 — 한국어 지명으로 띄운다. 키는 bono8055-cpu.github.io 에서만 쓰이도록 제한돼 있다 */
+const GMAPS_KEY='AIzaSyACqk-wX4FLjgAZzIlF3U35PgDlbn3PaOY';
+let gmReady=null;
+function loadGmaps(){
+  if(gmReady) return gmReady;
+  gmReady=new Promise((ok,no)=>{
+    window.__gmInit=async()=>{ try{
+      const [maps,core]=await Promise.all([google.maps.importLibrary('maps'),google.maps.importLibrary('core')]);
+      /* 번호 핀과 이름을 한 덩어리 HTML로 얹는다 */
+      class Pin extends maps.OverlayView{
+        constructor(pos,html,onTap){ super(); this.pos=pos; this.el=document.createElement('div'); this.el.className='gpin'; this.el.innerHTML=html; this.el.addEventListener('click',onTap); }
+        onAdd(){ this.getPanes().overlayMouseTarget.appendChild(this.el); }
+        draw(){ const p=this.getProjection().fromLatLngToDivPixel(this.pos); this.el.style.left=p.x+'px'; this.el.style.top=p.y+'px'; }
+        onRemove(){ this.el.remove(); }
+      }
+      ok({...maps,...core,Pin});
+    }catch(e){ no(e); } };
+    const sc=document.createElement('script');
+    sc.src=`https://maps.googleapis.com/maps/api/js?key=${GMAPS_KEY}&language=ko&region=JP&loading=async&callback=__gmInit`;
+    sc.async=true; sc.onerror=()=>no(new Error('load')); document.head.appendChild(sc);
+  });
+  return gmReady;
+}
+
+function drawMaps(i){
+  const d=DAYS[i]; if(!d.maps) return;
+  d.maps.forEach((m,k)=>{
+    const id=i+'_'+k, box=document.getElementById('lmap'+id); if(!box||MAPS[id]) return;
+    MAPS[id]=1;
+    loadGmaps().then(gm=>{ MAPS[id]=makeMap(gm,d,m,box); })
+      .catch(()=>{ delete MAPS[id]; box.textContent='지도를 불러오지 못했어요. 네트워크를 확인해 주세요.'; });
+  });
+}
+
+function makeMap(gm,d,m,box){
+  /* 처음 크기에서는 한 손가락이 페이지 스크롤이고 두 손가락으로 확대 · 이동한다 */
+  const map=new gm.Map(box,{disableDefaultUI:true,clickableIcons:false,keyboardShortcuts:false,
+    gestureHandling:'cooperative',mapTypeId:'roadmap',
+    styles:[{featureType:'poi.business',stylers:[{visibility:'off'}]}]});
+  /* 흰 테두리를 한 겹 깔아 선이 지도에 묻히지 않게 한다. 선 굵기는 화면 픽셀이라 확대해도 그대로다 */
+  m.path.forEach(([,co,mode],q)=>{
+    const path=co.map(([la,ln])=>({lat:la,lng:ln})), col=LEGC[q%LEGC.length];
+    new gm.Polyline({map,path,clickable:false,zIndex:1,strokeColor:'#fff',strokeOpacity:.95,strokeWeight:8});
+    new gm.Polyline({map,path,clickable:false,zIndex:2,...(mode
+      ? {strokeOpacity:0,icons:[{icon:{path:google.maps.SymbolPath.CIRCLE,scale:2,fillColor:col,fillOpacity:1,strokeOpacity:0},offset:'0',repeat:'9px'}]}
+      : {strokeColor:col,strokeOpacity:1,strokeWeight:4})});
+  });
+  const at=new Map();
+  m.idx.forEach(j=>{ const x=d.route[j], key=x.p.ll.join();
+    if(!at.has(key)) at.set(key,{ll:x.p.ll,n:x.n,nums:[],rows:[]});
+    at.get(key).nums.push(j+1); at.get(key).rows.push(`${j+1}. ${x.t} ${x.r}`); });
+  const iw=new gm.InfoWindow();
+  const bounds=new gm.LatLngBounds();
+  for(const g of at.values()){
+    const pos=new gm.LatLng(g.ll[0],g.ll[1]); bounds.extend(pos);
+    new gm.Pin(pos,`<div class="pin">${g.nums.join('·')}</div><div class="plabel">${esc(g.n)}</div>`,
+      ()=>{ iw.setContent(`<b>${esc(g.n)}</b><br>${g.rows.join('<br>')}`); iw.setPosition(pos); iw.open({map}); }).setMap(map);
+  }
+  map.fitBounds(bounds,36);
+  /* 처음 크기보다 작게는 줄지 않는다. 확대했을 때만 한 손가락으로 지도를 옮기고, 처음 크기로 돌아오면 제자리로 되돌린다 */
+  google.maps.event.addListenerOnce(map,'idle',()=>{
+    const z0=map.getZoom(), home=map.getCenter();
+    map.setOptions({minZoom:z0});
+    map.addListener('zoom_changed',()=>{
+      if(map.getZoom()>z0) map.setOptions({gestureHandling:'greedy'});
+      else { map.setOptions({gestureHandling:'cooperative'}); map.setCenter(home); }
+    });
+  });
+  return map;
+}
+
+const P = {
+  airport:{q:'福岡空港 国際線ターミナル',ll:[33.58383,130.44413]},
+  airportD:{q:'福岡空港駅 地下鉄',ll:[33.59705,130.44841]},
+  stay:{q:'JR博多駅',ll:[33.58976,130.4223]},
+  ichiran:{q:'一蘭 本社総本店 福岡市博多区中洲5-3-2',ll:[33.59314,130.40465]},
+  kushida:{q:'櫛田神社 福岡市博多区上川端町1-41',ll:[33.59329,130.41111]},
+  canal:{q:'キャナルシティ博多',ll:[33.59093,130.41028]},
+  maedaya:{q:'博多もつ鍋 前田屋 総本店 福岡市博多区博多駅東2-9-20',ll:[33.58785,130.4255]},
+  yatai:{q:'中洲屋台 福岡市博多区中洲1丁目',ll:[33.58992,130.40892]},
+  tenjinSt:{q:'西鉄福岡(天神)駅',ll:[33.58802,130.40096]},
+  dazaifuSt:{q:'西鉄太宰府駅',ll:[33.51906,130.53159]},
+  tenmangu:{q:'太宰府天満宮',ll:[33.51924,130.53456]},
+  sbDazaifu:{q:'スターバックス 太宰府天満宮表参道店',ll:[33.51954,130.53335]},
+  yanagawaSt:{q:'西鉄柳川駅',ll:[33.16522,130.41918]},
+  motoyoshi:{q:'元祖本吉屋 柳川市旭町69',ll:[33.1678,130.41123]},
+  shogetsu:{q:'松月乗船場 柳川',ll:[33.16721,130.41556]},
+  okinohata:{q:'北原白秋生家 柳川市沖端町',ll:[33.15907,130.39418]},
+  shinshin:{q:'博多らーめん ShinShin 天神本店 福岡市中央区天神3-2-19',ll:[33.59279,130.39684]},
+  sbOhori:{q:'スターバックス 福岡大濠公園店',ll:[33.58679,130.37812]},
+  maizuru:{q:'舞鶴公園 福岡城跡 梅園',ll:[33.58515,130.38328]},
+  mentaiju:{q:'元祖博多めんたい重 福岡市中央区西中洲6-15',ll:[33.59122,130.40399]},
+  tower:{q:'福岡タワー',ll:[33.59185,130.35147]},
+  momochi:{q:'シーサイドももち海浜公園',ll:[33.59382,130.35141]},
+  tenjin:{q:'天神地下街',ll:[33.59136,130.39889]},
+  hanamidori:{q:'博多華味鳥 中洲本店 福岡市博多区中洲5-4-24',ll:[33.59404,130.4038]},
+  ming:{q:'博多駅 マイング',ll:[33.59094,130.42065]},
+  manu:{q:'manu coffee 春吉店 福岡市中央区渡辺通3-11-2',ll:[33.58675,130.40615]}
+};
+
+/* ───────── 일정 데이터 ───────── */
+const DAYS=[
+{tab:'5(금)',title:'하카타 · 나카스',sub:'도착일 · 지하철과 걸어서',
+ route:[{p:P.airport,t:'10:00',n:'후쿠오카공항 국제선',r:'도착'},{p:P.stay,t:'11:25',n:'숙소',r:'짐 맡기기'},
+        {p:P.ichiran,t:'12:00',n:'이치란 본사총본점',r:'점심 라멘'},{p:P.kushida,t:'13:00',n:'구시다 신사',r:'참배 · 상점가'},
+        {p:P.canal,t:'13:55',n:'캐널시티 하카타',r:'쇼핑 · 분수'},{p:P.stay,t:'15:30',n:'숙소',r:'체크인 · 휴식'},
+        {p:P.maedaya,t:'18:00',n:'마에다야 총본점',r:'저녁 모쓰나베'},{p:P.yatai,t:'19:55',n:'나카스 야타이',r:'포장마차'},
+        {p:P.stay,t:'21:20',n:'숙소',r:'귀가'}],
+ maps:[{t:'하루 동선',idx:[0,1,2,3,4,5,6,7,8],path:[[0,[[33.58383,130.44413],[33.58331,130.44451],[33.58284,130.44481],[33.58257,130.44493],[33.58232,130.44508],[33.58221,130.44511],[33.5821,130.44512],[33.58199,130.44509],[33.58184,130.44499],[33.58178,130.4449],[33.58174,130.44483],[33.5817,130.44468],[33.5817,130.44452],[33.58175,130.44434],[33.58185,130.44418],[33.5823,130.4438],[33.58237,130.4437],[33.58526,130.44142],[33.58552,130.44113],[33.58558,130.44099],[33.58561,130.44087],[33.58567,130.43966],[33.58573,130.43954],[33.58575,130.43905],[33.58571,130.43874],[33.58598,130.43861],[33.58628,130.43849],[33.58668,130.43841],[33.58706,130.43838],[33.58821,130.43841],[33.58879,130.43837],[33.58935,130.43824],[33.58955,130.43816],[33.58977,130.43806],[33.59021,130.43779],[33.59168,130.43653],[33.59198,130.43626],[33.59244,130.43581],[33.5933,130.43506],[33.59498,130.43368],[33.59555,130.43316],[33.59675,130.43213],[33.5977,130.43127],[33.59809,130.43094],[33.59786,130.43059],[33.59747,130.42993],[33.59684,130.42901],[33.59584,130.4276],[33.59486,130.42635],[33.59424,130.42547],[33.59391,130.42505],[33.59376,130.42481],[33.59375,130.42477],[33.59376,130.42473],[33.59355,130.42444],[33.59309,130.42386],[33.59203,130.42263],[33.59193,130.42255],[33.59083,130.42246],[33.58982,130.42241],[33.58976,130.4224],[33.58976,130.4223]],'u'],[1,[[33.58976,130.4223],[33.59314,130.40465]],'t'],[2,[[33.59314,130.40465],[33.59466,130.4062],[33.59461,130.40637],[33.59307,130.40934],[33.59314,130.40946],[33.59316,130.40954],[33.59342,130.40999],[33.59372,130.4106],[33.59341,130.41099],[33.59329,130.41111]],'w'],[3,[[33.59329,130.41111],[33.59312,130.41127],[33.59297,130.41137],[33.59268,130.41162],[33.59252,130.41128],[33.59252,130.41119],[33.59248,130.41111],[33.59244,130.41109],[33.59227,130.41076],[33.59226,130.41069],[33.59212,130.4104],[33.59207,130.41037],[33.59195,130.41045],[33.59185,130.41046],[33.59172,130.4104],[33.59103,130.41028],[33.59093,130.41028]],'w'],[4,[[33.59093,130.41028],[33.59058,130.41026],[33.59058,130.41031],[33.59046,130.41053],[33.59046,130.41067],[33.59051,130.41094],[33.5905,130.41101],[33.59061,130.41152],[33.59078,130.41197],[33.59082,130.41211],[33.59088,130.41218],[33.59068,130.41252],[33.59049,130.4128],[33.59042,130.41299],[33.59008,130.41352],[33.59004,130.41364],[33.58993,130.41383],[33.58988,130.41395],[33.58978,130.41426],[33.58975,130.41501],[33.58971,130.41559],[33.58969,130.4166],[33.58962,130.41677],[33.58966,130.41687],[33.5896,130.4184],[33.58957,130.41842],[33.58955,130.41852],[33.58937,130.41853],[33.58936,130.41851],[33.58934,130.41851],[33.58934,130.41855],[33.58938,130.41856],[33.58939,130.41854],[33.58948,130.41856],[33.58975,130.41857],[33.58973,130.41904],[33.58975,130.41978],[33.58983,130.41986],[33.58998,130.41986],[33.59006,130.41996],[33.59009,130.42014],[33.59012,130.42142],[33.59008,130.42169],[33.58992,130.42168],[33.58996,130.42172],[33.58993,130.42195],[33.58992,130.4223],[33.58976,130.4223]],'w'],[5,[[33.58976,130.4223],[33.58901,130.42227],[33.58895,130.42229],[33.58888,130.42228],[33.58884,130.42247],[33.58883,130.42307],[33.58885,130.42312],[33.5888,130.4242],[33.58879,130.42427],[33.58874,130.42432],[33.58877,130.42435],[33.58826,130.42497],[33.58785,130.4255]],'w'],[6,[[33.58785,130.4255],[33.58826,130.42497],[33.58877,130.42435],[33.58874,130.42432],[33.58879,130.42427],[33.58885,130.42312],[33.58883,130.42307],[33.58884,130.42247],[33.58888,130.42228],[33.58895,130.42229],[33.58901,130.42227],[33.58903,130.42157],[33.58903,130.4214],[33.58902,130.42139],[33.58908,130.42132],[33.58906,130.4212],[33.58907,130.42098],[33.58911,130.42052],[33.58915,130.42051],[33.58916,130.42027],[33.58932,130.42025],[33.58936,130.41996],[33.5896,130.41996],[33.58968,130.41985],[33.58975,130.41857],[33.58939,130.41857],[33.58934,130.41855],[33.58934,130.41851],[33.58936,130.41851],[33.58937,130.41853],[33.58955,130.41852],[33.58957,130.41842],[33.5896,130.4184],[33.58966,130.41687],[33.58962,130.41677],[33.58969,130.4166],[33.58971,130.41559],[33.58975,130.41501],[33.58978,130.41426],[33.58988,130.41395],[33.58993,130.41383],[33.59004,130.41364],[33.59008,130.41352],[33.59042,130.41299],[33.59049,130.4128],[33.59068,130.41252],[33.59088,130.41218],[33.59082,130.41211],[33.59078,130.41197],[33.59061,130.41152],[33.5905,130.41101],[33.59051,130.41094],[33.59046,130.41053],[33.59058,130.41031],[33.59058,130.41026],[33.59038,130.41026],[33.59042,130.40965],[33.59046,130.40959],[33.59027,130.40934],[33.58997,130.40899],[33.58997,130.40894],[33.59,130.40889],[33.58996,130.40885],[33.58992,130.40892]],'w'],[7,[[33.58992,130.40892],[33.58996,130.40885],[33.59,130.40889],[33.58997,130.40894],[33.58997,130.40899],[33.59027,130.40934],[33.59046,130.40959],[33.59042,130.40963],[33.59038,130.41026],[33.59058,130.41026],[33.59058,130.41031],[33.59046,130.41053],[33.59046,130.41067],[33.59051,130.41094],[33.5905,130.41101],[33.59061,130.41152],[33.59078,130.41197],[33.59082,130.41211],[33.59088,130.41218],[33.59068,130.41252],[33.59049,130.4128],[33.59042,130.41299],[33.59008,130.41352],[33.59004,130.41364],[33.58993,130.41383],[33.58988,130.41395],[33.58978,130.41426],[33.58975,130.41501],[33.58971,130.41559],[33.58969,130.4166],[33.58962,130.41677],[33.58966,130.41687],[33.5896,130.4184],[33.58957,130.41842],[33.58955,130.41852],[33.58937,130.41853],[33.58936,130.41851],[33.58934,130.41851],[33.58934,130.41855],[33.58938,130.41856],[33.58939,130.41854],[33.58948,130.41856],[33.58975,130.41857],[33.58973,130.41904],[33.58975,130.41978],[33.58983,130.41986],[33.58998,130.41986],[33.59006,130.41996],[33.59009,130.42014],[33.59012,130.42142],[33.59008,130.42169],[33.58992,130.42168],[33.58996,130.42172],[33.58993,130.42195],[33.58992,130.4223],[33.58976,130.4223]],'w']]}],
+ note:'<b>항공편과 숙소가 아직 정해지지 않아</b> 10:00 도착 · 하카타역 근처 숙소로 가정해 짰어요. 첫날은 짐을 맡기고 하카타 라멘 → 구시다 신사 → 캐널시티를 걸어서 돌고, 숙소에서 쉬었다가 모쓰나베와 나카스 야타이로 저녁을 보내요.',
+ stops:[
+  {k:1,t:'10:00',h:'✈ 후쿠오카공항 국제선 도착',p:'입국 심사와 짐 찾기까지 1시간쯤 잡아요.',
+   tags:['항공편 미정 · 10:00 도착으로 가정'],map:P.airport},
+  {m:1,t:'11:00',h:'🚌 국제선 → 하카타역 · 약 20분',p:'니시테쓰 버스 · 국제선 6 · 7번 승강장 · 400엔 (2026년 기준)'},
+  {t:'11:25',h:'숙소 · 짐 맡기기',p:'하카타역 근처 숙소에 짐만 맡기고 나와요. 체크인은 오후예요. 10분.',
+   tags:['숙소 미정 · 하카타역 근처로 가정'],map:P.stay},
+  {m:1,t:'11:40',h:'🚇 하카타 → 나카스카와바타 · 약 5분',p:'지하철 공항선 · 두 정거장'},
+  {k:1,t:'12:00',h:'점심 · 이치란 본사총본점 (一蘭 本社総本店)',p:'하카타 돈코쓰 라멘 체인 이치란의 본점. 칸막이 자리에 앉아 주문 용지에 국물 진하기 · 면 익힘 · 매운 양념 양을 적어 내요. 50분.',
+   tags:['24시간 · 무휴','나카스카와바타역 1분','식권 자판기'],map:P.ichiran,
+   resv:{ok:0,how:'예약 없이 줄을 서요. 입구 자판기에서 식권을 사고, 자리의 주문 용지에 표시해 직원에게 건네요. 면을 다 먹고 국물이 남으면 면 추가(替え玉 · 카에다마)를 시켜요.',
+    links:[{t:'📞 050-3733-2600',u:'tel:05037332600'}]},
+   menu:[{jp:'ラーメン',y:'라-멘',k:'기본 돈코쓰 라멘'},{jp:'替え玉',y:'카에다마',k:'면 사리 추가'},
+    {jp:'赤い秘伝のたれ',y:'아카이 히덴노 타레',k:'빨간 매운 양념. 주문 용지에서 양을 골라요'},{jp:'半熟塩ゆでたまご',y:'한주쿠 시오유데 타마고',k:'반숙 소금 계란'}]},
+  {m:1,t:'12:50',h:'🚶 이치란 → 구시다 신사 · 10분',p:'770m'},
+  {t:'13:00',h:'구시다 신사 · 가와바타 상점가',p:'하카타의 수호 신사. 경내에 7월 축제에 쓰는 장식 수레 「가자리야마」가 1년 내내 서 있어요. 신사 북쪽 가와바타 상점가 아케이드를 함께 걸어요. 50분.',
+   tags:['참배 04:00~22:00','무료','6월에는 가자리야마 없음'],map:P.kushida,
+   sl:'여기서 볼 것',
+   see:[{n:'가자리야마 (飾り山)',d:'하카타 기온 야마카사 축제의 장식 수레. 신사 경내에 세워 둬요'},
+    {n:'가와바타 상점가',d:'신사에서 북쪽으로 이어지는 오래된 아케이드. 하카타 과자 · 잡화 가게가 늘어서 있어요'}]},
+  {m:1,t:'13:50',h:'🚶 구시다 신사 → 캐널시티 · 5분',p:'350m'},
+  {t:'13:55',h:'캐널시티 하카타',p:'건물 사이로 인공 운하가 흐르는 쇼핑몰. 운하 무대의 분수 쇼를 보고 가게를 돌아요. 1시간 20분.',
+   tags:['분수 쇼 시각은 현장 확인','📞 092-282-2525'],map:P.canal},
+  {m:1,t:'15:15',h:'🚶 캐널시티 → 숙소 · 18분',p:'1.4km'},
+  {t:'15:30',h:'숙소 · 체크인 · 휴식',p:'아침 일찍 출발한 날이라 저녁 전까지 쉬어요.',map:P.stay},
+  {m:1,t:'17:50',h:'🚶 숙소 → 마에다야 총본점 · 6분',p:'430m · 하카타역 지쿠시 출구 쪽'},
+  {k:1,t:'18:00',h:'저녁 · 모쓰나베 마에다야 총본점 (博多もつ鍋 前田屋 総本店)',p:'소 곱창을 간장 또는 된장 국물에 양배추 · 부추와 끓이는 하카타 냄비 요리. 다 먹으면 남은 국물에 짬뽕면을 넣어 마무리해요. 1시간 30분.',
+   tags:['평일 17:00~24:00 (L.O. 23:00)','예약 권장','하카타역 지쿠시 출구 3분'],map:P.maedaya,
+   resv:{ok:0,how:'<b>금요일 저녁이라 미리 예약해요.</b> 히토사라 인터넷 예약이나 전화로 2명 18:00. 들어가서 「予約しているリムです。2名です。」(요야쿠시테 이루 리무데스. 니메-데스 · 예약한 임이에요. 2명이에요)라고 말해요.',
+    links:[{t:'히토사라 예약',u:'https://hitosara.com/0006116435/'},{t:'📞 092-292-8738',u:'tel:0922928738'}]},
+   menu:[{jp:'もつ鍋 醤油味',y:'모츠나베 쇼-유아지',k:'간장 맛 · 처음이면 이쪽'},{jp:'もつ鍋 味噌味',y:'모츠나베 미소아지',k:'된장 맛'},
+    {jp:'2人前',y:'니닌마에',k:'2인분'},{jp:'ちゃんぽん麺',y:'짬퐁멘',k:'마무리 면'}]},
+  {m:1,t:'19:30',h:'🚶 마에다야 → 나카스 야타이 · 25분',p:'1.9km · 캐널시티 옆을 지나요'},
+  {t:'19:55',h:'나카스 야타이 (中洲屋台)',p:'나카스 강변에 밤마다 포장마차가 줄지어 서요. 한 집에 오래 앉기보다 오뎅 · 꼬치 한두 가지에 맥주 한 잔씩 마셔요. 1시간.',
+   tags:['저녁 무렵부터 · 가게마다 다름','비 오면 쉬는 집이 많음','현금 준비'],map:P.yatai,
+   menu:[{jp:'おでん',y:'오뎅',k:'어묵탕'},{jp:'焼き鳥',y:'야키토리',k:'닭꼬치'},{jp:'生ビール',y:'나마비-루',k:'생맥주'},
+    {jp:'二人、座れますか？',y:'후타리, 스와레마스카?',k:'두 명 앉을 수 있어요?'}]},
+  {m:1,t:'21:00',h:'🚶 나카스 야타이 → 숙소 · 20분',p:'1.5km'}
+ ]},
+{tab:'6(토)',title:'다자이후 · 야나가와',sub:'니시테쓰 전철로 하루 · 관광 티켓 1장',
+ intro:'<b>다자이후</b>는 학문의 신을 모신 덴만구가 있는 옛 관청 도시예요. 경내에 매화나무가 6,000그루쯤 있고, 매화는 1월 하순부터 3월 상순까지 피어요. 3월 6일이면 끝물이에요. <b>야나가와</b>는 성을 둘러싼 물길이 마을을 도는 곳이라 작은 나룻배를 타고 70분쯤 물길을 따라 내려가요. 장어를 양념밥 위에 얹어 찌는 「세이로무시」가 이 마을 음식이에요.',
+ route:[{p:P.stay,t:'08:00',n:'숙소',r:'출발'},{p:P.tenjinSt,t:'08:15',n:'니시테쓰 텐진역',r:'관광 티켓'},
+        {p:P.dazaifuSt,t:'09:10',n:'다자이후역',r:'도착'},{p:P.tenmangu,t:'09:15',n:'다자이후 덴만구',r:'참배 · 매화'},
+        {p:P.sbDazaifu,t:'10:50',n:'스타벅스 다자이후',r:'커피'},{p:P.dazaifuSt,t:'11:25',n:'다자이후역',r:'출발'},
+        {p:P.yanagawaSt,t:'12:25',n:'니시테쓰 야나가와역',r:'도착'},{p:P.motoyoshi,t:'12:40',n:'모토요시야 본점',r:'점심 장어'},
+        {p:P.shogetsu,t:'13:50',n:'마쓰게쓰 승선장',r:'뱃놀이'},{p:P.okinohata,t:'15:00',n:'오키노하타',r:'하선 · 산책'},
+        {p:P.yanagawaSt,t:'15:45',n:'니시테쓰 야나가와역',r:'출발'},{p:P.tenjinSt,t:'16:40',n:'니시테쓰 텐진역',r:'도착'},
+        {p:P.shinshin,t:'16:50',n:'신신 텐진본점',r:'이른 저녁 라멘'},{p:P.stay,t:'18:00',n:'숙소',r:'귀가'}],
+ maps:[{t:'다자이후',idx:[2,3,4,5],path:[[2,[[33.51906,130.53159],[33.51954,130.53166],[33.51955,130.53195],[33.51954,130.5343],[33.51952,130.53435],[33.51952,130.53459],[33.51946,130.53459],[33.51944,130.53457],[33.51924,130.53456]],'w'],[3,[[33.51924,130.53456],[33.51944,130.53457],[33.51946,130.53459],[33.51952,130.53459],[33.51952,130.53436],[33.51954,130.53432],[33.51954,130.53335]],'w'],[4,[[33.51954,130.53335],[33.51955,130.5324],[33.51954,130.53166],[33.51906,130.53159]],'w']]},
+       {t:'야나가와',idx:[6,7,8,9,10],path:[[6,[[33.16522,130.41918],[33.16516,130.41888],[33.16513,130.41886],[33.16499,130.41886],[33.16494,130.4188],[33.16504,130.41871],[33.16507,130.41865],[33.16512,130.41864],[33.16538,130.41838],[33.16539,130.41834],[33.16573,130.41834],[33.16589,130.41675],[33.16589,130.41662],[33.16605,130.41662],[33.16616,130.41658],[33.16639,130.41657],[33.16646,130.41657],[33.16654,130.4166],[33.16656,130.41641],[33.16659,130.41631],[33.16661,130.4161],[33.1666,130.41598],[33.16667,130.41549],[33.16676,130.41508],[33.16705,130.41409],[33.16714,130.41366],[33.16717,130.41343],[33.16719,130.41224],[33.16774,130.41232],[33.16778,130.41181],[33.1678,130.41123]],'w'],[7,[[33.1678,130.41123],[33.16778,130.41181],[33.16774,130.41232],[33.16776,130.41232],[33.16773,130.41345],[33.1677,130.41403],[33.16774,130.41526],[33.16773,130.41534],[33.16772,130.41538],[33.16769,130.41541],[33.16752,130.41548],[33.16743,130.41558],[33.16721,130.41556]],'w'],[8,[[33.16721,130.41556],[33.15907,130.39418]],'b'],[9,[[33.15907,130.39418],[33.15909,130.39418],[33.15908,130.39439],[33.15906,130.39446],[33.15904,130.39485],[33.16035,130.39528],[33.16061,130.39539],[33.1611,130.39556],[33.16062,130.39724],[33.16053,130.39761],[33.16045,130.39809],[33.15999,130.40208],[33.15981,130.40341],[33.15975,130.40414],[33.15955,130.4056],[33.15951,130.40596],[33.15951,130.40614],[33.15939,130.40705],[33.15856,130.41397],[33.15846,130.41456],[33.1579,130.41698],[33.15782,130.41738],[33.15784,130.41761],[33.15789,130.41774],[33.1583,130.41751],[33.1588,130.41733],[33.16034,130.41686],[33.16101,130.41667],[33.16132,130.41661],[33.16168,130.41658],[33.16189,130.41658],[33.16395,130.41671],[33.16548,130.41671],[33.16535,130.41792],[33.16531,130.41815],[33.16533,130.41825],[33.16537,130.41829],[33.16539,130.41834],[33.16538,130.41838],[33.16512,130.41864],[33.16507,130.41865],[33.16503,130.41873],[33.16499,130.41876],[33.16522,130.41918]]]]},
+       {t:'텐진 · 하카타',idx:[0,1,11,12,13],path:[[0,[[33.58976,130.4223],[33.58802,130.40096]],'t'],[11,[[33.58802,130.40096],[33.58958,130.39954],[33.58982,130.39938],[33.58994,130.39931],[33.59063,130.39902],[33.59117,130.39882],[33.5917,130.3986],[33.59182,130.39853],[33.59194,130.3985],[33.59211,130.39843],[33.59215,130.3984],[33.59225,130.39825],[33.59238,130.39814],[33.59265,130.398],[33.59302,130.39786],[33.59294,130.39757],[33.59279,130.39684]],'w'],[12,[[33.59279,130.39684],[33.58976,130.4223]],'t']]}],
+ note:'<b>니시테쓰 「다자이후 · 야나가와 관광 티켓」</b> 한 장으로 텐진 → 다자이후 → 야나가와 → 텐진 전철과 야나가와 뱃놀이가 해결돼요. 다자이후는 아침에 가야 덜 붐벼요. 야나가와에서 점심을 먹고 배를 탄 뒤 텐진으로 돌아와 라멘으로 이르게 저녁을 먹어요.',
+ stops:[
+  {m:1,t:'08:00',h:'🚇 하카타 → 텐진 · 약 5분',p:'지하철 공항선'},
+  {t:'08:15',h:'니시테쓰 후쿠오카(텐진)역 · 관광 티켓',p:'디지털 티켓이면 화면만 준비하고, 종이 티켓이면 역 창구에서 사요. 15분.',
+   tags:['디지털 3,620엔 · 종이 3,730엔 (2026년 6월 기준)','2일간 유효','자동 개찰구 불가 · 유인 개찰구로'],map:P.tenjinSt,
+   resv:{ok:0,how:'전철 왕복 · 야나가와 뱃놀이 승선권 · 쿠폰이 한 장에 들어 있어요. 내렸다 탈 수 있는 역은 다자이후역과 니시테쓰 야나가와역뿐이에요. 자동 개찰구를 못 쓰니 역무원이 있는 개찰구에서 보여줘요. 디지털 티켓은 전날 앱이나 브라우저에서 사 두면 아침이 편해요.',
+    links:[{t:'관광 티켓 안내',u:'https://www.crossroadfukuoka.jp/feature/dazaifu_yanagawa'}]}},
+  {m:1,t:'08:30',h:'🚆 텐진 → 다자이후 · 약 40분',p:'니시테쓰 덴진오무타선 → 니시테쓰후쓰카이치 환승 → 다자이후선'},
+  {m:1,t:'09:10',h:'🚶 다자이후역 → 덴만구 · 5분',p:'360m · 참배길'},
+  {k:1,t:'09:15',h:'다자이후 덴만구 (太宰府天満宮)',p:'학문의 신 스가와라노 미치자네를 모신 신사. 참배길의 우메가에모치(매화 문양 찹쌀떡)를 하나씩 먹고, 경내 매화를 보며 걸어요. 1시간 30분.',
+   tags:['3월 개문 06:30 · 폐문 18:30','매화 1월 하순~3월 상순 · 끝물','무료'],map:P.tenmangu,
+   sl:'여기서 볼 것',
+   see:[{n:'참배길 (表参道)',d:'역에서 신사까지 기념품 · 떡집이 이어지는 길이에요'},
+    {n:'다이코바시 (太鼓橋)',d:'연못을 건너는 붉은 아치 다리 세 개'},
+    {n:'도비우메 (飛梅)',d:'본전 앞 매화나무. 미치자네를 따라 교토에서 날아왔다는 전설이 있어요'},
+    {n:'우메가에모치',d:'참배길 가게마다 구워 팔아요. 갓 구운 걸 하나씩'}],
+   menu:[{jp:'梅ヶ枝餅、ふたつ ください',y:'우메가에모치, 후타츠 쿠다사이',k:'우메가에모치 두 개 주세요'}]},
+  {m:1,t:'10:45',h:'🚶 덴만구 → 스타벅스 · 2분',p:'150m'},
+  {t:'10:50',h:'커피 · 스타벅스 다자이후 덴만구 오모테산도점',p:'건축가 구마 겐고가 나무 막대 2,000개 남짓을 엮어 지은 매장. 30분.',
+   tags:['08:00~20:00','부정기 휴무','📞 092-919-5690'],map:P.sbDazaifu},
+  {m:1,t:'11:20',h:'🚶 스타벅스 → 다자이후역 · 3분',p:'210m'},
+  {m:1,t:'11:30',h:'🚆 다자이후 → 니시테쓰 야나가와 · 약 55분',p:'다자이후선 → 니시테쓰후쓰카이치 환승 → 덴진오무타선 특급'},
+  {m:1,t:'12:25',h:'🚶 야나가와역 → 모토요시야 · 13분',p:'970m'},
+  {k:1,t:'12:40',h:'점심 · 모토요시야 본점 (元祖本吉屋)',p:'1681년 문을 연 장어집으로, 장어 세이로무시를 처음 만든 집이라고 알려져 있어요. 양념밥 위에 장어구이와 지단을 얹어 나무 찜통째 쪄 내요. 1시간.',
+   tags:['10:30~20:00 (L.O. 19:30)','월요일 휴무 정보 있음','세이로무시 4,100엔부터'],map:P.motoyoshi,
+   resv:{ok:0,how:'토요일 점심이라 줄이 있을 수 있어요. 전화 예약이 되는지 미리 물어봐요. 휴무일은 출처마다 달라 공식 사이트의 휴무 달력으로 확인해요.',
+    links:[{t:'공식 사이트',u:'https://www.motoyoshiya.jp/'},{t:'📞 0944-72-6155',u:'tel:0944726155'}]},
+   menu:[{jp:'せいろ蒸し',y:'세이로무시',k:'장어 찜밥 · 간국 · 절임 포함'},{jp:'特せいろ蒸し定食',y:'토쿠 세이로무시 테-쇼쿠',k:'장어가 더 많은 정식'}]},
+  {m:1,t:'13:40',h:'🚶 모토요시야 → 마쓰게쓰 승선장 · 6분',p:'450m'},
+  {k:1,t:'13:50',h:'야나가와 뱃놀이 (川下り)',p:'사공이 장대로 미는 나룻배를 타고 성 둘레 물길 약 4km를 내려가요. 다리 밑을 지날 때는 몸을 숙여요. 70분.',
+   tags:['관광 티켓에 승선권 포함','합승선 접수 09:30~14:30 · 30분 간격','종점 오키노하타'],map:P.shogetsu,
+   resv:{ok:0,how:'관광 티켓의 승선권을 어느 승선장에서 쓰는지는 <b>티켓을 살 때 확인</b>해요. 지도의 위치는 역에서 가까운 마쓰게쓰 승선장이에요. 3월 초 물 위는 쌀쌀해서 겉옷을 챙겨요. 배에 따라 고타쓰(이불 덮은 난방 탁자)를 두기도 해요.',
+    links:[]}},
+  {t:'15:00',h:'오키노하타 · 하선 후 산책',p:'배에서 내린 물가 마을. 시인 기타하라 하쿠슈의 생가 앞 거리를 걸어요. 30분.',
+   tags:['장어집 · 기념품 가게'],map:P.okinohata},
+  {m:1,t:'15:30',h:'🚕 오키노하타 → 야나가와역 · 약 10분',p:'3.5km · 택시'},
+  {m:1,t:'15:50',h:'🚆 니시테쓰 야나가와 → 텐진 · 약 50분',p:'덴진오무타선 특급'},
+  {m:1,t:'16:40',h:'🚶 텐진역 → 신신 텐진본점 · 10분',p:'740m'},
+  {k:1,t:'16:50',h:'이른 저녁 · 하카타 라멘 신신 텐진본점 (博多らーめん ShinShin)',p:'텐진의 하카타 라멘집. 국물이 이치란보다 가볍고 면이 아주 가늘어요. 50분.',
+   tags:['11:00~다음 날 03:00','수요일 · 셋째 화요일 휴무','📞 092-732-4006'],map:P.shinshin,
+   menu:[{jp:'ラーメン',y:'라-멘',k:'기본 라멘'},{jp:'替え玉',y:'카에다마',k:'면 추가'},{jp:'餃子',y:'교-자',k:'한입 교자'}]},
+  {m:1,t:'17:40',h:'🚇 텐진 → 하카타 · 약 5분',p:'지하철 공항선 · 저녁은 자유'}
+ ]},
+{tab:'7(일)',title:'오호리공원 · 후쿠오카타워 · 텐진',sub:'지하철 · 버스 · 택시 섞어서',
+ route:[{p:P.stay,t:'09:00',n:'숙소',r:'출발'},{p:P.sbOhori,t:'09:20',n:'오호리공원',r:'호수 산책 · 커피'},
+        {p:P.maizuru,t:'10:40',n:'후쿠오카성터 · 매화원',r:'성터 산책'},{p:P.mentaiju,t:'12:00',n:'멘타이주',r:'점심'},
+        {p:P.tower,t:'13:40',n:'후쿠오카타워',r:'전망대'},{p:P.momochi,t:'14:35',n:'모모치 해변',r:'해변 산책'},
+        {p:P.tenjin,t:'15:45',n:'텐진',r:'쇼핑'},{p:P.hanamidori,t:'18:00',n:'하나미도리 나카스본점',r:'저녁 미즈타키'},
+        {p:P.stay,t:'19:45',n:'숙소',r:'귀가'}],
+ maps:[{t:'하루 동선',idx:[0,1,2,3,4,5,6,7,8],path:[[0,[[33.58976,130.4223],[33.58679,130.37812]],'t'],[1,[[33.58679,130.37812],[33.58706,130.37797],[33.58728,130.37788],[33.58728,130.37845],[33.58729,130.37847],[33.58735,130.37847],[33.58734,130.37896],[33.58708,130.38034],[33.5871,130.38054],[33.5871,130.38075],[33.58712,130.38086],[33.58721,130.38108],[33.58732,130.38129],[33.58738,130.3816],[33.58647,130.38176],[33.58641,130.3818],[33.5864,130.38183],[33.5862,130.38205],[33.58613,130.38209],[33.58592,130.38215],[33.58588,130.38218],[33.58578,130.3823],[33.58576,130.38241],[33.58578,130.38257],[33.58562,130.38306],[33.58561,130.38329],[33.58556,130.38334],[33.58521,130.38338],[33.58515,130.38328]],'w'],[2,[[33.58515,130.38328],[33.58549,130.38155],[33.58568,130.38158],[33.58598,130.38174],[33.58607,130.38177],[33.58647,130.38172],[33.58658,130.38169],[33.58767,130.38152],[33.588,130.38154],[33.58884,130.38166],[33.5892,130.38173],[33.58903,130.38266],[33.59,130.38278],[33.58981,130.38683],[33.58983,130.38723],[33.59001,130.38861],[33.59024,130.39019],[33.59037,130.39081],[33.59043,130.39118],[33.59149,130.39598],[33.59154,130.39612],[33.5919,130.39691],[33.59207,130.39725],[33.59213,130.39741],[33.59232,130.39826],[33.59237,130.39839],[33.59278,130.40005],[33.59284,130.40023],[33.59289,130.40031],[33.59361,130.4018],[33.59398,130.40254],[33.59405,130.40265],[33.59387,130.40291],[33.59335,130.40379],[33.59295,130.40454],[33.59245,130.40369],[33.59234,130.40341],[33.59121,130.40396],[33.59122,130.40399]]],[3,[[33.59122,130.40399],[33.59121,130.40396],[33.59234,130.40341],[33.59223,130.40281],[33.59214,130.40248],[33.59179,130.40092],[33.59171,130.40047],[33.59135,130.39881],[33.59215,130.39849],[33.59221,130.39843],[33.59236,130.39821],[33.59263,130.39806],[33.59401,130.39754],[33.59481,130.39708],[33.59546,130.39666],[33.59677,130.39588],[33.59684,130.3958],[33.59691,130.39562],[33.59697,130.3948],[33.59703,130.3945],[33.59706,130.3945],[33.59711,130.39446],[33.59722,130.39426],[33.59741,130.39407],[33.59749,130.39401],[33.59796,130.39371],[33.59904,130.39307],[33.59992,130.3925],[33.6002,130.39236],[33.60027,130.39236],[33.60028,130.39231],[33.6003,130.39229],[33.60052,130.39215],[33.60064,130.39201],[33.60069,130.39191],[33.60072,130.39178],[33.60072,130.39169],[33.60068,130.39149],[33.60061,130.3912],[33.6005,130.39085],[33.60033,130.39037],[33.59986,130.38924],[33.59977,130.38893],[33.59974,130.38876],[33.59968,130.38862],[33.59965,130.38845],[33.59967,130.38807],[33.59976,130.38745],[33.60013,130.386],[33.60018,130.38558],[33.60018,130.38514],[33.60016,130.38493],[33.60012,130.38472],[33.59974,130.38289],[33.59957,130.382],[33.59922,130.38043],[33.59917,130.38015],[33.59913,130.3797],[33.59914,130.37946],[33.59918,130.37918],[33.59929,130.3788],[33.59942,130.3785],[33.59976,130.37783],[33.59988,130.37756],[33.59998,130.37725],[33.60002,130.37708],[33.60008,130.37665],[33.6001,130.37631],[33.60014,130.37408],[33.60013,130.37332],[33.60009,130.37281],[33.59987,130.37157],[33.59984,130.37109],[33.59987,130.3706],[33.59991,130.37034],[33.59998,130.37002],[33.6003,130.36899],[33.60037,130.3687],[33.60043,130.36818],[33.60043,130.36795],[33.60036,130.36744],[33.60028,130.36713],[33.60018,130.36686],[33.59999,130.36649],[33.59968,130.36603],[33.59867,130.36468],[33.59803,130.36372],[33.59773,130.36322],[33.59717,130.36223],[33.59694,130.36178],[33.59637,130.36054],[33.59589,130.35936],[33.59582,130.35927],[33.59577,130.35916],[33.5955,130.35848],[33.59528,130.35784],[33.59502,130.35697],[33.59497,130.35683],[33.59492,130.35674],[33.59482,130.35667],[33.59467,130.35667],[33.59441,130.35683],[33.59436,130.35688],[33.59404,130.35706],[33.59336,130.35749],[33.59315,130.35758],[33.59311,130.3575],[33.59248,130.35577],[33.59352,130.35522],[33.59333,130.35474],[33.59324,130.35441],[33.59317,130.35404],[33.59309,130.35335],[33.59382,130.35321],[33.59392,130.35312],[33.59397,130.35302],[33.59398,130.35285],[33.59381,130.35159],[33.59367,130.34992],[33.59363,130.34982],[33.59357,130.34975],[33.59351,130.34971],[33.59345,130.34969],[33.59335,130.34969],[33.59164,130.35001],[33.59181,130.35148],[33.59185,130.35147]],'u'],[4,[[33.59185,130.35147],[33.59188,130.35174],[33.5931,130.35152],[33.59342,130.35121],[33.59365,130.35119],[33.5937,130.35116],[33.59373,130.3511],[33.59379,130.35107],[33.59382,130.35141]],'w'],[5,[[33.59382,130.35141],[33.59379,130.35141],[33.59381,130.35159],[33.59398,130.35285],[33.59398,130.35296],[33.59396,130.35305],[33.59392,130.35312],[33.59382,130.35321],[33.59309,130.35335],[33.59318,130.35411],[33.59327,130.35454],[33.59333,130.35474],[33.59375,130.35581],[33.59384,130.35596],[33.59394,130.35619],[33.59401,130.35645],[33.59419,130.35686],[33.59507,130.35636],[33.59515,130.35657],[33.59535,130.35734],[33.59555,130.35797],[33.59602,130.35921],[33.59635,130.36014],[33.59668,130.36093],[33.59681,130.3612],[33.59685,130.36132],[33.59687,130.36145],[33.59747,130.36262],[33.59784,130.36326],[33.59831,130.36401],[33.59882,130.36475],[33.59986,130.36614],[33.60012,130.36654],[33.60026,130.36682],[33.60037,130.3671],[33.60047,130.36752],[33.60051,130.36783],[33.60051,130.36827],[33.60048,130.36858],[33.60042,130.36888],[33.60015,130.36972],[33.6,130.37029],[33.59995,130.3706],[33.59992,130.37095],[33.59993,130.3714],[33.59999,130.37183],[33.60017,130.37281],[33.6002,130.3731],[33.60022,130.37355],[33.60022,130.37481],[33.6002,130.37631],[33.60016,130.37689],[33.60007,130.37736],[33.60002,130.37752],[33.59985,130.37789],[33.59958,130.37838],[33.59941,130.37877],[33.5993,130.37923],[33.59925,130.37959],[33.59925,130.37983],[33.59926,130.38006],[33.5993,130.38031],[33.60023,130.38476],[33.6003,130.38537],[33.60029,130.38577],[33.60025,130.38604],[33.60019,130.38631],[33.59984,130.38756],[33.59976,130.3877],[33.59973,130.38781],[33.5997,130.38805],[33.59969,130.38864],[33.59974,130.38891],[33.59994,130.3896],[33.6004,130.39073],[33.60054,130.39118],[33.60059,130.39139],[33.60062,130.39158],[33.60062,130.39167],[33.60061,130.3918],[33.60051,130.39206],[33.60038,130.39221],[33.60017,130.39236],[33.60014,130.39242],[33.59881,130.39321],[33.59842,130.39353],[33.59835,130.39364],[33.59746,130.3942],[33.59729,130.39435],[33.59715,130.39458],[33.59709,130.39477],[33.59702,130.39568],[33.59697,130.39583],[33.59688,130.39596],[33.59576,130.39665],[33.59566,130.39673],[33.59449,130.39739],[33.59406,130.39765],[33.5934,130.39789],[33.59268,130.39818],[33.59254,130.39822],[33.59245,130.39829],[33.59226,130.39855],[33.5921,130.39872],[33.59139,130.399],[33.59136,130.39889]],'u'],[6,[[33.59136,130.39889],[33.59142,130.39887],[33.59146,130.39904],[33.59217,130.39875],[33.59222,130.39879],[33.59226,130.39885],[33.59256,130.40011],[33.59264,130.40035],[33.59296,130.40096],[33.59301,130.40107],[33.59301,130.40112],[33.59319,130.40147],[33.59326,130.40156],[33.59398,130.403],[33.59432,130.40342],[33.59404,130.4038]],'w'],[7,[[33.59404,130.4038],[33.58976,130.4223]],'t']]}],
+ note:'오전은 오호리공원 호수와 후쿠오카성터를 걷고, 점심은 명란젓 덮밥이에요. 오후에 바닷가 후쿠오카타워에 올랐다가 텐진에서 쇼핑하고, 저녁은 닭 육수 냄비 미즈타키예요.',
+ stops:[
+  {m:1,t:'09:00',h:'🚇 하카타 → 오호리코엔 · 약 11분',p:'지하철 공항선 · 환승 없음'},
+  {t:'09:20',h:'오호리공원 · 스타벅스 오호리공원점',p:'성의 해자를 넓혀 만든 큰 호수 공원. 호숫가 스타벅스에서 커피를 사서 호수 가운데 다리를 걸어요. 1시간 10분.',
+   tags:['호수 둘레 약 2km','스타벅스 영업시간은 확인 필요'],map:P.sbOhori},
+  {m:1,t:'10:30',h:'🚶 오호리공원 → 후쿠오카성터 · 10분',p:'770m'},
+  {t:'10:40',h:'후쿠오카성터 · 마이즈루공원 매화원',p:'성 건물은 없고 돌담과 망루가 남은 성터예요. 니노마루 매화원은 3월 초면 끝물이에요. 천수대 터에 오르면 시내가 보여요. 1시간.',
+   tags:['성터 무료','매화 2월 중순~3월 · 끝물'],map:P.maizuru},
+  {m:1,t:'11:40',h:'🚕 후쿠오카성터 → 멘타이주 · 약 11분',p:'3.0km · 택시'},
+  {k:1,t:'12:00',h:'점심 · 원조 하카타 멘타이주 (元祖博多めんたい重)',p:'명란젓을 김 위에 통째로 올린 덮밥 「멘타이주」의 원조집. 다시마에 절인 명란에 양념을 끼얹어 먹어요. 1시간.',
+   tags:['07:00~22:30 (L.O. 22:00)','무휴','📞 092-725-7220'],map:P.mentaiju,
+   resv:{ok:0,how:'점심시간에는 줄이 길어요. 줄이 너무 길면 이날 저녁이나 마지막 날 아침(07:00 개점)으로 바꿔요.',
+    links:[]},
+   menu:[{jp:'めんたい重',y:'멘타이주-',k:'명란 덮밥'},{jp:'辛さは控えめで',y:'카라사와 히카에메데',k:'덜 맵게'}]},
+  {m:1,t:'13:00',h:'🚌 텐진 → 후쿠오카타워 · 약 25분',p:'니시테쓰 버스 · 「福岡タワー南口」 하차'},
+  {k:1,t:'13:40',h:'후쿠오카타워 전망대',p:'바닷가에 선 234m 탑. 123m 전망실에서 하카타만과 시내가 한눈에 보여요. 50분.',
+   tags:['09:30~22:00 (발권 21:30)','대인 1,000엔'],map:P.tower},
+  {m:1,t:'14:30',h:'🚶 후쿠오카타워 → 모모치 해변 · 4분',p:'290m'},
+  {t:'14:35',h:'시사이드 모모치 해변공원',p:'타워 앞 인공 해변. 바다 위에 선 「마리존」 건물까지 모래사장을 걸어요. 40분.',
+   tags:['무료','바람이 세요'],map:P.momochi},
+  {m:1,t:'15:15',h:'🚌 후쿠오카타워 → 텐진 · 약 25분',p:'니시테쓰 버스'},
+  {t:'15:45',h:'텐진 쇼핑',p:'텐진 지하상가와 백화점 · 패션 빌딩이 모인 번화가예요. 2시간.',
+   tags:['지하상가 10:00~20:00 안팎'],map:P.tenjin},
+  {m:1,t:'17:45',h:'🚶 텐진 → 하나미도리 나카스본점 · 9분',p:'660m'},
+  {k:1,t:'18:00',h:'저녁 · 미즈타키 하카타 하나미도리 나카스본점 (博多華味鳥)',p:'닭을 오래 고아 뽀얗게 낸 국물에 닭고기 · 채소를 익혀 먹는 하카타 냄비 요리. 먼저 국물만 한 모금 마시고, 마지막은 죽(조스이)으로 마무리해요. 1시간 30분.',
+   tags:['일 · 공휴일 저녁 ~22:00','예약 권장','나카스카와바타역 5분'],map:P.hanamidori,
+   resv:{ok:0,how:'<b>일요일 저녁이라 예약해요.</b> 잇큐 레스토랑 인터넷 예약이나 전화로 2명 18:00. 2025년 10월 새로 단장했어요.',
+    links:[{t:'잇큐 예약',u:'https://restaurant.ikyu.com/155798/'},{t:'📞 092-263-0322',u:'tel:0922630322'}]},
+   menu:[{jp:'水炊き',y:'미즈타키',k:'닭 육수 냄비'},{jp:'雑炊',y:'조-스이',k:'마무리 죽'},{jp:'2人前',y:'니닌마에',k:'2인분'}]},
+  {m:1,t:'19:30',h:'🚇 나카스카와바타 → 하카타 · 약 5분',p:'지하철 공항선'}
+ ]},
+{tab:'8(월)',title:'기념품 · 출국',sub:'하카타역에서 사고 공항으로',
+ route:[{p:P.stay,t:'09:30',n:'숙소',r:'체크아웃 · 짐 맡김'},{p:P.ming,t:'09:45',n:'하카타역 마잉',r:'기념품'},
+        {p:P.stay,t:'13:15',n:'숙소',r:'짐 찾기'},{p:P.airport,t:'14:15',n:'후쿠오카공항 국제선',r:'출국'}],
+ maps:[{t:'하루 동선',idx:[0,1,2,3],path:[[0,[[33.58976,130.4223],[33.58992,130.4223],[33.58993,130.42195],[33.58998,130.42165],[33.59001,130.42161],[33.5903,130.42158],[33.59043,130.42158],[33.59046,130.4216],[33.59057,130.42144],[33.59062,130.42121],[33.59069,130.42116],[33.59086,130.42112],[33.59091,130.42103],[33.59097,130.42027],[33.59106,130.42024],[33.59107,130.42016],[33.59094,130.42065]],'w'],[1,[[33.59094,130.42065],[33.59107,130.42016],[33.59106,130.42024],[33.59097,130.42027],[33.59091,130.42103],[33.59086,130.42112],[33.59062,130.42121],[33.59057,130.42144],[33.59046,130.4216],[33.59043,130.42158],[33.5903,130.42158],[33.59001,130.42161],[33.58992,130.42172],[33.58995,130.4218],[33.58993,130.42195],[33.58992,130.4223],[33.58976,130.4223]],'w'],[2,[[33.58976,130.4223],[33.58383,130.44413]],'t']]}],
+ note:'마지막 날은 하카타역 안에서 기념품과 점심을 해결하고 공항으로 가요. <b>16:30 출발로 가정</b>해 14:15에 국제선에 도착하게 잡았어요.',
+ stops:[
+  {t:'09:30',h:'숙소 · 체크아웃 · 짐 맡기기',p:'짐은 숙소에 맡기고 손가방만 들고 나가요.',map:P.stay},
+  {m:1,t:'09:40',h:'🚶 숙소 → 하카타역 마잉 · 5분',p:'340m'},
+  {k:1,t:'09:45',h:'기념품 · 하카타역 마잉 · 하카타 한큐',p:'하카타역 안 기념품 거리 마잉에서 과자 · 명란젓을 사고, 하카타 한큐 지하 식품관도 둘러봐요. 점심은 역 지하 식당가 「하카타 1번가」에서 먹어요. 3시간 30분.',
+   tags:['마잉 09:00 안팎~21:00','하카타 한큐 지하 10:00~20:00'],map:P.ming,
+   sl:'담을 것',
+   see:[{n:'하카타 도리몬 (博多通りもん)',d:'흰 앙금에 연유 · 버터를 넣은 만주. 후쿠오카 근처에서만 팔아요'},
+    {n:'명란젓 (辛子明太子)',d:'가게마다 맵기가 달라요. 비행기에 들고 탈 거면 냉장 포장을 부탁해요'},
+    {n:'하카타 1번가 (博多1番街)',d:'하카타역 지하 식당가. 라멘 · 우동 · 정식집이 모여 있어요'}],
+   menu:[{jp:'保冷剤、入れてください',y:'호레-자이, 이레테 쿠다사이',k:'아이스팩 넣어 주세요'},{jp:'免税できますか？',y:'멘제- 데키마스카?',k:'면세 돼요?'}]},
+  {m:1,t:'13:15',h:'🚶 하카타역 → 숙소 · 5분',p:'짐 찾기'},
+  {m:1,t:'13:30',h:'🚇 하카타 → 후쿠오카공항 · 약 5분',p:'지하철 공항선 종점(국내선) → 무료 연결 버스 10~15분 → 국제선'},
+  {k:1,t:'14:15',h:'✈ 후쿠오카공항 국제선 · 출국',p:'출발 2시간 남짓 전에 도착해요. 남은 엔화는 면세점에서 써요.',
+   tags:['항공편 미정 · 16:30 출발로 가정'],map:P.airport}
+ ]}
+];
+
+const RUNS=[];
+
+const PH=[
+ {h:'먼저, 이것만 외우면 돼요',d:'상대가 길게 답할 수 없는 말들이에요. 안심하고 던져도 좋아요.',
+  items:[{jp:'すみません',y:'스미마셍',k:'저기요 / 실례합니다',hint:'부를 때도, 미안할 때도, 지나갈 때도 다 돼요.'},
+   {jp:'これ、ください',y:'코레, 쿠다사이',k:'이거 주세요',hint:'메뉴나 진열대를 손가락으로 가리키면서.'},
+   {jp:'おいしいです！',y:'오이시이데스!',k:'맛있어요!'},
+   {jp:'ごちそうさまでした',y:'고치소-사마데시타',k:'잘 먹었습니다',hint:'나갈 때 이 한마디.'},
+   {jp:'ありがとうございます',y:'아리가토- 고자이마스',k:'감사합니다'},
+   {jp:'おねがいします',y:'오네가이시마스',k:'부탁드립니다'}]},
+ {h:'못 알아들었을 때',d:'대화가 꼬일 때 이 여섯 개로 정리해요.',
+  items:[{jp:'日本語、少しだけです',y:'니홍고, 스코시다케데스',k:'일본어 조금밖에 못해요'},
+   {jp:'ゆっくり おねがいします',y:'윳쿠리 오네가이시마스',k:'천천히 말해 주세요'},
+   {jp:'もう一度 おねがいします',y:'모- 이치도 오네가이시마스',k:'한 번만 더 말해 주세요'},
+   {jp:'書いて ください',y:'카이테 쿠다사이',k:'써 주세요',hint:'숫자 · 시간이 안 들릴 때.'},
+   {jp:'大丈夫です',y:'다이죠-부데스',k:'괜찮습니다',hint:'봉투 필요하냐고 물을 때도 이 말이면 거절이에요.'},
+   {jp:'わかりました',y:'와카리마시타',k:'알겠습니다'}]},
+ {h:'숫자 세기 — 1~10 · 명 · 개 · 잔',d:'값 · 시각은 「셀 때」, 사람은 「명」, 물건은 「개」, 음료는 「잔」 줄로 세요. 우리는 2명이라 2줄을 칠해 뒀어요.',
+  nums:[[1,'いち','이치','ひとり','히토리','ひとつ','히토츠','いっぱい','잇파이'],
+   [2,'に','니','ふたり','후타리','ふたつ','후타츠','にはい','니하이'],
+   [3,'さん','산','さんにん','산닌','みっつ','밋츠','さんばい','삼바이'],
+   [4,'よん','욘','よにん','요닌','よっつ','욧츠','よんはい','욘하이'],
+   [5,'ご','고','ごにん','고닌','いつつ','이츠츠','ごはい','고하이'],
+   [6,'ろく','로쿠','ろくにん','로쿠닌','むっつ','뭇츠','ろっぱい','롭파이'],
+   [7,'なな','나나','しちにん','시치닌','ななつ','나나츠','ななはい','나나하이'],
+   [8,'はち','하치','はちにん','하치닌','やっつ','얏츠','はっぱい','핫파이'],
+   [9,'きゅう','큐-','きゅうにん','큐-닌','ここのつ','코코노츠','きゅうはい','큐-하이'],
+   [10,'じゅう','쥬-','じゅうにん','쥬-닌','とお','토-','じゅっぱい','쥽파이']]},
+ {h:'식당 ① 들어갈 때',d:'입구에서 첫마디로 써요.',
+  items:[{jp:'二人です',y:'후타리데스',k:'두 명이에요',hint:'「何名様ですか」(난메-사마데스카 · 몇 분이세요?)에 대한 답. 손가락 두 개를 펴도 통해요.'},
+   {jp:'予約しているリムです。2名です。',y:'요야쿠시테 이루 리무데스. 니메-데스',k:'예약한 임이에요. 2명이에요',hint:'예약한 식당에서 첫마디. 예약 화면을 같이 보여줘요.'},
+   {jp:'カウンターでも 大丈夫です',y:'카운타-데모 다이죠-부데스',k:'카운터 자리도 괜찮아요',hint:'테이블이 찼다고 할 때. 바로 앉을 수 있어요.'}]},
+ {h:'식당 ② 주문 · 리필',d:'가리키고 개수만 말하면 돼요.',
+  items:[{jp:'メニュー、ください',y:'메뉴-, 쿠다사이',k:'메뉴 주세요'},
+   {jp:'韓国語のメニュー、ありますか？',y:'칸코쿠고노 메뉴-, 아리마스카?',k:'한국어 메뉴 있어요?'},
+   {jp:'これを ふたつ ください',y:'코레오 후타츠 쿠다사이',k:'이거 두 개 주세요'},
+   {jp:'生ビール、ふたつ ください',y:'나마비-루, 후타츠 쿠다사이',k:'생맥주 두 잔 주세요'},
+   {jp:'替え玉、ください',y:'카에다마, 쿠다사이',k:'(라멘) 면 추가요',hint:'하카타 라멘집 필수. 국물은 남겨 두고 면만 더 받아요. 「바리카타」(아주 꼬들하게)도 같이 말할 수 있어요.'},
+   {jp:'バリカタで',y:'바리카타데',k:'면 아주 꼬들하게',hint:'하카타 라멘 면 익힘 단계. 보통은 「普通で」(후츠-데).'},
+   {jp:'取り皿を ふたつ おねがいします',y:'토리자라오 후타츠 오네가이시마스',k:'앞접시 두 개 주세요',hint:'냄비 요리를 나눠 먹을 때.'},
+   {jp:'お水、おねがいします',y:'오미즈, 오네가이시마스',k:'물 주세요'}]},
+ {h:'식당 ③ 계산하기',d:'계산은 대개 입구 계산대에서 해요.',
+  items:[{jp:'お会計、おねがいします',y:'오카이케-, 오네가이시마스',k:'계산해 주세요'},
+   {jp:'カードで いいですか？',y:'카-도데 이이데스카?',k:'카드 돼요?',hint:'답 → 「現金だけです」(겐킨다케데스 · 현금만요)이면 현금으로.'},
+   {jp:'レシート、ください',y:'레시-토, 쿠다사이',k:'영수증 주세요'}]},
+ {h:'이동할 때 — 지하철 · 전철 · 버스 · 택시',d:'목적지 이름을 보여주면서 말하면 대부분 통해요.',
+  items:[{jp:'天神に 行きますか？',y:'텐진니 이키마스카?',k:'텐진 가요?',hint:'버스 · 전철 타기 전에 운전사나 역무원에게. 「天神」 자리에 목적지를 바꿔 넣어요.'},
+   {jp:'どこで 乗り換えですか？',y:'도코데 노리카에데스카?',k:'어디서 갈아타요?'},
+   {jp:'この切符、使えますか？',y:'코노 킷푸, 츠카에마스카?',k:'이 표 쓸 수 있어요?',hint:'다자이후 · 야나가와 관광 티켓을 보여주면서.'},
+   {jp:'ここまで、おねがいします',y:'코코마데, 오네가이시마스',k:'여기까지 가 주세요',hint:'택시에서 앱의 「지도」를 보여주면서.'},
+   {jp:'タクシーを 呼んでください',y:'탁시-오 욘데 쿠다사이',k:'택시 불러 주세요'}]},
+ {h:'재미 삼아 한 번 던져보기',d:'가게 사람이 웃어줄 확률이 높은 말들이에요.',
+  items:[{jp:'とんこつ、最高です！',y:'톤코츠, 사이코-데스!',k:'돈코쓰 최고예요!'},
+   {jp:'韓国から 来ました',y:'캉코쿠카라 키마시타',k:'한국에서 왔어요'},
+   {jp:'写真、いいですか？',y:'샤신, 이이데스카?',k:'사진 찍어도 될까요?'}]}
+];
+
+const CHECK=[
+ ['f1','항공권 · 인천 ↔ 후쿠오카','도착 10:00 · 출발 16:30으로 가정한 일정이에요. 정해지면 첫날 · 마지막 날 시각을 맞춰요'],
+ ['f2','숙소 · 하카타역 근처','짐 보관 · 체크인 시각 확인'],
+ ['f3','3/5(금) 18:00 · 모쓰나베 마에다야 총본점 × 2명','히토사라 인터넷 예약 또는 📞 092-292-8738'],
+ ['f4','3/7(일) 18:00 · 하나미도리 나카스본점 × 2명','잇큐 인터넷 예약 또는 📞 092-263-0322'],
+ ['f5','다자이후 · 야나가와 관광 티켓','디지털 3,620엔(전날 구매) · 종이 3,730엔(텐진역)'],
+ ['f6','엔화 현금','야타이 · 일부 식당은 현금만 받아요']
+];
+
+/* ───────── 카페 ───────── */
+const CAFE=[
+ {d:'5(금)',gap:'캐널시티 → 숙소 사이 15:15',
+  list:[
+   {n:'마누 커피 하루요시점',jp:'manu coffee 春吉店',q:'manu coffee 春吉店 福岡市中央区渡辺通3-11-2',pay:'확인 필요',
+    hr:'09:00~24:00 (한 곳의 정보)',off:'확인 필요',seat:'확인 필요',take:'가능',
+    menu:'스페셜티 커피',
+    note:'후쿠오카 스페셜티 커피 1세대 가게예요. 캐널시티에서 걸어서 11분이라 숙소로 돌아가기 전에 들를 수 있어요.'}]},
+ {d:'6(토)',gap:'다자이후 덴만구 다음 10:50',
+  list:[
+   {n:'스타벅스 다자이후 덴만구 오모테산도점',jp:'スターバックス 太宰府天満宮表参道店',q:'スターバックス 太宰府天満宮表参道店',pay:'카드 · 전자머니',
+    hr:'08:00~20:00',off:'부정기',seat:'매장 안쪽까지 좌석',take:'가능',
+    menu:'계절 음료 · 드립커피',
+    note:'이미 일정에 들어 있어요(10:50). 구마 겐고가 나무 막대를 엮어 지은 매장이에요. 📞 092-919-5690',cur:1}]},
+ {d:'7(일)',gap:'오호리공원 09:20',
+  list:[
+   {n:'스타벅스 후쿠오카 오호리공원점',jp:'スターバックス 福岡大濠公園店',q:'スターバックス 福岡大濠公園店',pay:'카드 · 전자머니',
+    hr:'확인 필요',off:'확인 필요',seat:'호수가 보이는 큰 창 · 테라스',take:'가능',
+    menu:'계절 음료 · 드립커피',
+    note:'이미 일정에 들어 있어요(09:20). 공원 안 매장이라 호수를 보며 앉아요.',cur:1}]}
+];
+
+
+/* ───────── 사용자 ───────── */
+let ME = LS.get('trip_user') || null;
+const gate=document.getElementById('gate'), whoBox=document.getElementById('who');
+MEMBERS.forEach(n=>{
+  const b=document.createElement('button'); b.textContent=n;
+  b.onclick=()=>{ ME=n; LS.set('trip_user',n); gate.classList.add('hide'); renderMe(); askTrip(true); if(typeof applyDriver==='function') applyDriver(true); notify('checks');notify('comments');notify('reactions'); };
+  whoBox.appendChild(b);
+});
+function renderMe(){
+  document.getElementById('me').innerHTML = ME
+   ? `<b>${ME}</b> 님으로 보는 중 ${ME===TRIP_PICKER?'<a class="trip" href="./?trip=tk">다카마쓰 여행 보기</a>':''}<button id="lo">이름 바꾸기</button>` : '';
+  const lo=document.getElementById('lo');
+  if(lo) lo.onclick=()=>{ LS.set('trip_user',''); location.replace('./'); };
+}
+if(ME) gate.classList.add('hide');
+/* 큰 사위는 다카마쓰와 후쿠오카 두 여행이 있어 들어올 때 고른다. 한 번 고르면 이 창을 닫을 때까지 다시 묻지 않는다 */
+const TRIP_PICKER='큰 사위', TRIP_HERE='fk', tripPick=document.getElementById('tripPick');
+const SS={ get(k){try{return sessionStorage.getItem(k)}catch(e){return null}}, set(k,v){try{sessionStorage.setItem(k,v)}catch(e){}} };
+function askTrip(force){
+  if(ME!==TRIP_PICKER){ tripPick.classList.add('hide'); return; }
+  if(force||!SS.get('tripPicked')) tripPick.classList.remove('hide');
+}
+tripPick.addEventListener('click',e=>{
+  const b=e.target.closest('[data-trip]'); if(!b) return;
+  SS.set('tripPicked','1');
+  if(b.dataset.trip!==TRIP_HERE){ location.href=b.dataset.trip==='fk'?'fukuoka.html':'./?trip=tk'; return; }
+  tripPick.classList.add('hide');
+});
+/* 후쿠오카 페이지의 「다카마쓰 여행 보기」로 오면 고른 것으로 친다. 공유 링크(#d0s12)로 들어오면 묻지 않는다 */
+if(new URLSearchParams(location.search).get('trip')==='tk'){ SS.set('tripPicked','1'); history.replaceState(null,'',location.pathname+location.hash); }
+SS.set('tripPicked','1');   // 후쿠오카 페이지로 바로 들어왔으면 이미 고른 것으로 친다
+renderMe();
+
+/* ───────── 렌더링 ───────── */
+const nav=document.getElementById('nav'), panes=document.getElementById('panes');
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const fmt=ts=>{const d=new Date(ts);return `${d.getMonth()+1}/${d.getDate()} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`};
+
+/* 스톱 안쪽 상세는 접어 둔다 — 타임라인을 훑을 때 방해되지 않게 */
+function detail(o){
+  const body=[
+    o.resv?`<div class="resv"><h4>${o.resv.ok?'예약':'예약 없음'}</h4><p>${o.resv.how}</p>
+      ${o.resv.links?`<div class="links">${o.resv.links.map(l=>`<a class="go r" href="${l.u}" target="_blank" rel="noopener">${l.t}</a>`).join('')}</div>`:''}</div>`:'',
+    o.see?`<div class="menu"><h4>${o.sl||'여기서 볼 것'}</h4><ul class="see">${o.see.map(x=>
+      `<li><div class="mean"><b>${x.n}</b> — ${x.d}</div></li>`).join('')}</ul></div>`:'',
+    o.menu?`<div class="menu"><h4>${o.ml||'무엇을 시킬까요'}</h4><ul>${o.menu.map(m=>
+      `<li><div class="jp">${m.jp}</div><div class="yomi">${m.y}</div><div class="mean">${m.k}</div></li>`).join('')}</ul></div>`:'',
+    o.photo?`<div class="menu"><h4>사진 스팟</h4>${o.photo.map(f=>`<div class="spot">
+      ${f.img?`<figure><img loading="lazy" src="${f.img}" alt="${f.n}" onerror="this.parentNode.remove()"><figcaption class="cr">${f.cr}</figcaption></figure>`:''}
+      <div class="mean"><b>${f.n}</b> — ${f.d}</div>
+      <div class="links"><a class="go" href="${M(f)}" target="_blank" rel="noopener">이 지점 지도</a></div></div>`).join('')}</div>`:''
+  ].filter(Boolean).join('');
+  return body?`<details class="more"><summary>자세히 보기</summary><div class="mbody">${body}</div></details>`:'';
+}
+
+function stopBlock(o,id,mode){
+  const links=[];
+  if(o.map)links.push(`<a class="go" href="${M(o.map)}" target="_blank" rel="noopener">지도</a>`);
+  /* 배로 건너는 칸 · 앞에 이동 칸이 없는 칸은 길찾기를 달지 않는다. dir 이 있으면 그곳으로, 차로 가는 곳에 주차장이 있으면 주차장으로 안내한다 */
+  if(o.map&&mode&&!o.h.startsWith('⛴')){ const to=o.dir||(mode==='driving'&&o.park?o.park:o.map);
+    links.push(`<a class="go d" href="${DIR(to,mode)}" target="_blank" rel="noopener">${DIRLABEL[mode]}</a>`); }
+  if(o.park)links.push(`<a class="go p" href="${M(o.park)}" target="_blank" rel="noopener">🅿 ${o.park.n}</a>`);
+  return `<div class="stop${o.k?' key':''}${o.m?' move':''}" data-id="${id}">
+    <div class="t" data-tm="${id}" title="누르면 실제 시각으로 고칠 수 있어요. 뒤 일정도 같이 밀려요">${o.t}</div><h3>${o.h}</h3>${o.p?`<p>${o.p}</p>`:''}
+    ${o.tags?`<div class="tags">${o.tags.map(t=>`<span class="tag${t.startsWith('⚠')||t.includes('예약 필수')||t.includes('현금')?' w':''}">${t}</span>`).join('')}</div>`:''}
+    ${links.length?`<div class="links">${links.join('')}</div>`:''}
+    ${o.slack?`<div class="slack"><b>늦어지면</b> ${o.slack}</div>`:''}
+    ${detail(o)}
+    ${o.m?'':`<div class="bar" data-bar="${id}"></div><div class="thread" data-th="${id}"></div>`}
+  </div>`;
+}
+
+/* sw:[순서, 버튼이름]이 붙은 일정끼리 토요일 전환 묶음이 된다 */
+const SATS=DAYS.map((d,i)=>d.sw?[d.sw[0],i,d.sw[1]]:null).filter(Boolean).sort((a,b)=>a[0]-b[0]);
+const SATMAIN=DAYS.findIndex(d=>d.sw&&!d.alt), ALTK='satAlt';
+const satSel=()=>Math.min(Math.max(+(LS.get(ALTK)||0),0),SATS.length-1);
+const satPane=i=>i===SATMAIN?SATS[satSel()][1]:i;
+const swapBar=i=>`<div class="swap"><b>토요일</b>`+SATS.map(([,idx,lbl],k)=>`<button data-swap="${k}"${idx===i?' class="on"':''}>${lbl}</button>`).join('')+`</div>`;
+
+DAYS.forEach((d,i)=>{
+  if(!d.alt) nav.insertAdjacentHTML('beforeend',`<button data-i="${i}"${i?'':' class="on"'}>${d.tab}</button>`);
+  const s=document.createElement('section'); s.className='pane'+(i?'':' on');
+  s.innerHTML=(d.sw?swapBar(i):'')
+   +`<div class="dayhead"><h2>${d.title}</h2><em>${d.sub}</em></div>`
+   +(d.intro?`<div class="note">${d.intro}</div>`:'')   // 그날 가는 곳 소개 — 일정 안내(note)보다 먼저 보여준다
+   +(d.note?`<div class="note">${d.note}</div>`:'')
+   +(d.maps?dayFig(i):'')
+   +`<div class="rail">`+d.stops.map((o,j)=>stopBlock(o,`d${i}s${j}`,TRAVEL(d.stops,j))).join('')+`</div>`;
+  panes.appendChild(s);
+});
+
+
+const cafePane=document.createElement('section'); cafePane.className='pane';
+cafePane.innerHTML=`<div class="dayhead"><h2>카페</h2><em>일정 사이사이, 그 근처에서</em></div>`
++CAFE.map(g=>`<div class="cday"><h3>${g.d}</h3><em>${esc(g.gap)}</em></div>`
+ +g.list.map(c=>`<div class="cafe${c.cur?' cur':''}">
+   <h4>${esc(c.n)}${c.cur?'<span class="cin">일정에 있음</span>':''}</h4>
+   <div class="cjp">${esc(c.jp)}</div>
+   <table class="ctb"><tbody>
+    <tr><td>영업</td><td>${esc(c.hr)}</td></tr>
+    <tr><td>휴무</td><td>${esc(c.off)}</td></tr>
+    <tr><td>자리</td><td>${esc(c.seat)}</td></tr>
+    <tr><td>테이크아웃</td><td>${esc(c.take)}</td></tr>
+    <tr><td>결제</td><td${/현금/.test(c.pay)?' class="cpay"':''}>${esc(c.pay)}</td></tr>
+    <tr><td>대표</td><td>${esc(c.menu)}</td></tr>
+   </tbody></table>
+   <p class="cno">${c.note}</p>
+   <div class="links"><a class="go" href="${M({q:c.q})}" target="_blank" rel="noopener">지도 · 사진 보기</a></div>
+  </div>`).join('')).join('');
+panes.appendChild(cafePane);
+
+/* ───────── 라멘집 ───────── */
+const RAMEN=[P.ichiran,P.shinshin];
+const ramenPane=document.createElement('section'); ramenPane.className='pane';
+ramenPane.innerHTML=`<div class="dayhead"><h2>라멘집</h2><em>하카타 돈코쓰 · 일정에 든 두 집</em></div>
+<div class="note"><b>하카타 라멘</b>은 돼지뼈를 오래 끓인 뽀얀 국물에 아주 가는 면이에요. 면이 금방 퍼져서 양을 적게 주고, 국물을 남겨 두었다가 면만 더 받는 「카에다마(替え玉)」가 이 동네 방식이에요. 면 익힘은 「바리카타」(아주 꼬들) · 「카타」(꼬들) · 「후츠-」(보통) 순이에요.</div>
+<div class="cafe cur">
+ <h4>이치란 본사총본점<span class="cin">일정에 있음</span></h4>
+ <div class="cjp">一蘭 本社総本店</div>
+ <table class="ctb"><tbody>
+  <tr><td>일정</td><td>3/5(금) 12:00 점심</td></tr>
+  <tr><td>영업</td><td>24시간 · 무휴</td></tr>
+  <tr><td>위치</td><td>福岡市博多区中洲5-3-2 · 나카스카와바타역 1분</td></tr>
+  <tr><td>매운맛</td><td>주문 용지에서 「빨간 비법 양념(赤い秘伝のたれ)」 양을 골라 맵기를 정해요</td></tr>
+  <tr><td>방식</td><td>식권 자판기 → 칸막이 자리 → 주문 용지 표시</td></tr>
+ </tbody></table>
+ <p class="cno">이치란의 본점이라 1층 · 2층에 자리가 많아요. 혼자 칸막이 자리라 대화는 어렵지만 국물 진하기 · 기름 · 마늘 · 파 · 면 익힘을 다 고를 수 있어요. 📞 050-3733-2600</p>
+ <div class="links"><a class="go" href="${M(RAMEN[0])}" target="_blank" rel="noopener">지도 · 사진 보기</a><a class="go d" href="${DIR(RAMEN[0],'transit')}" target="_blank" rel="noopener">🚌 대중교통 길찾기</a></div>
+</div>
+<div class="cafe cur">
+ <h4>하카타 라멘 신신 텐진본점<span class="cin">일정에 있음</span></h4>
+ <div class="cjp">博多らーめん ShinShin 天神本店</div>
+ <table class="ctb"><tbody>
+  <tr><td>일정</td><td>3/6(토) 16:50 이른 저녁</td></tr>
+  <tr><td>영업</td><td>11:00~다음 날 03:00</td></tr>
+  <tr><td>휴무</td><td>수요일 · 셋째 화요일</td></tr>
+  <tr><td>위치</td><td>福岡市中央区天神3-2-19 · 텐진역 걸어서 10분</td></tr>
+ </tbody></table>
+ <p class="cno">국물이 가볍고 면이 아주 가늘어요. 밤늦게까지 열어서 저녁 뒤 2차로 가도 돼요. 📞 092-732-4006</p>
+ <div class="links"><a class="go" href="${M(RAMEN[1])}" target="_blank" rel="noopener">지도 · 사진 보기</a><a class="go d" href="${DIR(RAMEN[1],'transit')}" target="_blank" rel="noopener">🚌 대중교통 길찾기</a></div>
+</div>
+<div class="cafe">
+ <h4>주문할 때</h4>
+ <table class="ctb"><tbody>
+  <tr><td>면 추가</td><td>「替え玉、ください」<br>카에다마, 쿠다사이</td></tr>
+  <tr><td>아주 꼬들하게</td><td>「バリカタで」<br>바리카타데</td></tr>
+  <tr><td>보통으로</td><td>「普通で」<br>후츠-데</td></tr>
+  <tr><td>맵게</td><td>「辛くしてください」<br>카라쿠 시테 쿠다사이</td></tr>
+  <tr><td>덜 맵게</td><td>「辛さ控えめで」<br>카라사 히카에메데</td></tr>
+ </tbody></table>
+</div>`;
+panes.appendChild(ramenPane);
+
+/* 런닝 탭 삽화 — AI로 그려 Higgsfield 저장소에 올린 그림을 바로 불러온다 */
+const ARTB='https://d8j0ntlcm91z4.cloudfront.net/user_37vErD8AJhL9V7kdpLOZ1TNmIfV/hf_20261014_';
+const ART={
+ top:['014618_60b425e8-9941-4c19-81ee-54e5a09f9a7b','해 뜨는 세토내해 바닷가 산책로를 달리는 두 사람'],
+ light:['014619_eccf8e10-61ad-41c9-a789-c1c2d6b6943c','방파제 끝 빨간 등대'],
+ tower:['014622_51d1e4be-b9f7-48fb-8c50-aed9aac53fac','심볼타워 앞 바닷가 산책로'],
+ castle:['014619_39a4500d-e272-4409-bbad-5d14611b4de6','다마모성 망루와 해자, 항구 창고 골목']
+};
+const artImg=k=>`<img class="rart" src="${ARTB}${ART[k][0]}_min.webp" alt="${ART[k][1]}" loading="lazy" onerror="this.remove()">`;
+
+const jpPane=document.createElement('section'); jpPane.className='pane';
+jpPane.innerHTML=`<div class="dayhead"><h2>일본어 한마디</h2><em>못 알아들어도 괜찮게 짜여 있어요</em></div>
+<div class="note">원칙은 하나예요. <b>상대가 길게 답할 수밖에 없는 말은 하지 않아요.</b>
+「추천이 뭐예요?」 같은 질문은 30초짜리 설명을 불러요. 대신 손가락으로 가리키고 「これ、ください」(코레, 쿠다사이)라고 하면 끝나요.</div>`
++PH.map(g=>`<div class="jph" style="font-family:var(--f);font-size:17px;font-weight:600;margin:26px 0 2px">${g.h}</div>
+ <div style="font-size:13px;color:var(--muted);margin-bottom:4px">${g.d}</div>`
+ +(g.nums?`<table class="cntb" style="margin-top:8px"><thead><tr><th></th><th>셀 때</th><th>명 (人)</th><th>개 (つ)</th><th>잔 (杯)</th></tr></thead><tbody>${g.nums.map(([n,...c])=>`<tr${n===2?' class="hl"':''}><th>${n}</th>${[0,2,4,6].map(k=>`<td>${c[k+1]}<i>${c[k]}</i></td>`).join('')}</tr>`).join('')}</tbody></table>`:'')
+ +(g.items||[]).map(p=>`<div class="ph" style="border-top:1px solid var(--line);padding:13px 0">
+   <div class="jp" style="font-size:15px">${p.jp}</div><div class="yomi">${p.y}</div>
+   <div class="mean" style="color:#44453F">${p.k}</div>
+   ${p.hint?`<div style="font-size:12px;color:var(--muted);margin-top:5px">${p.hint}</div>`:''}</div>`).join('')).join('');
+panes.appendChild(jpPane);
+
+const runPane=document.createElement('section'); runPane.className='pane';
+/* 같은 길로 돌아오는 코스(경유지 1곳)는 반환점까지만 보여준다. 출발지와 도착지가 같으면 구글 지도가 경로를 그리지 않는다 */
+const runLink=r=>{ const ll=r.route.map(x=>x.p.ll.join(',')), mid=ll.slice(1,-1);
+  if(mid.length===1) return `https://www.google.com/maps/dir/?api=1&origin=${ll[0]}&destination=${mid[0]}&travelmode=walking`;
+  return `https://www.google.com/maps/dir/?api=1&origin=${ll[0]}&destination=${ll.at(-1)}&waypoints=${mid.join('%7C')}&travelmode=walking`; };
+runPane.innerHTML=`<div class="dayhead"><h2>런닝코스</h2><em>숙소에서 출발해 바다를 보며 달리고 숙소로 돌아와요</em></div>${artImg('top')}
+<div class="note"><b>아침이든 저녁이든</b><br>
+· 해 뜨는 시각 06:10 · 해 지는 시각 17:28 (16~19일)<br>
+· 아침에는 바다 위로 해가 떠오르고, 저녁에는 해가 진 뒤 빨간 등대에 불이 들어와요.<br>
+· 저녁 식사 뒤라면 1~2시간 쉬었다가 나가요.</div>
+<div class="note"><b>나가기 전에</b><br>
+· 두 명 이상 함께 나가고 폰과 숙소 열쇠를 챙겨요.<br>
+· 일본은 차가 왼쪽으로 다녀요. 길을 건널 때 <b>오른쪽을 먼저</b> 봐요.<br>
+· 10월 아침저녁은 15~18도라 얇은 긴팔이 좋아요. 방파제 위는 바람이 세요.<br>
+· 해가 진 뒤에는 밝은 색 옷을 입어요.<br>
+· 시간은 1km에 7~8분으로 천천히 달린 기준이에요. 왕초보 코스는 걷기를 섞은 시간이에요.</div>`
++RUNS.map((r,k)=>`<div class="run">${artImg(r.art)}<div class="rb">
+  <h3><span class="rlv${r.lv==='중급'?' mid':r.lv==='왕초보'?' easy':''}">${r.lv}</span>${esc(r.n)}</h3>
+  <div class="rkm"><b>${r.km}</b> · ${r.min} · 숙소 출발 · 숙소 도착</div>
+  <p style="font-size:13.5px">${r.d}</p>
+  <table class="ctb" style="margin-top:8px"><tbody>${r.facts.map(([a,b])=>`<tr><td>${a}</td><td>${b}</td></tr>`).join('')}</tbody></table>
+  <details class="dfig" data-run="${k}"><summary>코스 지도 · 눌러서 열기</summary><div class="body"><div class="lmap" id="rmap${k}"></div>
+   <ul class="figleg">${r.maps[0].path.map(([L],q)=>`<li><i style="background:${LEGC[q%LEGC.length]}"></i>${L+1} → ${L+2} · ${esc(r.route[L].n)} → ${esc(r.route[L+1].n)}<em>${r.route[L+1].t}</em></li>`).join('')}</ul></div></details>
+  <div class="links"><a class="go d" href="${runLink(r)}" target="_blank" rel="noopener">🏃 구글 지도로 코스 열기</a></div>
+ </div></div>`).join('')+`<p class="mapfoot">삽화는 AI로 그린 그림이에요.</p>`;
+panes.appendChild(runPane);
+runPane.querySelectorAll('details[data-run]').forEach(el=>el.addEventListener('toggle',()=>{
+  const k=+el.dataset.run, id='r'+k, box=document.getElementById('rmap'+k);
+  if(!el.open||MAPS[id]) return; MAPS[id]=1;
+  loadGmaps().then(gm=>{ MAPS[id]=makeMap(gm,RUNS[k],RUNS[k].maps[0],box); })
+    .catch(()=>{ delete MAPS[id]; box.textContent='지도를 불러오지 못했어요. 네트워크를 확인해 주세요.'; });
+}));
+
+const boardPane=document.createElement('section'); boardPane.className='pane';
+boardPane.innerHTML=`<div class="dayhead"><h2>요청 · 의견</h2><em>일정에 붙지 않는 이야기는 여기에</em></div>
+ <div class="bar" data-bar="board"></div><div class="thread on" data-th="board"></div>
+ <div style="font-family:var(--f);font-size:17px;font-weight:600;margin:30px 0 8px">일정에 달린 의견 모아보기</div>
+ <div id="allc"></div>`;
+panes.appendChild(boardPane);
+
+const routeTable=d=>`<table><tbody>`+d.route.map(r=>`<tr><td style="width:46px">${r.t}</td><td>${esc(r.n)}</td><td style="color:var(--muted)">${esc(r.r)}</td></tr>`).join('')+`</tbody></table>`;
+const overview=DAYS.map(d=>d.alt?'':d.sw
+ ?`<div class="cday"><h3>${d.tab.split(' ')[0]}</h3><em>안 ${SATS.length}개 중 하나</em></div>`
+  +SATS.map(([,idx,lbl])=>`<p style="margin:12px 0 3px"><b>${esc(lbl)}</b> <span style="color:var(--muted)">· ${esc(DAYS[idx].title)}</span></p><p style="font-size:12.5px;line-height:1.7">`+DAYS[idx].route.map(r=>`${r.t} ${esc(r.n)}`).join(' → ')+`</p>`).join('')
+ :`<div class="cday"><h3>${d.tab}</h3><em>${esc(d.title)}</em></div>`+routeTable(d)).join('');
+
+const infoPane=document.createElement('section'); infoPane.className='pane';
+infoPane.innerHTML=`<div class="dayhead"><h2>참고 정보</h2><em>예약 · 교통 · 운영시간</em></div>
+<details open><summary>한눈에 보는 일정</summary><div class="body" style="margin-top:-18px">${overview}</div></details>
+
+<details open><summary>예약 체크리스트</summary><div class="body" id="chk"></div></details>
+
+<details><summary>가정한 것 · 정해지면 고칠 것</summary><div class="body">
+<table><tbody>
+<tr><td>인원</td><td>2명 (큰 딸 · 큰 사위)</td></tr>
+<tr><td>항공</td><td>3/5 후쿠오카 10:00 도착 · 3/8 16:30 출발 — <b>미정</b></td></tr>
+<tr><td>숙소</td><td>하카타역 근처 — <b>미정</b>. 지도의 「숙소」는 하카타역 위치예요</td></tr>
+<tr><td>이동</td><td>렌터카 없이 지하철 · 니시테쓰 전철 · 버스 · 택시</td></tr>
+</tbody></table></div></details>
+
+<details><summary>교통 · 표</summary><div class="body">
+<table><tbody>
+<tr><td>공항 ↔ 하카타</td><td>국제선 ↔ 하카타역 니시테쓰 버스 약 20분 · 400엔(2026년) / 지하철은 국내선역에서 하카타까지 5분 · 260엔, 국제선 ↔ 국내선은 무료 연결 버스 10~15분</td></tr>
+<tr><td>하카타 ↔ 텐진</td><td>지하철 공항선 약 5분</td></tr>
+<tr><td>다자이후 · 야나가와</td><td>니시테쓰 「다자이후 · 야나가와 관광 티켓」 — 텐진 출발 전철 왕복 + 야나가와 뱃놀이 + 쿠폰 · 디지털 3,620엔 · 종이 3,730엔 · 2일간 · 도중하차는 다자이후역 · 야나가와역만</td></tr>
+<tr><td>후쿠오카타워</td><td>텐진에서 니시테쓰 버스 약 25분 · 「福岡タワー南口」 하차</td></tr>
+</tbody></table>
+<div class="links" style="margin-top:8px"><a class="go" href="https://www.crossroadfukuoka.jp/feature/dazaifu_yanagawa" target="_blank" rel="noopener">관광 티켓 안내</a></div></div></details>
+
+<details><summary>영업시간 · 휴무</summary><div class="body">
+<table><thead><tr><th>장소</th><th>영업</th><th>휴무</th></tr></thead><tbody>
+<tr><td>이치란 본사총본점</td><td>24시간</td><td>무휴</td></tr>
+<tr><td>구시다 신사</td><td>참배 04:00–22:00</td><td>—</td></tr>
+<tr><td>마에다야 총본점</td><td>평일 17:00–24:00<br>토일 점심 11:00–14:30</td><td>확인 필요</td></tr>
+<tr><td>다자이후 덴만구</td><td>3월 06:30–18:30</td><td>—</td></tr>
+<tr><td>스타벅스 다자이후</td><td>08:00–20:00</td><td>부정기</td></tr>
+<tr><td>모토요시야 본점</td><td>10:30–20:00</td><td>월 (출처마다 다름)</td></tr>
+<tr><td>야나가와 뱃놀이</td><td>합승선 접수 09:30–14:30</td><td>—</td></tr>
+<tr><td>신신 텐진본점</td><td>11:00–03:00</td><td><b>수</b> · 셋째 화</td></tr>
+<tr><td>원조 하카타 멘타이주</td><td>07:00–22:30</td><td>무휴</td></tr>
+<tr><td>후쿠오카타워</td><td>09:30–22:00</td><td>—</td></tr>
+<tr><td>하나미도리 나카스본점</td><td>저녁 17:00– (일 ~22:00)</td><td>연말연시</td></tr>
+</tbody></table></div></details>
+
+<details><summary>3월 초 후쿠오카</summary><div class="body">
+<p>· <b>매화 끝물, 벚꽃 전</b>이에요. 다자이후 덴만구 매화는 1월 하순~3월 상순, 후쿠오카성터 매화원은 2월 중순~3월이라 둘 다 끝물이고, 벚꽃은 3월 하순부터예요.<br>
+· 아침저녁은 쌀쌀해요. 야나가와 뱃놀이와 모모치 해변은 바람을 맞으니 겉옷을 챙겨요.<br>
+· 다자이후 덴만구는 매화철이라 오전 일찍 가야 덜 붐벼요.</p></div></details>
+`;
+panes.appendChild(infoPane);
+
+nav.insertAdjacentHTML('beforeend','<button data-i="jp">일본어</button>');
+nav.insertAdjacentHTML('beforeend','<button data-i="cafe">카페</button>');
+nav.insertAdjacentHTML('beforeend','<button data-i="ramen">라멘집</button>');
+nav.insertAdjacentHTML('beforeend','<button data-i="board">요청</button>');
+nav.insertAdjacentHTML('beforeend','<button data-i="info">정보</button>');
+const extra={cafe:cafePane,ramen:ramenPane,jp:jpPane,run:runPane,board:boardPane,info:infoPane};
+function showTab(key){
+  const b=nav.querySelector('button[data-i="'+key+'"]'); if(!b) return;
+  [...nav.children].forEach(x=>x.classList.remove('on')); b.classList.add('on');
+  [...panes.children].forEach(s=>s.classList.remove('on'));
+  const shown=(extra[key]||panes.children[satPane(+key)]);
+  shown.classList.add('on');
+  shown.querySelectorAll('details[data-map]').forEach(el=>{ if(el.open) drawMaps(+el.dataset.map); });
+  autoScroll(nav.offsetTop-1);
+}
+/* 폰의 뒤로 버튼 — 탭을 옮길 때마다 기록을 하나 쌓는다.
+   탭 안에서 아래로 내려가 있으면 기록을 하나 더 쌓아서, 뒤로를 누르면 먼저 맨 위로 올라가고 한 번 더 누르면 이전 탭으로 간다 */
+let curTab=(nav.querySelector('button.on')||nav.children[0]).dataset.i;
+/* nav 는 고정 막대 안쪽 요소라 offsetTop 이 늘 0 이다. 기준은 일정 본문이 시작하는 높이로 잡는다 */
+const DEEP=()=>window.scrollY>panes.offsetTop+300, NEARTOP=()=>window.scrollY<panes.offsetTop;
+if('scrollRestoration' in history) history.scrollRestoration='manual';   // 뒤로 갈 때 브라우저가 예전 스크롤 위치로 되돌리지 않게 한다
+history.replaceState({t:curTab,s:0},'');
+nav.addEventListener('click',e=>{
+  const b=e.target.closest('button'); if(!b)return;
+  const key=b.dataset.i;
+  if(key!==curTab){ curTab=key; history.pushState({t:key,s:0},''); }
+  showTab(key);
+});
+let backing=false, lockUntil=0;
+/* 앱이 스스로 스크롤하는 동안에는 기록을 쌓지 않는다 */
+function autoScroll(top){ lockUntil=Date.now()+1000; window.scrollTo({top,behavior:'smooth'}); }
+window.addEventListener('scroll',()=>{
+  const st=history.state; if(!st||backing||Date.now()<lockUntil) return;
+  if(st.s===0&&DEEP()) history.pushState({t:curTab,s:1},'');
+  /* 손으로 다시 맨 위까지 올라오면 쌓아 둔 기록을 걷어서, 다음 뒤로가 헛돌지 않게 한다 */
+  else if(st.s===1&&NEARTOP()){ backing=true; history.back(); }
+},{passive:true});
+/* 오른쪽 점 스크롤 막대 — 스크롤하면 나타나고 1.5초 뒤 사라진다. 점은 구간(일정 · 묶음 · 코스) 위치, 큰 점은 핵심 일정, 주황 점은 지금 구간 */
+const navBar=document.querySelector('nav');
+const secOf=pane=>pane===jpPane?'.jph':pane===runPane?'.run h3':pane===cafePane||pane===ramenPane?'.cafe h4':pane===infoPane?'details>summary':pane===boardPane?null:'.stop:not(.move)';
+const txt=el=>(el.firstChild&&el.firstChild.nodeType===3?el.firstChild.textContent:el.textContent).trim();
+const rail=document.createElement('div'); rail.id='srail';
+rail.innerHTML='<div class="ln"></div><div class="dots"></div><div class="th"></div><div class="lb"></div>';
+document.body.appendChild(rail);
+const rDots=rail.querySelector('.dots'), rTh=rail.querySelector('.th'), rLb=rail.querySelector('.lb');
+let rEls=[], rPos=[], rKey='', rMax=1, rH=1, rT=0, rRaf=0, rDrag=false;
+const clamp=v=>Math.min(1,Math.max(0,v));
+function railBuild(){
+  const pane=panes.querySelector('section.pane.on'), sel=pane&&secOf(pane);
+  const vh=window.innerHeight, docH=document.documentElement.scrollHeight, top=navBar.getBoundingClientRect().bottom;
+  rMax=docH-vh;
+  if(!sel||rMax<vh*.5) return false;
+  rail.style.top=(top+10)+'px'; rail.style.bottom='14px'; rH=rail.clientHeight;
+  const key=[...panes.children].indexOf(pane)+'|'+docH+'|'+rH;
+  if(key!==rKey){
+    rKey=key; rEls=[...pane.querySelectorAll(sel)];
+    /* 그 구간이 탭 막대 바로 아래에 올 때의 스크롤 위치를 막대 위 비율로 바꾼다 */
+    rPos=rEls.map(el=>clamp((el.getBoundingClientRect().top+window.scrollY-top-8)/rMax));
+    rDots.innerHTML=rPos.map((f,i)=>`<i class="dt${rEls[i].classList.contains('key')?' k':''}" style="top:${(f*100).toFixed(2)}%"></i>`).join('');
+  }
+  return true;
+}
+function railUpdate(){
+  const vh=window.innerHeight, f=clamp(window.scrollY/rMax), thH=Math.max(26,rH*vh/(rMax+vh));
+  rTh.style.height=thH+'px'; rTh.style.top=(f*(rH-thH))+'px';
+  let k=-1; rPos.forEach((p,i)=>{ if(p<=f+.002) k=i; });
+  [...rDots.children].forEach((d,i)=>d.classList.toggle('cur',i===k));
+  if(rDrag&&k>=0){ const el=rEls[k];
+    rLb.innerHTML=el.classList.contains('stop')?`<b>${txt(el.querySelector('.t'))}</b>${esc(el.querySelector('h3').textContent)}`:esc(txt(el));
+    rLb.style.top=(f*(rH-thH)+thH/2)+'px'; }
+}
+function railShow(){
+  rRaf=0;
+  if(!railBuild()){ rail.classList.remove('on'); return; }
+  railUpdate(); rail.classList.add('on');
+  clearTimeout(rT); if(!rDrag) rT=setTimeout(()=>rail.classList.remove('on'),1500);
+}
+window.addEventListener('scroll',()=>{ if(!rRaf) rRaf=requestAnimationFrame(railShow); },{passive:true});
+window.addEventListener('resize',()=>{ rKey=''; });
+/* 막대를 누르거나 끌면 그 위치로 바로 옮긴다 */
+const scrub=e=>{ const r=rail.getBoundingClientRect(); window.scrollTo({top:clamp((e.clientY-r.top)/r.height)*rMax,behavior:'instant'}); };
+rail.addEventListener('pointerdown',e=>{ rDrag=true; rail.classList.add('drag'); rail.setPointerCapture(e.pointerId); clearTimeout(rT); scrub(e); e.preventDefault(); });
+rail.addEventListener('pointermove',e=>{ if(rDrag) scrub(e); });
+const endDrag=()=>{ if(!rDrag) return; rDrag=false; rail.classList.remove('drag'); clearTimeout(rT); rT=setTimeout(()=>rail.classList.remove('on'),1500); };
+rail.addEventListener('pointerup',endDrag); rail.addEventListener('pointercancel',endDrag);
+window.addEventListener('popstate',e=>{
+  const st=e.state; if(!st) return;
+  if(backing){ backing=false; return; }
+  /* 다른 탭으로 돌아오면 그 탭 맨 위에서 보여준다. 그 탭의 '아래로 내려가 있던' 기록은 바로 걷어서 한 번 더 누르면 그 이전 탭으로 간다 */
+  if(st.t!==curTab){ curTab=st.t; showTab(st.t); if(st.s===1){ backing=true; history.back(); } return; }
+  if(st.s===0) autoScroll(0);
+});
+
+/* ───────── 일정 길게 누르기 → 공유 ─────────
+   폰 브라우저는 손을 뗀 다음의 '탭'이 있어야 공유창을 열어 준다. 그래서 길게 누르면 메뉴를 띄우고, 메뉴의 버튼을 누를 때 공유한다 */
+const APPURL='https://bono8055-cpu.github.io/takamatsu/fukuoka.html';
+const plain=h=>{ const d=document.createElement('div'); d.innerHTML=h||''; return d.textContent.replace(/\s+/g,' ').trim(); };
+const sheet=document.createElement('div'); sheet.id='shsheet';
+sheet.innerHTML='<div class="box"><h4></h4><div class="sub"></div><button class="pri" data-act="share">공유하기</button><button data-act="copy">내용 복사</button><button data-act="close">닫기</button></div>';
+document.body.appendChild(sheet);
+const toastEl=document.createElement('div'); toastEl.id='toast'; document.body.appendChild(toastEl);
+const toast=t=>{ toastEl.textContent=t; toastEl.classList.add('on'); clearTimeout(toastEl._t); toastEl._t=setTimeout(()=>toastEl.classList.remove('on'),1800); };
+let shareData=null;
+function stopShare(id){
+  const m=/^d(\d+)s(\d+)$/.exec(id||''); if(!m) return null;
+  const d=DAYS[+m[1]], o=d&&d.stops[+m[2]]; if(!o) return null;
+  const el=document.querySelector(`[data-tm="${id}"]`), t=el?(el.firstChild&&el.firstChild.nodeType===3?el.firstChild.textContent:o.t):o.t;
+  const url=APPURL+'#'+id;
+  const lines=[`[${d.tab} ${t}] ${plain(o.h)}`, plain(o.p)];
+  if(o.map) lines.push('지도: '+M(o.map));
+  lines.push('일정 보기: '+url);
+  return {title:plain(o.h), text:lines.filter(Boolean).join('\n'), url, head:`${d.tab} · ${t}`};
+}
+function openSheet(id){
+  shareData=stopShare(id); if(!shareData) return;
+  sheet.querySelector('h4').textContent=shareData.title;
+  sheet.querySelector('.sub').textContent=shareData.head;
+  sheet.classList.add('on');
+}
+sheet.addEventListener('click',async e=>{
+  const act=e.target.closest('button')?.dataset.act;
+  if(!act){ if(e.target===sheet) sheet.classList.remove('on'); return; }
+  if(act==='close'){ sheet.classList.remove('on'); return; }
+  const {title,text}=shareData;
+  if(act==='share'&&navigator.share){
+    try{ await navigator.share({title,text}); sheet.classList.remove('on'); }catch(err){ if(err.name!=='AbortError') toast('공유를 열지 못했어요'); }
+    return;
+  }
+  try{ await navigator.clipboard.writeText(text); toast('복사했어요. 카톡에 붙여 넣으면 돼요'); sheet.classList.remove('on'); }
+  catch(err){ toast('복사하지 못했어요'); }
+});
+/* 길게 누르기 — 0.5초 동안 손가락이 거의 움직이지 않으면 메뉴를 띄운다. 링크 · 버튼 · 지도 위에서는 하지 않는다 */
+let hold=null;
+const holdCancel=()=>{ if(hold){ clearTimeout(hold.t); hold.el.classList.remove('hold'); hold=null; } };
+panes.addEventListener('pointerdown',e=>{
+  const st=e.target.closest('.stop'); if(!st||e.target.closest('a,button,input,textarea,summary,.lmap,[data-tm],.menu')) return;
+  holdCancel();
+  hold={el:st,x:e.clientX,y:e.clientY,fired:false};
+  hold.t=setTimeout(()=>{ if(!hold) return; hold.fired=true; st.classList.add('hold'); navigator.vibrate&&navigator.vibrate(12);
+    openSheet(st.dataset.id); setTimeout(()=>st.classList.remove('hold'),400); },500);
+});
+panes.addEventListener('pointermove',e=>{ if(hold&&Math.hypot(e.clientX-hold.x,e.clientY-hold.y)>10) holdCancel(); });
+['pointerup','pointercancel'].forEach(ev=>panes.addEventListener(ev,()=>{ if(hold&&!hold.fired) holdCancel(); else hold=null; }));
+window.addEventListener('scroll',()=>{ if(hold&&!hold.fired) holdCancel(); },{passive:true});
+/* 길게 눌렀을 때 뜨는 브라우저 기본 메뉴(복사 · 선택)는 일정 카드에서만 막는다 */
+panes.addEventListener('contextmenu',e=>{ if(e.target.closest('.stop')&&!e.target.closest('a,.menu')) e.preventDefault(); });
+
+/* ───────── 운전 탭 (막내 사위 전용) ─────────
+   토요일 차 이동 구간을 한 화면에 모았다. 누르면 구글 지도가 지금 위치에서 그 목적지까지 바로 내비를 시작한다.
+   목적지는 일정 카드의 길찾기와 같다(주차장이 있으면 주차장) */
+const DRIVER='';
+const SAT={stops:[],route:[]};
+const drivePane=document.createElement('section'); drivePane.className='pane';
+function driveLegs(){
+  const out=[]; const st=SAT.stops;
+  st.forEach((o,j)=>{
+    if(o.m&&o.h.startsWith('⛴')) return;
+    if(!o.h.startsWith('⛴')&&!o.m&&o.h.includes('페리')) return;
+    if(o.m&&o.h.startsWith('🚗')){
+      const [name,dur]=plain(o.h).replace(/^🚗\S*\s*/,'').split(' · ');
+      /* 목적지는 제목의 「→ 이름」을 그날 동선에서 찾는다. 바로 다음 카드가 그곳이면 카드의 주차장 · 출입구를 쓴다 */
+      const toName=(name.split('→').pop()||'').trim(), r=SAT.route.find(x=>x.n===toName);
+      const card=st.slice(j+1).find(x=>!x.m&&x.map);
+      const dest=card&&(!r||card.map===r.p)?(card.dir||card.park||card.map):(r&&r.p); if(!dest) return;
+      out.push({t:o.t,name,dur,km:plain(o.p).split(' · ')[0],url:DIR(dest,'driving')+'&dir_action=navigate'});
+    } else if(o.h.startsWith('⛴')) out.push({ferry:`${o.t} ${plain(o.h)}`});
+  });
+  return out;
+}
+function renderDrive(){
+  const legs=driveLegs();
+  /* 토요일 당일이면 일본 시각으로 다음 구간을 굵게 표시한다 */
+  const jp=new Date(Date.now()+9*3600e3), today=jp.toISOString().slice(5,10)==='10-17', now=jp.toISOString().slice(11,16);
+  const nextI=today?legs.findIndex(l=>l.t&&l.t>=now):-1;
+  drivePane.innerHTML=`<div class="dvhead"><h2>🚗 토요일 운전</h2><em>누르면 지금 위치에서 바로 안내</em></div>
+  <div class="dvlist">${legs.map((l,i)=>l.ferry?`<div class="ferry">${esc(l.ferry)}</div>`
+    :`<a href="${l.url}" target="_blank" rel="noopener"${i===nextI?' class="next"':''}><b>${l.t}</b><span>${esc(l.name)}<i>${esc(l.dur||'')} · ${esc(l.km||'')}</i></span><em>안내</em></a>`).join('')}</div>
+  <p class="dvfoot">구글 지도 앱이 열리고 바로 내비가 시작돼요. 경로 옵션에서 '유료도로 피하기'를 켜 두면 좋아요. 이 탭은 막내 사위에게만 보여요.</p>`;
+}
+renderDrive();
+panes.appendChild(drivePane);
+extra.drive=drivePane;
+/* 막내 사위로 들어오면 운전 탭을 맨 앞에 붙이고 첫 화면으로 연다. 다른 이름이면 숨긴다 */
+function applyDriver(open){
+  let b=nav.querySelector('button[data-i="drive"]');
+  if(ME===DRIVER){
+    if(!b){ b=document.createElement('button'); b.dataset.i='drive'; b.className='drv'; b.textContent='🚗 운전'; nav.prepend(b); }
+    if(open){ curTab='drive'; history.replaceState({t:'drive',s:0},'',location.pathname); renderDrive(); showTab('drive'); }
+  } else if(b){
+    b.remove();
+    if(curTab==='drive'){ curTab='0'; history.replaceState({t:'0',s:0},'',location.pathname); showTab('0'); }
+  }
+}
+applyDriver(!/^#d\d+s\d+$/.test(location.hash));
+const _lo=document.getElementById('me'); _lo&&_lo.addEventListener('click',e=>{ if(e.target.id==='lo') setTimeout(()=>applyDriver(false),0); });
+
+/* 공유 링크(#d0s12)로 들어오면 그 날 탭을 열고 그 일정으로 내려간다 */
+(()=>{ const m=/^#d(\d+)s(\d+)$/.exec(location.hash); if(!m) return;
+  const d=DAYS[+m[1]]; if(!d) return;
+  const key=d.alt?String(SATMAIN):m[1];
+  if(d.alt){ const k=SATS.findIndex(x=>x[1]===+m[1]); if(k>=0) LS.set(ALTK,String(k)); }
+  curTab=key; history.replaceState({t:key,s:0},'',location.pathname+location.hash);
+  showTab(key);
+  const el=document.querySelector(`.stop[data-id="d${m[1]}s${m[2]}"]`); if(!el) return;
+  /* 받은 사람은 그 일정 카드 하나만 본다. '전체 일정 보기'를 누르면 그날 일정 전체에서 그 카드 위치로 간다 */
+  el.classList.add('solo-on'); document.body.classList.add('solo');
+  const bar=document.createElement('div'); bar.className='solobar';
+  bar.innerHTML='<span>공유받은 일정 하나만 보고 있어요</span><button>전체 일정 보기</button>';
+  el.closest('.rail').before(bar);
+  bar.querySelector('button').onclick=()=>{
+    document.body.classList.remove('solo'); el.classList.remove('solo-on'); bar.remove();
+    history.replaceState({t:key,s:0},'',location.pathname);
+    lockUntil=Date.now()+1000; window.scrollTo({top:el.getBoundingClientRect().top+window.scrollY-navBar.offsetHeight-12,behavior:'instant'});
+    el.classList.add('hold'); setTimeout(()=>el.classList.remove('hold'),1500);
+  };
+  /* 다른 탭을 누르면 하나만 보기를 끝낸다 */
+  nav.addEventListener('click',()=>{ if(document.body.classList.contains('solo')){ document.body.classList.remove('solo'); el.classList.remove('solo-on'); bar.remove(); } },{once:true});
+  window.scrollTo({top:0,behavior:'instant'});
+})();
+
+panes.addEventListener('click',e=>{
+  const b=e.target.closest('[data-swap]'); if(!b) return;
+  LS.set(ALTK,b.dataset.swap);
+  const to=SATS[+b.dataset.swap][1];
+  [...panes.children].forEach(x=>x.classList.remove('on'));
+  const p=panes.children[to]; p.classList.add('on');
+  [...nav.children].forEach(x=>x.classList.remove('on'));
+  const nb=nav.querySelector('button[data-i="'+SATMAIN+'"]'); if(nb) nb.classList.add('on');
+  p.querySelectorAll('details[data-map]').forEach(el=>{ if(el.open) drawMaps(+el.dataset.map); });
+  window.scrollTo({top:nav.offsetTop-1,behavior:'smooth'});
+});
+
+/* ───────── 체크리스트 ───────── */
+/* ───────── 실제 시각 조정 ───────── */
+const toMin = t => { const [h,m]=String(t).split(':').map(Number); return h*60+m; };
+const toHM  = m => { m=((m%1440)+1440)%1440; return `${String(m/60|0).padStart(2,'0')}:${String(m%60).padStart(2,'0')}`; };
+/* 자기까지의 누적 지연(분). 앞 스톱을 밀면 뒤가 따라 밀리는 근거가 이 누적합이에요. */
+const shiftAt = (i,j) => { let s=0; for(let x=0;x<=j;x++) s+=(local.times[`d${i}s${x}`]||{}).d||0; return s; };
+const tmAt = el => { const m=/^d(\d+)s(\d+)$/.exec(el.dataset.tm||''); return m?[+m[1],+m[2]]:null; };
+
+function renderTimes(){
+  document.querySelectorAll('[data-tm]').forEach(el=>{
+    if(el.querySelector('input')) return;
+    const at=tmAt(el); if(!at) return;
+    const o=DAYS[at[0]].stops[at[1]]; if(!o) return;
+    const sh=shiftAt(at[0],at[1]);
+    el.innerHTML = sh ? `${toHM(toMin(o.t)+sh)}<s>${o.t}</s>` : o.t;
+    el.classList.toggle('adj', !!sh);
+  });
+}
+listeners.times.push(renderTimes);
+
+panes.addEventListener('click', e=>{
+  const el=e.target.closest('[data-tm]');
+  if(!el || el.querySelector('input')) return;
+  const at=tmAt(el); if(!at) return;
+  const [i,j]=at, id=`d${i}s${j}`, o=DAYS[i].stops[j];
+  const cur=toMin(o.t)+shiftAt(i,j);
+  const inp=document.createElement('input');
+  inp.type='time'; inp.className='tedit'; inp.value=toHM(cur);
+  el.innerHTML=''; el.appendChild(inp);
+  inp.focus(); if(inp.showPicker) try{ inp.showPicker(); }catch(_){}
+  let done=false;
+  const close=commit=>{
+    if(done) return; done=true;
+    const v=inp.value;
+    el.innerHTML=''; renderTimes();          // notify 재렌더가 막히지 않도록 입력창부터 걷어내요
+    if(!commit || !v) return;
+    let diff=toMin(v)-cur;
+    diff=((diff+720)%1440+1440)%1440-720;    // 자정 넘김 입력을 ±12시간 안으로 해석
+    if(diff) setTime(id, ((local.times[id]||{}).d||0)+diff, ME||'');
+  };
+  inp.addEventListener('change',()=>close(true));
+  inp.addEventListener('blur',()=>close(true));
+  inp.addEventListener('keydown',ev=>{ if(ev.key==='Escape') close(false); if(ev.key==='Enter') close(true); });
+});
+
+function renderChecks(){
+  const box=document.getElementById('chk'); if(!box)return;
+  box.innerHTML=CHECK.map(([id,t,sub])=>{
+    const c=local.checks[id];
+    return `<label class="check"><input type="checkbox" data-c="${id}"${c?' checked':''}>
+      <span><b>${t}</b><br><span style="color:var(--muted);font-size:12.5px">${sub}</span>
+      ${c?`<div class="byline">✓ ${esc(c.by)} · ${fmt(c.at)}</div>`:''}</span></label>`;
+  }).join('');
+  box.querySelectorAll('input[data-c]').forEach(el=>{
+    el.onchange=()=>{ if(!ME){gate.classList.remove('hide');el.checked=!el.checked;return;}
+      setCheck(el.dataset.c, el.checked, ME); };
+  });
+}
+listeners.checks.push(renderChecks);
+
+/* ───────── 댓글 · 반응 ───────── */
+function renderSocial(){
+  document.querySelectorAll('[data-bar]').forEach(bar=>{
+    const id=bar.dataset.bar;
+    const cs=local.comments.filter(c=>c.stop===id);
+    const rs=Object.values(local.reactions).filter(r=>r.stop===id);
+    const mine=rs.some(r=>r.by===ME);
+    bar.innerHTML=`<button data-r="${id}" class="${mine?'act':''}">👍 ${rs.length||''}</button>
+      <button data-t="${id}">💬 의견 ${cs.length||''}</button>
+      ${rs.length?`<span class="cnt">${rs.map(r=>esc(r.by)).join(', ')}</span>`:''}`;
+    bar.querySelector('[data-r]').onclick=()=>{ if(!ME){gate.classList.remove('hide');return;} toggleReact(id,ME); };
+    bar.querySelector('[data-t]').onclick=()=>{
+      document.querySelector(`[data-th="${id}"]`).classList.toggle('on'); };
+  });
+  document.querySelectorAll('[data-th]').forEach(th=>{
+    const id=th.dataset.th;
+    const cs=local.comments.filter(c=>c.stop===id);
+    th.innerHTML=(cs.length?cs.map(c=>`<div class="cmt">
+        <span class="who2">${esc(c.by)}<span class="when">${fmt(c.at)}</span></span>
+        ${c.by===ME?`<button class="del" data-d="${c.id}">삭제</button>`:''}
+        <div>${esc(c.text)}</div></div>`).join('')
+      :`<div class="empty">${id==='board'?'아직 올라온 요청이 없습니다.':'아직 의견이 없습니다.'}</div>`)
+     +`<div class="wr"><input placeholder="${id==='board'?'요청이나 의견을 남겨주세요':'이 일정에 대한 의견'}" data-i="${id}">
+       <button data-s="${id}">남기기</button></div>`;
+    const inp=th.querySelector(`[data-i]`), btn=th.querySelector(`[data-s]`);
+    const send=()=>{ const v=inp.value.trim(); if(!v)return;
+      if(!ME){gate.classList.remove('hide');return;} addComment(id,v,ME); inp.value=''; };
+    btn.onclick=send; inp.onkeydown=e=>{if(e.key==='Enter')send()};
+    th.querySelectorAll('[data-d]').forEach(b=>b.onclick=()=>delComment(b.dataset.d));
+  });
+  const all=document.getElementById('allc');
+  if(all){
+    const cs=local.comments.filter(c=>c.stop!=='board').slice().reverse();
+    all.innerHTML=cs.length?cs.map(c=>{
+      const [di,si]=c.stop.replace('d','').split('s').map(Number);
+      const d=DAYS[di], s=d&&d.stops[si];
+      return `<div class="cmt"><span class="who2">${esc(c.by)}<span class="when">${fmt(c.at)}</span></span>
+        <div style="font-size:12px;color:var(--muted)">${s?`${d.tab} · ${s.t} ${esc(s.h)}`:''}</div>
+        <div>${esc(c.text)}</div></div>`;
+    }).join(''):`<div class="empty">일정에 달린 의견이 아직 없습니다.</div>`;
+  }
+}
+listeners.comments.push(renderSocial);
+listeners.reactions.push(renderSocial);
+
+/* ───────── 시작 ───────── */
+(async()=>{
+  online = await initDB();
+  const st=document.getElementById('status');
+  const mode=document.getElementById('mode');
+  if(online){ st.textContent=''; if(mode){mode.textContent='함께 보기 모드 — 연결됨';mode.style.color='var(--seto)';} }
+  else{ st.textContent='혼자 보기 모드 — 체크와 댓글이 이 기기에만 남습니다';
+        if(mode) mode.textContent='혼자 보기 모드 (아직 연결 전)'; }
+  renderChecks(); renderSocial(); renderTimes();
+  document.querySelectorAll('details[data-map]').forEach(el=>{
+    el.addEventListener('toggle',()=>{ if(el.open) drawMaps(+el.dataset.map); });
+  });
+})();
+</script>
+</html>
