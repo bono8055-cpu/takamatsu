@@ -1285,6 +1285,39 @@ cafePane.innerHTML=`<div class="dayhead"><h2>카페</h2><em>일정 사이사이,
   </div>`).join('')).join('');
 panes.appendChild(cafePane);
 
+/* ───────── 라멘집 ───────── */
+const RAMEN={q:'徳島ラーメン 麺王 高松駅前店',ll:[34.35108,134.04878]};
+const ramenPane=document.createElement('section'); ramenPane.className='pane';
+ramenPane.innerHTML=`<div class="dayhead"><h2>라멘집</h2><em>매운 라멘 · 숙소와 동선 가까운 곳</em></div>
+<div class="cafe">
+ <h4>멘오 다카마쓰역앞점</h4>
+ <div class="cjp">徳島ラーメン 麺王 高松駅前店</div>
+ <table class="ctb"><tbody>
+  <tr><td>매운 메뉴</td><td>激辛王 (게키카라오-) · 850엔 — 하바네로를 넣은 돼지뼈 간장 국물에 고춧가루를 반죽한 면</td></tr>
+  <tr><td>영업</td><td>11:00~24:00</td></tr>
+  <tr><td>휴무</td><td>연중무휴</td></tr>
+  <tr><td>위치</td><td>다카마쓰 스테이션 호텔 1층 (高松市寿町1-1)</td></tr>
+  <tr><td>거리</td><td>페리 터미널 150m · 스기다마 걸어서 6분 · 숙소 걸어서 20분 (1.5km)</td></tr>
+  <tr><td>결제</td><td class="cpay">확인 필요 — 현금 준비</td></tr>
+ </tbody></table>
+ <p class="cno">도쿠시마 라멘은 진한 돼지뼈 간장 국물에 달짝지근한 돼지고기를 얹은 스타일이에요. 쇼도시마에서 돌아와 내리자마자, 일요일 스기다마 뒤 2차로, 월요일 항구 권역에서 들르기 좋아요. 激辛王 메뉴와 가격은 한 곳의 정보라 지금도 있는지 주문할 때 물어봐요.</p>
+ <div class="links"><a class="go" href="${M(RAMEN)}" target="_blank" rel="noopener">지도 · 사진 보기</a><a class="go d" href="${DIR(RAMEN,'walking')}" target="_blank" rel="noopener">🚶 걸어서 길찾기</a></div>
+</div>
+<div class="cafe">
+ <h4>주문할 때</h4>
+ <table class="ctb"><tbody>
+  <tr><td>7명이에요</td><td>「7人ですが、座れますか？」<br>나나닌 데스가, 스와레마스카?</td></tr>
+  <tr><td>매운 메뉴</td><td>「激辛王ありますか？」<br>게키카라오- 아리마스카?</td></tr>
+  <tr><td>덜 맵게</td><td>「辛さ控えめにできますか？」<br>카라사 히카에메니 데키마스카?</td></tr>
+  <tr><td>면 단단하게</td><td>「麺かためで」<br>멘 카타메데</td></tr>
+  <tr><td>날계란</td><td>「生卵ください」<br>나마타마고 쿠다사이 — 도쿠시마 라멘에 흔히 얹어요</td></tr>
+  <tr><td>공깃밥</td><td>「ライスください」<br>라이스 쿠다사이</td></tr>
+  <tr><td>물</td><td>「お水ください」<br>오미즈 쿠다사이</td></tr>
+ </tbody></table>
+ <p class="cno">입구에 식권 자판기가 있으면 먼저 표를 사서 직원에게 건네요.</p>
+</div>`;
+panes.appendChild(ramenPane);
+
 /* 런닝 탭 삽화 — AI로 그려 Higgsfield 저장소에 올린 그림을 바로 불러온다 */
 const ARTB='https://d8j0ntlcm91z4.cloudfront.net/user_37vErD8AJhL9V7kdpLOZ1TNmIfV/hf_20261014_';
 const ART={
@@ -1468,9 +1501,10 @@ panes.appendChild(infoPane);
 nav.insertAdjacentHTML('beforeend','<button data-i="jp">일본어</button>');
 nav.insertAdjacentHTML('beforeend','<button data-i="run">런닝코스</button>');
 nav.insertAdjacentHTML('beforeend','<button data-i="cafe">카페</button>');
+nav.insertAdjacentHTML('beforeend','<button data-i="ramen">라멘집</button>');
 nav.insertAdjacentHTML('beforeend','<button data-i="board">요청</button>');
 nav.insertAdjacentHTML('beforeend','<button data-i="info">정보</button>');
-const extra={cafe:cafePane,jp:jpPane,run:runPane,board:boardPane,info:infoPane};
+const extra={cafe:cafePane,ramen:ramenPane,jp:jpPane,run:runPane,board:boardPane,info:infoPane};
 function showTab(key){
   const b=nav.querySelector('button[data-i="'+key+'"]'); if(!b) return;
   [...nav.children].forEach(x=>x.classList.remove('on')); b.classList.add('on');
@@ -1504,7 +1538,7 @@ window.addEventListener('scroll',()=>{
 },{passive:true});
 /* 오른쪽 점 스크롤 막대 — 스크롤하면 나타나고 1.5초 뒤 사라진다. 점은 구간(일정 · 묶음 · 코스) 위치, 큰 점은 핵심 일정, 주황 점은 지금 구간 */
 const navBar=document.querySelector('nav');
-const secOf=pane=>pane===jpPane?'.jph':pane===runPane?'.run h3':pane===cafePane?'.cafe h4':pane===infoPane?'details>summary':pane===boardPane?null:'.stop:not(.move)';
+const secOf=pane=>pane===jpPane?'.jph':pane===runPane?'.run h3':pane===cafePane||pane===ramenPane?'.cafe h4':pane===infoPane?'details>summary':pane===boardPane?null:'.stop:not(.move)';
 const txt=el=>(el.firstChild&&el.firstChild.nodeType===3?el.firstChild.textContent:el.textContent).trim();
 const rail=document.createElement('div'); rail.id='srail';
 rail.innerHTML='<div class="ln"></div><div class="dots"></div><div class="th"></div><div class="lb"></div>';
