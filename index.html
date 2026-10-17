@@ -41,6 +41,15 @@ h1 b{font-weight:600}
 #me{position:relative;margin-top:8px;font-size:12px;color:var(--muted)}
 #me b{color:var(--ink)}
 #me button{background:none;border:0;border-bottom:1px solid var(--muted);color:var(--muted);font-size:12px;cursor:pointer;padding:0 0 1px;margin-left:8px}
+#me .trip{color:var(--seto);font-weight:600;margin-left:8px;text-decoration:none;border-bottom:1px solid var(--seto)}
+/* 여행 고르기 — 큰 사위에게만 뜬다 */
+#tripPick{position:fixed;inset:0;z-index:101;background:var(--paper);display:flex;align-items:center;justify-content:center;padding:24px}
+#tripPick.hide{display:none}
+#tripPick .box{max-width:380px;width:100%}
+#tripPick h2{font-family:var(--f);font-size:26px;font-weight:600;margin-bottom:6px}
+#tripPick p{color:var(--muted);font-size:13.5px;margin-bottom:22px}
+#tripPick .who button{line-height:1.4}
+#tripPick .who small{display:block;font-size:11.5px;font-weight:400;color:var(--muted);margin-top:2px}
 #status{position:relative;margin-top:4px;font-size:11.5px;color:var(--pumpkin)}
 
 nav{position:sticky;top:0;z-index:20;background:rgba(230,228,222,.94);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
@@ -243,6 +252,12 @@ footer{margin-top:44px;padding:20px 0 8px;border-top:2px solid var(--ink);font-s
   <h2>누구세요?</h2>
   <p>이름을 고르면 됩니다. 비밀번호는 없어요.<br>체크와 댓글에 이 이름이 남습니다.</p>
   <div class="who" id="who"></div>
+</div></div>
+
+<div id="tripPick" class="hide"><div class="box">
+  <h2>어느 여행을 볼까요?</h2>
+  <p>큰 사위에게만 보이는 화면이에요. 위쪽 이름 옆 단추로 언제든 바꿀 수 있어요.</p>
+  <div class="who"><button data-trip="tk">다카마쓰<small>2026.10 · 7명</small></button><button data-trip="fk">후쿠오카<small>2027.3 · 2명</small></button></div>
 </div></div>
 
 <header class="hero">
@@ -1205,16 +1220,32 @@ let ME = LS.get('trip_user') || null;
 const gate=document.getElementById('gate'), whoBox=document.getElementById('who');
 MEMBERS.forEach(n=>{
   const b=document.createElement('button'); b.textContent=n;
-  b.onclick=()=>{ ME=n; LS.set('trip_user',n); gate.classList.add('hide'); renderMe(); if(typeof applyDriver==='function') applyDriver(true); notify('checks');notify('comments');notify('reactions'); };
+  b.onclick=()=>{ ME=n; LS.set('trip_user',n); gate.classList.add('hide'); renderMe(); askTrip(true); if(typeof applyDriver==='function') applyDriver(true); notify('checks');notify('comments');notify('reactions'); };
   whoBox.appendChild(b);
 });
 function renderMe(){
   document.getElementById('me').innerHTML = ME
-   ? `<b>${ME}</b> 님으로 보는 중 <button id="lo">이름 바꾸기</button>` : '';
+   ? `<b>${ME}</b> 님으로 보는 중 ${ME===TRIP_PICKER?'<a class="trip" href="fukuoka.html">후쿠오카 여행 보기</a>':''}<button id="lo">이름 바꾸기</button>` : '';
   const lo=document.getElementById('lo');
   if(lo) lo.onclick=()=>{ LS.set('trip_user',''); ME=null; gate.classList.remove('hide'); };
 }
 if(ME) gate.classList.add('hide');
+/* 큰 사위는 다카마쓰와 후쿠오카 두 여행이 있어 들어올 때 고른다. 한 번 고르면 이 창을 닫을 때까지 다시 묻지 않는다 */
+const TRIP_PICKER='큰 사위', TRIP_HERE='tk', tripPick=document.getElementById('tripPick');
+const SS={ get(k){try{return sessionStorage.getItem(k)}catch(e){return null}}, set(k,v){try{sessionStorage.setItem(k,v)}catch(e){}} };
+function askTrip(force){
+  if(ME!==TRIP_PICKER){ tripPick.classList.add('hide'); return; }
+  if(force||!SS.get('tripPicked')) tripPick.classList.remove('hide');
+}
+tripPick.addEventListener('click',e=>{
+  const b=e.target.closest('[data-trip]'); if(!b) return;
+  SS.set('tripPicked','1');
+  if(b.dataset.trip!==TRIP_HERE){ location.href=b.dataset.trip==='fk'?'fukuoka.html':'./?trip=tk'; return; }
+  tripPick.classList.add('hide');
+});
+/* 후쿠오카 페이지의 「다카마쓰 여행 보기」로 오면 고른 것으로 친다. 공유 링크(#d0s12)로 들어오면 묻지 않는다 */
+if(new URLSearchParams(location.search).get('trip')==='tk'){ SS.set('tripPicked','1'); history.replaceState(null,'',location.pathname+location.hash); }
+if(!/^#d\d+s\d+$/.test(location.hash)) askTrip(false);
 renderMe();
 
 /* ───────── 렌더링 ───────── */
