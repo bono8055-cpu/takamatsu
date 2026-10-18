@@ -380,6 +380,8 @@ const DIR = (o,mode) => `https://www.google.com/maps/dir/?api=1&${o.pid
 /* 그 장소로 가는 바로 앞 이동 칸이 🚶면 걷기, 🚌면 대중교통, 🚗·🚕면 차로 찾는다 */
 const TRAVEL = (stops,j) => { for(let k=j-1;k>=0;k--){ const x=stops[k]; if(!x.m) continue;
   return x.h.startsWith('🚶')?'walking':x.h.startsWith('🚌')?'transit':'driving'; } return null; };
+/* 여러 곳을 순서대로 거치는 걷기 길찾기. 휴대폰에서는 경유지가 3곳까지만 열려서 구간을 나눠 단다 */
+const WALKDIR = pts => `https://www.google.com/maps/dir/?api=1&origin=${pts[0].join(',')}&destination=${pts.at(-1).join(',')}${pts.length>2?`&waypoints=${encodeURIComponent(pts.slice(1,-1).map(x=>x.join(',')).join('|'))}`:''}&travelmode=walking`;
 const DIRLABEL={walking:'🚶 걸어서 길찾기',driving:'🚗 차로 길찾기',transit:'🚌 대중교통 길찾기'};
 
 /* 구간마다 다른 색 — 순서를 색으로도 읽게 한다 */
@@ -735,7 +737,9 @@ const DAYS=[
   {k:1,t:'08:45',h:'리쓰린공원',p:'에도시대 다이묘 정원. 동문으로 들어가 남정을 시계 방향으로 한 바퀴 돌고, 동문 옆 출구로 나와 주차장으로 돌아와요. 걷는 거리 1.5km(걷기 30분) + 말차 30분 + 구경, 모두 1시간 40분쯤이에요. 주차장 도착은 10:25 무렵이에요.',
    tags:['남정 코스만','06:00 개장이라 한산','현금 준비'],map:P.ritsurinP,
    sl:'걷는 순서 (약도 번호)',
-   seeimg:{img:'ritsurin.svg',n:'리쓰린 남정 걷는 순서 약도',cr:'지도 데이터 © OpenStreetMap 기여자'},
+   seeimg:{img:'ritsurin.svg',n:'리쓰린 남정 걷는 순서 약도',cr:'지도 데이터 © OpenStreetMap 기여자',
+    dir:[{t:'🚶 P → ③ 키쿠게쓰테이 길찾기',p:[[34.32858,134.04508],[34.32999,134.04577],[34.32976,134.04386],[34.32783,134.04254]]},
+     {t:'🚶 ③ → ⑥ → P 길찾기',p:[[34.32783,134.04254],[34.32741,134.04399],[34.32718,134.04443],[34.32882,134.04473],[34.32858,134.04508]]}]},
    see:[{n:'P → ① 동문',d:'주차장에서 북쪽으로 걸어 큰길 쪽 동문으로 들어가요. 입장권은 동문 매표소에서 사요. 250m · 5분'},
     {n:'② 쓰루카메마쓰 (鶴亀松)',d:'거북 모양 돌 위에 학이 날개를 편 모양의 소나무. 150m · 3분'},
     {n:'③ 키쿠게쓰테이 (掬月亭)',d:'다이묘가 쓰던 다실. 신발을 벗고 다다미에 앉아 정원을 보며 말차를 마셔요. 09:00에 열어서 이 순서면 문 열 때 맞춰 도착해요. 370m · 7분'},
@@ -1275,7 +1279,7 @@ function detail(o){
   const body=[
     o.resv?`<div class="resv"><h4>${o.resv.ok?'예약':'예약 없음'}</h4><p>${o.resv.how}</p>
       ${o.resv.links?`<div class="links">${o.resv.links.map(l=>`<a class="go r" href="${l.u}" target="_blank" rel="noopener">${l.t}</a>`).join('')}</div>`:''}</div>`:'',
-    o.see?`<div class="menu"><h4>${o.sl||'여기서 볼 것'}</h4>${o.seeimg?`<figure class="cmap"><a href="${o.seeimg.img}" target="_blank" rel="noopener"><img loading="lazy" src="${o.seeimg.img}" alt="${o.seeimg.n}"></a><figcaption class="cr">누르면 크게 보여요 · ${o.seeimg.cr}</figcaption></figure>`:''}<ul class="see">${o.see.map(x=>
+    o.see?`<div class="menu"><h4>${o.sl||'여기서 볼 것'}</h4>${o.seeimg?`<figure class="cmap"><a href="${o.seeimg.img}" target="_blank" rel="noopener"><img loading="lazy" src="${o.seeimg.img}" alt="${o.seeimg.n}"></a><figcaption class="cr">누르면 크게 보여요 · ${o.seeimg.cr}</figcaption></figure>${o.seeimg.dir?`<div class="links">${o.seeimg.dir.map(d=>`<a class="go d" href="${WALKDIR(d.p)}" target="_blank" rel="noopener">${d.t}</a>`).join('')}</div>`:''}`:''}<ul class="see">${o.see.map(x=>
       `<li><div class="mean"><b>${x.n}</b> — ${x.d}</div></li>`).join('')}</ul></div>`:'',
     o.menu?`<div class="menu"><h4>${o.ml||'무엇을 시킬까요'}</h4><ul>${o.menu.map(m=>
       `<li><div class="jp">${m.jp}</div><div class="yomi">${m.y}</div><div class="mean">${m.k}</div></li>`).join('')}</ul></div>`:'',
