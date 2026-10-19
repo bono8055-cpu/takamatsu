@@ -97,6 +97,10 @@ nav button.drv.on{background:#1F6F4A;color:#fff}
 .dvlist a span i{display:block;font-style:normal;font-size:11.5px;font-weight:400;color:var(--muted);margin-top:2px}
 .dvlist a em{flex:none;font-style:normal;font-size:12px;font-weight:600;color:#fff;background:#1F6F4A;padding:7px 9px}
 .dvlist a.next{border:2px solid #1F6F4A;background:#EEF5EF}
+.dvlist a.alt{border-style:dashed}
+.dvlist a.alt b{color:var(--muted);font-weight:400}
+.dvlist a.alt span{font-size:13.5px;font-weight:500}
+.dvlist a.alt em{background:var(--muted)}
 .dvlist .ferry{font-size:12px;color:var(--muted);padding:5px 10px 0 64px}
 .dvdone{margin-top:6px;font-size:12.5px;color:var(--muted)}
 .dvdone summary{cursor:pointer;padding:6px 0}
@@ -800,8 +804,9 @@ const DAYS=[
     {jp:'かけうどん',y:'카케 우동',k:'맑은 국물 우동. 버터가 부담스러우면'},
     {jp:'ちくわ天',y:'치쿠와텐',k:'어묵 튀김. 진열대에서 직접 집어요'}]},
   {m:1,t:'14:00',h:'🚗 바카이치다이 → 주유소 · 29분',p:'14.5km'},
-  {t:'14:30',h:'⛽ 급유 · 아폴로스테이션 고난SS (香南SS)',p:'영업소 가는 길의 마지막 주유소라 가득 채운 뒤 바늘이 거의 안 내려가요. 레귤러(レギュラー) 가득(満タン · 만탄)으로 넣고 영수증을 받아요. 영업시간은 확인하지 못했어요. 닫혀 있으면 3km 옆 「SOLATO 셀프 다카마쓰공항SS」(07:00~24:00)로 가요. 10분.',
-   tags:['영업소까지 2km · 4분','영수증 챙기기'],map:P.gasKonan},
+  {t:'14:30',h:'⛽ 급유 · 아폴로스테이션 고난SS (香南SS)',p:'영업소 가는 길의 마지막 주유소라 가득 채운 뒤 바늘이 거의 안 내려가요. 레귤러(レギュラー) 가득(満タン · 만탄)으로 넣고 영수증을 받아요. 영업시간은 확인하지 못했어요. 닫혀 있으면 차로 4분(2km) 옆 「SOLATO 셀프 다카마쓰공항SS」(07:00~24:00)로 가요. 10분.',
+   tags:['영업소까지 2km · 4분','영수증 챙기기'],map:P.gasKonan,
+   dvalt:{n:'⛽ 닫혀 있으면 → SOLATO 셀프',d:'고난SS에서 4분',km:'2km · 영업소까지 6분',p:P.gasSolato}},
   {m:1,t:'14:40',h:'🚗 주유소 → 렌터카 영업소 · 4분',p:'2km'},
   {k:1,t:'14:50',h:'렌터카 반납 · 영업소',p:'반납 예약 15:00 · 연료 가득 채워 반납 · 반납 수속 15분 → 공항 셔틀 5분 → 15:15 체크인 → 16:15 보안·출국 → 16:45 게이트.',tags:['연료 가득 반납'],map:P.rental},
   {t:'15:15',h:'공항 체크인 · 2층에서 1시간',p:'체크인하고 16:15 보안 검색까지 1시간이 남아요. 2층 「空の駅かがわ」(소라노에키 가가와)에는 우동 육수가 나오는 수도꼭지가 있어 종이컵으로 맛봐요. 디저트는 2층 카페 부오노(Cafe Buono), 마지막 기념품은 2층 「四国空市場」(시코쿠 소라이치바)에서 사요.',
@@ -1752,6 +1757,8 @@ function driveLegs(){
       const dest=card&&(!r||card.map===r.p)?(card.dir||card.park||card.map):(r&&r.p); if(!dest) return;
       out.push({t:o.t,name,dur,km:plain(o.p).split(' · ')[0],url:DIR(dest,'driving')+'&dir_action=navigate'});
     } else if(o.h.startsWith('⛴')) out.push({ferry:`${o.t} ${plain(o.h)}`});
+    /* 주유소처럼 닫혀 있을 수 있는 곳은 예비 목적지를 바로 아래 줄에 둔다 */
+    if(o.dvalt) out.push({t:'예비',name:o.dvalt.n,dur:o.dvalt.d,km:o.dvalt.km,alt:1,url:DIR(o.dvalt.p,'driving')+'&dir_action=navigate'});
   });
   return out;
 }
@@ -1759,11 +1766,12 @@ function renderDrive(){
   const legs=driveLegs();
   /* 19일 당일이면 일본 시각으로 다음 구간을 굵게 표시한다 */
   const jp=new Date(Date.now()+9*3600e3), today=jp.toISOString().slice(5,10)==='10-19', now=jp.toISOString().slice(11,16);
-  const nextI=today?legs.findIndex(l=>l.t&&l.t>=now):-1;
+  const nextI=today?legs.findIndex(l=>!l.alt&&l.t&&l.t>=now):-1;
   const row=(l,i)=>l.ferry?`<div class="ferry">${esc(l.ferry)}</div>`
-    :`<a href="${l.url}" target="_blank" rel="noopener"${i===nextI?' class="next"':''}><b>${l.t}</b><span>${esc(l.name)}<i>${esc(l.dur||'')} · ${esc(l.km||'')}</i></span><em>안내</em></a>`;
+    :`<a href="${l.url}" target="_blank" rel="noopener"${i===nextI?' class="next"':l.alt?' class="alt"':''}><b>${l.t}</b><span>${esc(l.name)}<i>${esc(l.dur||'')} · ${esc(l.km||'')}</i></span><em>안내</em></a>`;
   /* 당일에는 이미 지난 구간을 접어 둔다 — 남은 구간이 한 화면에 들어오게 */
-  const cut=nextI>0?nextI:0, done=legs.slice(0,cut).filter(l=>!l.ferry).length;
+  let cut=nextI>0?nextI:0; while(cut>0&&legs[cut-1].alt) cut--;
+  const done=legs.slice(0,cut).filter(l=>!l.ferry).length;
   drivePane.innerHTML=`<div class="dvhead"><h2>🚗 마지막 날 운전</h2><em>누르면 지금 위치에서 바로 안내</em></div>
   ${cut?`<details class="dvdone"><summary>지난 구간 ${done}개 · 눌러서 보기</summary>${legs.slice(0,cut).map(row).join('')}</details>`:''}
   <div class="dvlist">${legs.map((l,i)=>i<cut?'':row(l,i)).join('')}</div>
